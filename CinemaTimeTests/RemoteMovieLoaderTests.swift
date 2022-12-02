@@ -3,114 +3,6 @@
 import XCTest
 import CinemaTime
 
-protocol HTTPClient {
-    typealias Result = Swift.Result<(Data, HTTPURLResponse), Error>
-    func get(from url: URL, completion: @escaping (Result) -> Void)
-}
-
-struct RemoteMovie: Decodable {
-    let id: Int?
-    let title: String?
-    let posterPath: String?
-    let overview: String?
-    let releaseDate: String?
-    let voteAverage: Double?
-    
-    enum CodingKeys: String, CodingKey {
-        case id
-        case title
-        case posterPath = "poster_path"
-        case overview
-        case releaseDate = "release_date"
-        case voteAverage = "vote_average"
-    }
-}
-
-final class RemoteMovieLoader: MovieLoader {
-    private let url: URL
-    private let client: HTTPClient
-    
-    typealias Result = MovieLoader.Result
-    
-    enum Error: Swift.Error {
-        case invalidData
-    }
-    
-    init(url: URL, client: HTTPClient) {
-        self.url = url
-        self.client = client
-    }
-    
-    func load(completion: @escaping (MovieLoader.Result) -> Void) {
-        client.get(from: url) { [weak self] result in
-            guard self != nil else { return }
-            
-            switch result {
-            case let .success((data, response)):
-                completion(RemoteMovieLoader.map(data, response: response))
-                
-            case let .failure(error):
-                completion(.failure(error))
-            }
-        }
-    }
-    
-    private struct Root: Decodable {
-        let results: [RemoteMovie]
-    }
-    
-    private static func map(_ data: Data, response: HTTPURLResponse) -> Result {
-        do {
-            let remoteMovies = try RemoteMovieMapper.map(data, response: response)
-            return .success(remoteMovies.toModels())
-        } catch {
-            return .failure(error)
-        }
-    }
-}
-
-final class RemoteMovieMapper {
-    private struct Root: Decodable {
-        let results: [RemoteMovie]
-    }
-    
-    static func map(_ data: Data, response: HTTPURLResponse) throws -> [RemoteMovie] {
-        guard response.statusCode == 200, let movies = try? JSONDecoder().decode(Root.self, from: data) else {
-            throw RemoteMovieLoader.Error.invalidData
-        }
-        
-        return movies.results
-    }
-}
-
-extension Array where Element == RemoteMovie {
-    func toModels() -> [Movie] {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        
-        return compactMap { remoteMovie -> Movie? in
-            guard let id = remoteMovie.id, let title = remoteMovie.title else { return nil }
-            
-            return Movie(
-                id: id,
-                title: title,
-                imagePath: remoteMovie.posterPath,
-                overview: remoteMovie.overview,
-                releaseDate: dateFormatter.date(from: remoteMovie.releaseDate),
-                rating: remoteMovie.voteAverage)
-        }
-    }
-}
-
-extension DateFormatter {
-    func date(from string: String?) -> Date? {
-        guard let string = string else {
-            return nil
-        }
-        return date(from: string)
-    }
-}
-
 final class RemoteMovieLoaderTests: XCTestCase {
     
     func test_init_doesNotRequestDataFromURL() {
@@ -299,14 +191,6 @@ final class RemoteMovieLoaderTests: XCTestCase {
         
         func complete(with error: Error, at index: Int = 0) {
             receivedMessages[index].completion(.failure(error))
-        }
-    }
-}
-
-extension XCTestCase {
-    func trackForMemoryLeaks(_ instance: AnyObject, file: StaticString = #file, line: UInt = #line) {
-        addTeardownBlock { [weak instance] in
-            XCTAssertNil(instance, "Instance should have been deallocated. Potential memory leak.", file: file, line: line)
         }
     }
 }

@@ -11,6 +11,11 @@
 		4B0B6910293A242C00F6BFCE /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0B690F293A242C00F6BFCE /* Movie.swift */; };
 		4B0B6912293A254300F6BFCE /* MovieLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0B6911293A254300F6BFCE /* MovieLoader.swift */; };
 		4B0B6914293A2AB300F6BFCE /* RemoteMovieLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0B6913293A2AB300F6BFCE /* RemoteMovieLoaderTests.swift */; };
+		4B0B6916293A618F00F6BFCE /* RemoteMovieLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0B6915293A618F00F6BFCE /* RemoteMovieLoader.swift */; };
+		4B0B6918293A61B500F6BFCE /* HTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0B6917293A61B500F6BFCE /* HTTPClient.swift */; };
+		4B0B691A293A61DB00F6BFCE /* RemoteMovie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0B6919293A61DB00F6BFCE /* RemoteMovie.swift */; };
+		4B0B691C293A61EE00F6BFCE /* RemoteMovieMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0B691B293A61EE00F6BFCE /* RemoteMovieMapper.swift */; };
+		4B0B691E293A625800F6BFCE /* XCTestCase+MemoryLeakTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0B691D293A625800F6BFCE /* XCTestCase+MemoryLeakTracking.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,6 +34,11 @@
 		4B0B690F293A242C00F6BFCE /* Movie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
 		4B0B6911293A254300F6BFCE /* MovieLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieLoader.swift; sourceTree = "<group>"; };
 		4B0B6913293A2AB300F6BFCE /* RemoteMovieLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteMovieLoaderTests.swift; sourceTree = "<group>"; };
+		4B0B6915293A618F00F6BFCE /* RemoteMovieLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteMovieLoader.swift; sourceTree = "<group>"; };
+		4B0B6917293A61B500F6BFCE /* HTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClient.swift; sourceTree = "<group>"; };
+		4B0B6919293A61DB00F6BFCE /* RemoteMovie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteMovie.swift; sourceTree = "<group>"; };
+		4B0B691B293A61EE00F6BFCE /* RemoteMovieMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteMovieMapper.swift; sourceTree = "<group>"; };
+		4B0B691D293A625800F6BFCE /* XCTestCase+MemoryLeakTracking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+MemoryLeakTracking.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,8 +81,7 @@
 		4B0B68F9293A228D00F6BFCE /* CinemaTime */ = {
 			isa = PBXGroup;
 			children = (
-				4B0B690F293A242C00F6BFCE /* Movie.swift */,
-				4B0B6911293A254300F6BFCE /* MovieLoader.swift */,
+				4B0B691F293A628100F6BFCE /* Movie */,
 			);
 			path = CinemaTime;
 			sourceTree = "<group>";
@@ -81,8 +90,38 @@
 			isa = PBXGroup;
 			children = (
 				4B0B6913293A2AB300F6BFCE /* RemoteMovieLoaderTests.swift */,
+				4B0B691D293A625800F6BFCE /* XCTestCase+MemoryLeakTracking.swift */,
 			);
 			path = CinemaTimeTests;
+			sourceTree = "<group>";
+		};
+		4B0B691F293A628100F6BFCE /* Movie */ = {
+			isa = PBXGroup;
+			children = (
+				4B0B6920293A629700F6BFCE /* API */,
+				4B0B6921293A62AA00F6BFCE /* Domain */,
+			);
+			path = Movie;
+			sourceTree = "<group>";
+		};
+		4B0B6920293A629700F6BFCE /* API */ = {
+			isa = PBXGroup;
+			children = (
+				4B0B6917293A61B500F6BFCE /* HTTPClient.swift */,
+				4B0B6919293A61DB00F6BFCE /* RemoteMovie.swift */,
+				4B0B6915293A618F00F6BFCE /* RemoteMovieLoader.swift */,
+				4B0B691B293A61EE00F6BFCE /* RemoteMovieMapper.swift */,
+			);
+			path = API;
+			sourceTree = "<group>";
+		};
+		4B0B6921293A62AA00F6BFCE /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				4B0B690F293A242C00F6BFCE /* Movie.swift */,
+				4B0B6911293A254300F6BFCE /* MovieLoader.swift */,
+			);
+			path = Domain;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -195,8 +234,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B0B6916293A618F00F6BFCE /* RemoteMovieLoader.swift in Sources */,
 				4B0B6910293A242C00F6BFCE /* Movie.swift in Sources */,
+				4B0B6918293A61B500F6BFCE /* HTTPClient.swift in Sources */,
+				4B0B691A293A61DB00F6BFCE /* RemoteMovie.swift in Sources */,
 				4B0B6912293A254300F6BFCE /* MovieLoader.swift in Sources */,
+				4B0B691C293A61EE00F6BFCE /* RemoteMovieMapper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -205,6 +248,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B0B6914293A2AB300F6BFCE /* RemoteMovieLoaderTests.swift in Sources */,
+				4B0B691E293A625800F6BFCE /* XCTestCase+MemoryLeakTracking.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
