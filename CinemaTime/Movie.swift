@@ -2,7 +2,7 @@
 
 import Foundation
 
-public struct Movie {
+public struct Movie: Equatable {
     let id: Int
     let title: String
     let image: URL?

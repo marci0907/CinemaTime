@@ -12,6 +12,8 @@ final class RemoteMovieLoader {
     private let url: URL
     private let client: HTTPClient
     
+    typealias Result = MovieLoader.Result
+    
     enum Error: Swift.Error {
         case invalidData
     }
@@ -66,7 +68,7 @@ final class RemoteMovieLoaderTests: XCTestCase {
         let expectedError = NSError(domain: "a domain", code: 0)
         let (sut, client) = makeSUT()
         
-        expect(sut, toCompleteWithError: expectedError, when: {
+        expect(sut, toCompleteWith: .failure(expectedError), when: {
             client.complete(with: expectedError)
         })
     }
@@ -74,7 +76,7 @@ final class RemoteMovieLoaderTests: XCTestCase {
     func test_load_deliversErrorOnInvalidDataWith200HTTPURLResponse() {
         let (sut, client) = makeSUT()
         
-        expect(sut, toCompleteWithError: RemoteMovieLoader.Error.invalidData, when: {
+        expect(sut, toCompleteWith: .failure(RemoteMovieLoader.Error.invalidData), when: {
             client.complete(with: Data("".utf8), statusCode: 200)
         })
     }
@@ -85,7 +87,7 @@ final class RemoteMovieLoaderTests: XCTestCase {
         let invalidStatusCodes = [199, 201, 300, 400, 500]
         
         invalidStatusCodes.enumerated().forEach { index, statusCode in
-            expect(sut, toCompleteWithError: RemoteMovieLoader.Error.invalidData, when: {
+            expect(sut, toCompleteWith: .failure(RemoteMovieLoader.Error.invalidData), when: {
                 client.complete(with: Data("".utf8), statusCode: statusCode, at: index)
             })
         }
@@ -101,7 +103,7 @@ final class RemoteMovieLoaderTests: XCTestCase {
     
     private func expect(
         _ sut: RemoteMovieLoader,
-        toCompleteWithError expectedError: Error,
+        toCompleteWith expectedResult: RemoteMovieLoader.Result,
         when action: @escaping () -> Void,
         file: StaticString = #file,
         line: UInt = #line
@@ -109,15 +111,15 @@ final class RemoteMovieLoaderTests: XCTestCase {
         let exp = expectation(description: "Wait for completion")
         
         sut.load { receivedResult in
-            switch (receivedResult, expectedError) {
-            case let (.failure(receivedError as RemoteMovieLoader.Error), (expectedError as RemoteMovieLoader.Error)):
-                XCTAssertEqual(receivedError, expectedError, file: file, line: line)
+            switch (receivedResult, expectedResult) {
+            case let (.success(receivedItems), .success(expectedItems)):
+                XCTAssertEqual(receivedItems, expectedItems, file: file, line: line)
                 
-            case let (.failure(receivedError as NSError), (expectedError as NSError)):
+            case let (.failure(receivedError as NSError), (.failure(expectedError as NSError))):
                 XCTAssertEqual(receivedError, expectedError, file: file, line: line)
                 
             default:
-                XCTFail("Expected failure with \(expectedError), got \(receivedResult) instead", file: file, line: line)
+                XCTFail("Expected \(expectedResult), got \(receivedResult) instead", file: file, line: line)
             }
             
             exp.fulfill()
