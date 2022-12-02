@@ -42,7 +42,9 @@ final class RemoteMovieLoader {
     }
     
     func load(completion: @escaping (MovieLoader.Result) -> Void) {
-        client.get(from: url) { result in
+        client.get(from: url) { [weak self] result in
+            guard self != nil else { return }
+            
             switch result {
             case let .success((data, response)):
                 if response.statusCode == 200, let remoteMovies = RemoteMovieLoader.map(data) {
@@ -175,6 +177,19 @@ final class RemoteMovieLoaderTests: XCTestCase {
         expect(sut, toCompleteWith: .success([movie1.model, movie2.model, movie3.model]), when: {
             client.complete(with: receivedData, statusCode: 200)
         })
+    }
+    
+    func test_load_doesNotDeliverResultAfterSUTHasBeenDeallocated() {
+        let client = HTTPClientSpy()
+        var sut: RemoteMovieLoader? = RemoteMovieLoader(url: URL(string: "https://any-url.com")!, client: client)
+        
+        var deliveredResult: RemoteMovieLoader.Result?
+        sut?.load(completion: { deliveredResult = $0 })
+        
+        sut = nil
+        client.complete(with: makeJSON(from: []), statusCode: 200)
+        
+        XCTAssertNil(deliveredResult)
     }
     
     // MARK: - Helpers
