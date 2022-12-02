@@ -66,70 +66,28 @@ final class RemoteMovieLoaderTests: XCTestCase {
         let expectedError = NSError(domain: "a domain", code: 0)
         let (sut, client) = makeSUT()
         
-        let exp = expectation(description: "Wait for completion")
-        sut.load { result in
-            switch result {
-            case let .failure(receivedError as NSError):
-                XCTAssertEqual(expectedError, receivedError)
-                
-            case .success:
-                XCTFail("Expected failure with \(expectedError), got \(result) instead")
-            }
-            
-            exp.fulfill()
-        }
-        
-        client.complete(with: expectedError)
-        
-        wait(for: [exp], timeout: 1.0)
+        expect(sut, toCompleteWithError: expectedError, when: {
+            client.complete(with: expectedError)
+        })
     }
     
     func test_load_deliversInvalidDataErrorOnInvalidData() {
-        let expectedError = RemoteMovieLoader.Error.invalidData
         let (sut, client) = makeSUT()
         
-        let exp = expectation(description: "Wait for completion")
-        sut.load { result in
-            switch result {
-            case let .failure(receivedError as RemoteMovieLoader.Error):
-                XCTAssertEqual(expectedError, receivedError)
-                
-            default:
-                XCTFail("Expected failure with \(expectedError), got \(result) instead")
-            }
-            
-            exp.fulfill()
-        }
-        
-        client.complete(with: Data("".utf8), statusCode: 200)
-        
-        wait(for: [exp], timeout: 1.0)
+        expect(sut, toCompleteWithError: RemoteMovieLoader.Error.invalidData, when: {
+            client.complete(with: Data("".utf8), statusCode: 200)
+        })
     }
     
     func test_load_deliversInvalidDataErrorOnNon200HTTPURLResponse() {
-        let expectedError = RemoteMovieLoader.Error.invalidData
         let (sut, client) = makeSUT()
         
         let invalidStatusCodes = [199, 201, 300, 400, 500]
         
-        invalidStatusCodes.enumerated().forEach { index, errorCode in
-            let exp = expectation(description: "Wait for completion")
-            
-            sut.load { result in
-                switch result {
-                case let .failure(receivedError as RemoteMovieLoader.Error):
-                    XCTAssertEqual(expectedError, receivedError)
-                    
-                default:
-                    XCTFail("Expected failure with \(expectedError), got \(result) instead")
-                }
-                
-                exp.fulfill()
-            }
-            
-            client.complete(with: Data("".utf8), statusCode: errorCode, at: index)
-            
-            wait(for: [exp], timeout: 1.0)
+        invalidStatusCodes.enumerated().forEach { index, statusCode in
+            expect(sut, toCompleteWithError: RemoteMovieLoader.Error.invalidData, when: {
+                client.complete(with: Data("".utf8), statusCode: statusCode, at: index)
+            })
         }
     }
     
@@ -139,6 +97,35 @@ final class RemoteMovieLoaderTests: XCTestCase {
         let client = HTTPClientSpy()
         let sut = RemoteMovieLoader(url: url, client: client)
         return (sut, client)
+    }
+    
+    private func expect(
+        _ sut: RemoteMovieLoader,
+        toCompleteWithError expectedError: Error,
+        when action: @escaping () -> Void,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let exp = expectation(description: "Wait for completion")
+        
+        sut.load { receivedResult in
+            switch (receivedResult, expectedError) {
+            case let (.failure(receivedError as RemoteMovieLoader.Error), (expectedError as RemoteMovieLoader.Error)):
+                XCTAssertEqual(receivedError, expectedError, file: file, line: line)
+                
+            case let (.failure(receivedError as NSError), (expectedError as NSError)):
+                XCTAssertEqual(receivedError, expectedError, file: file, line: line)
+                
+            default:
+                XCTFail("Expected failure with \(expectedError), got \(receivedResult) instead", file: file, line: line)
+            }
+            
+            exp.fulfill()
+        }
+        
+        action()
+        
+        wait(for: [exp], timeout: 1.0)
     }
     
     private class HTTPClientSpy: HTTPClient {
