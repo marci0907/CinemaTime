@@ -26,7 +26,7 @@ struct RemoteMovie: Decodable {
     }
 }
 
-final class RemoteMovieLoader {
+final class RemoteMovieLoader: MovieLoader {
     private let url: URL
     private let client: HTTPClient
     
@@ -210,7 +210,7 @@ final class RemoteMovieLoaderTests: XCTestCase {
         with url: URL = URL(string: "https://any-url.com")!,
         file: StaticString = #file,
         line: UInt = #line
-    ) -> (RemoteMovieLoader, HTTPClientSpy) {
+    ) -> (MovieLoader, HTTPClientSpy) {
         let client = HTTPClientSpy()
         let sut = RemoteMovieLoader(url: url, client: client)
         trackForMemoryLeaks(client, file: file, line: line)
@@ -219,7 +219,7 @@ final class RemoteMovieLoaderTests: XCTestCase {
     }
     
     private func expect(
-        _ sut: RemoteMovieLoader,
+        _ sut: MovieLoader,
         toCompleteWith expectedResult: RemoteMovieLoader.Result,
         when action: @escaping () -> Void,
         file: StaticString = #file,
