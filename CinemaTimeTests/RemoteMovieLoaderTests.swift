@@ -4,7 +4,8 @@ import XCTest
 import CinemaTime
 
 protocol HTTPClient {
-    func get(from url: URL)
+    typealias Result = Swift.Result<(Data, HTTPURLResponse), Error>
+    func get(from url: URL, completion: @escaping (Result) -> Void)
 }
 
 final class RemoteMovieLoader {
@@ -17,7 +18,11 @@ final class RemoteMovieLoader {
     }
     
     func load(completion: @escaping (MovieLoader.Result) -> Void) {
-        client.get(from: url)
+        client.get(from: url) { result in
+            if case let .failure(error) = result {
+                completion(.failure(error))
+            }
+        }
     }
 }
 
@@ -38,6 +43,28 @@ final class RemoteMovieLoaderTests: XCTestCase {
         XCTAssertEqual(client.requestedURLs, [url])
     }
     
+    func test_load_deliversErrorOnClientError() {
+        let expectedError = NSError(domain: "a domain", code: 0)
+        let (sut, client) = makeSUT()
+        
+        let exp = expectation(description: "Wait for completion")
+        sut.load { result in
+            switch result {
+            case let .failure(receivedError as NSError):
+                XCTAssertEqual(expectedError, receivedError)
+                
+            case .success:
+                XCTFail("Expected failure with \(expectedError), got \(result) instead")
+            }
+            
+            exp.fulfill()
+        }
+        
+        client.complete(with: expectedError)
+        
+        wait(for: [exp], timeout: 1.0)
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(with url: URL = URL(string: "https://any-url.com")!) -> (RemoteMovieLoader, HTTPClientSpy) {
@@ -47,10 +74,18 @@ final class RemoteMovieLoaderTests: XCTestCase {
     }
     
     private class HTTPClientSpy: HTTPClient {
-        private(set) var requestedURLs = [URL]()
+        typealias Message = (url: URL, completion: (HTTPClient.Result) -> Void)
         
-        func get(from url: URL) {
-            requestedURLs.append(url)
+        var requestedURLs: [URL] { receivedMessages.map { $0.url } }
+        
+        private(set) var receivedMessages = [Message]()
+        
+        func get(from url: URL, completion: @escaping (HTTPClient.Result) -> Void) {
+            receivedMessages.append((url, completion))
+        }
+        
+        func complete(with error: Error, at index: Int = 0) {
+            receivedMessages[index].completion(.failure(error))
         }
     }
 }
