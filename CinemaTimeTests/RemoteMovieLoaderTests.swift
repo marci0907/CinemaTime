@@ -106,6 +106,33 @@ final class RemoteMovieLoaderTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
+    func test_load_deliversInvalidDataErrorOnNon200HTTPURLResponse() {
+        let expectedError = RemoteMovieLoader.Error.invalidData
+        let (sut, client) = makeSUT()
+        
+        let invalidStatusCodes = [199, 201, 300, 400, 500]
+        
+        invalidStatusCodes.enumerated().forEach { index, errorCode in
+            let exp = expectation(description: "Wait for completion")
+            
+            sut.load { result in
+                switch result {
+                case let .failure(receivedError as RemoteMovieLoader.Error):
+                    XCTAssertEqual(expectedError, receivedError)
+                    
+                default:
+                    XCTFail("Expected failure with \(expectedError), got \(result) instead")
+                }
+                
+                exp.fulfill()
+            }
+            
+            client.complete(with: Data("".utf8), statusCode: errorCode, at: index)
+            
+            wait(for: [exp], timeout: 1.0)
+        }
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(with url: URL = URL(string: "https://any-url.com")!) -> (RemoteMovieLoader, HTTPClientSpy) {
