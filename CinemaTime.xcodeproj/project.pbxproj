@@ -10,6 +10,7 @@
 		4B0B6900293A228E00F6BFCE /* CinemaTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B0B68F7293A228D00F6BFCE /* CinemaTime.framework */; };
 		4B0B6910293A242C00F6BFCE /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0B690F293A242C00F6BFCE /* Movie.swift */; };
 		4B0B6912293A254300F6BFCE /* MovieLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0B6911293A254300F6BFCE /* MovieLoader.swift */; };
+		4B0B6914293A2AB300F6BFCE /* RemoteMovieLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0B6913293A2AB300F6BFCE /* RemoteMovieLoaderTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -27,6 +28,7 @@
 		4B0B68FF293A228E00F6BFCE /* CinemaTimeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CinemaTimeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B0B690F293A242C00F6BFCE /* Movie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
 		4B0B6911293A254300F6BFCE /* MovieLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieLoader.swift; sourceTree = "<group>"; };
+		4B0B6913293A2AB300F6BFCE /* RemoteMovieLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteMovieLoaderTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +80,7 @@
 		4B0B6903293A228E00F6BFCE /* CinemaTimeTests */ = {
 			isa = PBXGroup;
 			children = (
+				4B0B6913293A2AB300F6BFCE /* RemoteMovieLoaderTests.swift */,
 			);
 			path = CinemaTimeTests;
 			sourceTree = "<group>";
@@ -147,6 +150,7 @@
 					};
 					4B0B68FE293A228E00F6BFCE = {
 						CreatedOnToolsVersion = 14.1;
+						LastSwiftMigration = 1410;
 					};
 				};
 			};
@@ -200,6 +204,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B0B6914293A2AB300F6BFCE /* RemoteMovieLoaderTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -400,14 +405,21 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 4733CLVUX5;
 				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.marcellmagyar.CinemaTimeTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -416,10 +428,16 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 4733CLVUX5;
 				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.marcellmagyar.CinemaTimeTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
