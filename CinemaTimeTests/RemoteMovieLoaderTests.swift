@@ -158,7 +158,7 @@ final class RemoteMovieLoaderTests: XCTestCase {
     func test_load_deliversNoItemsOn200HTTPURLResponseWithEmptyList() {
         let receivedData = makeJSON(from: [])
         let (sut, client) = makeSUT()
-
+        
         expect(sut, toCompleteWith: .success([]), when: {
             client.complete(with: receivedData, statusCode: 200)
         })
@@ -170,7 +170,7 @@ final class RemoteMovieLoaderTests: XCTestCase {
         let movie1 = makeItem(id: 1, title: "Black Adam", imagePath: "/1.jpg", overview: nil, releaseDate: nil, rating: 7.9)
         let movie2 = makeItem(id: 2, title: "Black Panther: Wakanda Forever", imagePath: "/2.jpg", overview: "This movie is about the Black Panther", releaseDate: Date(timeIntervalSince1970: 1667948400), rating: nil)
         let movie3 = makeItem(id: 3, title: "Some random movie", imagePath: nil, overview: nil, releaseDate: nil, rating: nil)
-
+        
         let receivedData = makeJSON(from: [movie1.json, movie2.json, movie3.json])
         expect(sut, toCompleteWith: .success([movie1.model, movie2.model, movie3.model]), when: {
             client.complete(with: receivedData, statusCode: 200)
@@ -179,9 +179,15 @@ final class RemoteMovieLoaderTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private func makeSUT(with url: URL = URL(string: "https://any-url.com")!) -> (RemoteMovieLoader, HTTPClientSpy) {
+    private func makeSUT(
+        with url: URL = URL(string: "https://any-url.com")!,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> (RemoteMovieLoader, HTTPClientSpy) {
         let client = HTTPClientSpy()
         let sut = RemoteMovieLoader(url: url, client: client)
+        trackForMemoryLeaks(client, file: file, line: line)
+        trackForMemoryLeaks(sut, file: file, line: line)
         return (sut, client)
     }
     
@@ -266,6 +272,14 @@ final class RemoteMovieLoaderTests: XCTestCase {
         
         func complete(with error: Error, at index: Int = 0) {
             receivedMessages[index].completion(.failure(error))
+        }
+    }
+}
+
+extension XCTestCase {
+    func trackForMemoryLeaks(_ instance: AnyObject, file: StaticString = #file, line: UInt = #line) {
+        addTeardownBlock { [weak instance] in
+            XCTAssertNil(instance, "Instance should have been deallocated. Potential memory leak.", file: file, line: line)
         }
     }
 }
