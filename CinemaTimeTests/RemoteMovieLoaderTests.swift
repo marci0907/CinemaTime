@@ -51,7 +51,7 @@ final class RemoteMovieLoaderTests: XCTestCase {
         XCTAssertEqual(client.requestedURLs, [url])
     }
     
-    func test_load_requestsDataTwiceFromURL() {
+    func test_loadTwice_requestsDataTwiceFromURL() {
         let url = URL(string: "https://any-url.com")!
         let (sut , client) = makeSUT(with: url)
         
@@ -71,7 +71,7 @@ final class RemoteMovieLoaderTests: XCTestCase {
         })
     }
     
-    func test_load_deliversInvalidDataErrorOnInvalidData() {
+    func test_load_deliversErrorOnInvalidDataWith200HTTPURLResponse() {
         let (sut, client) = makeSUT()
         
         expect(sut, toCompleteWithError: RemoteMovieLoader.Error.invalidData, when: {
@@ -79,7 +79,7 @@ final class RemoteMovieLoaderTests: XCTestCase {
         })
     }
     
-    func test_load_deliversInvalidDataErrorOnNon200HTTPURLResponse() {
+    func test_load_deliversErrorOnNon200HTTPURLResponse() {
         let (sut, client) = makeSUT()
         
         let invalidStatusCodes = [199, 201, 300, 400, 500]
