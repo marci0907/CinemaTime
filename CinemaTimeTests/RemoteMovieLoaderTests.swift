@@ -8,6 +8,24 @@ protocol HTTPClient {
     func get(from url: URL, completion: @escaping (Result) -> Void)
 }
 
+struct RemoteMovie: Decodable {
+    let id: Int?
+    let title: String?
+    let posterPath: String?
+    let overview: String?
+    let releaseDate: String?
+    let voteAverage: Double?
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case title
+        case posterPath = "poster_path"
+        case overview
+        case releaseDate = "release_date"
+        case voteAverage = "vote_average"
+    }
+}
+
 final class RemoteMovieLoader {
     private let url: URL
     private let client: HTTPClient
@@ -27,8 +45,8 @@ final class RemoteMovieLoader {
         client.get(from: url) { result in
             switch result {
             case let .success((data, response)):
-                if response.statusCode == 200, !data.isEmpty {
-                    completion(.success([]))
+                if response.statusCode == 200, let remoteMovies = RemoteMovieLoader.map(data) {
+                    completion(.success(remoteMovies.toModels()))
                 } else {
                     return completion(.failure(Error.invalidData))
                 }
@@ -36,6 +54,47 @@ final class RemoteMovieLoader {
                 completion(.failure(error))
             }
         }
+    }
+    
+    private struct Root: Decodable {
+        let results: [RemoteMovie]
+    }
+    
+    private static func map(_ data: Data) -> [RemoteMovie]? {
+        do {
+            let movies = try JSONDecoder().decode(Root.self, from: data)
+            return movies.results
+        } catch {
+            return nil
+        }
+    }
+}
+
+extension Array where Element == RemoteMovie {
+    func toModels() -> [Movie] {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        
+        return compactMap { remoteMovie -> Movie? in
+            guard let id = remoteMovie.id, let title = remoteMovie.title else { return nil }
+            
+            return Movie(
+                id: id,
+                title: title,
+                imagePath: remoteMovie.posterPath,
+                overview: remoteMovie.overview,
+                releaseDate: dateFormatter.date(from: remoteMovie.releaseDate),
+                rating: remoteMovie.voteAverage)
+        }
+    }
+}
+
+extension DateFormatter {
+    func date(from string: String?) -> Date? {
+        guard let string = string else {
+            return nil
+        }
+        return date(from: string)
     }
 }
 
@@ -105,6 +164,19 @@ final class RemoteMovieLoaderTests: XCTestCase {
         })
     }
     
+    func test_load_deliversItemsOn200HTTPURLResponseWithFilledList() {
+        let (sut, client) = makeSUT()
+        
+        let movie1 = makeItem(id: 1, title: "Black Adam", imagePath: "/1.jpg", overview: nil, releaseDate: nil, rating: 7.9)
+        let movie2 = makeItem(id: 2, title: "Black Panther: Wakanda Forever", imagePath: "/2.jpg", overview: "This movie is about the Black Panther", releaseDate: Date(timeIntervalSince1970: 1667948400), rating: nil)
+        let movie3 = makeItem(id: 3, title: "Some random movie", imagePath: nil, overview: nil, releaseDate: nil, rating: nil)
+
+        let receivedData = makeJSON(from: [movie1.json, movie2.json, movie3.json])
+        expect(sut, toCompleteWith: .success([movie1.model, movie2.model, movie3.model]), when: {
+            client.complete(with: receivedData, statusCode: 200)
+        })
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(with url: URL = URL(string: "https://any-url.com")!) -> (RemoteMovieLoader, HTTPClientSpy) {
@@ -140,6 +212,30 @@ final class RemoteMovieLoaderTests: XCTestCase {
         action()
         
         wait(for: [exp], timeout: 1.0)
+    }
+    
+    private func makeItem(
+        id: Int, title: String, imagePath: String? = nil, overview: String? = nil, releaseDate: Date? = nil, rating: Double? = nil
+    ) -> (model: Movie, json: [String: Any]) {
+        let model = Movie(id: id, title: title, imagePath: imagePath, overview: overview, releaseDate: releaseDate, rating: rating)
+        
+        var stringDate: String?
+        if let releaseDate = releaseDate {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            stringDate = dateFormatter.string(from: releaseDate)
+        }
+        
+        let json: [String: Any] = [
+            "id": id,
+            "title": title,
+            "poster_path": imagePath as Any,
+            "overview": overview as Any,
+            "release_date": stringDate as Any,
+            "vote_average": rating as Any
+        ].compactMapValues { $0 }
+        
+        return (model, json)
     }
     
     private func makeJSON(from moviesJSON: [[String: Any]]) -> Data {
