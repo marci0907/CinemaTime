@@ -43,6 +43,17 @@ final class RemoteMovieLoaderTests: XCTestCase {
         XCTAssertEqual(client.requestedURLs, [url])
     }
     
+    func test_load_requestsDataTwiceFromURL() {
+        let url = URL(string: "https://any-url.com")!
+        let (sut , client) = makeSUT(with: url)
+        
+        sut.load { _ in }
+        XCTAssertEqual(client.requestedURLs, [url])
+        
+        sut.load { _ in }
+        XCTAssertEqual(client.requestedURLs, [url, url])
+    }
+    
     func test_load_deliversErrorOnClientError() {
         let expectedError = NSError(domain: "a domain", code: 0)
         let (sut, client) = makeSUT()
