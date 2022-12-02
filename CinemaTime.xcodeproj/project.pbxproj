@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		4B0B6900293A228E00F6BFCE /* CinemaTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B0B68F7293A228D00F6BFCE /* CinemaTime.framework */; };
 		4B0B6910293A242C00F6BFCE /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0B690F293A242C00F6BFCE /* Movie.swift */; };
+		4B0B6912293A254300F6BFCE /* MovieLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0B6911293A254300F6BFCE /* MovieLoader.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -25,6 +26,7 @@
 		4B0B68F7293A228D00F6BFCE /* CinemaTime.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CinemaTime.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B0B68FF293A228E00F6BFCE /* CinemaTimeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CinemaTimeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B0B690F293A242C00F6BFCE /* Movie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
+		4B0B6911293A254300F6BFCE /* MovieLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieLoader.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +70,7 @@
 			isa = PBXGroup;
 			children = (
 				4B0B690F293A242C00F6BFCE /* Movie.swift */,
+				4B0B6911293A254300F6BFCE /* MovieLoader.swift */,
 			);
 			path = CinemaTime;
 			sourceTree = "<group>";
@@ -189,6 +192,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B0B6910293A242C00F6BFCE /* Movie.swift in Sources */,
+				4B0B6912293A254300F6BFCE /* MovieLoader.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
