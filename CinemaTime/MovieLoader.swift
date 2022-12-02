@@ -2,7 +2,7 @@
 
 import Foundation
 
-protocol MovieLoader {
+public protocol MovieLoader {
     typealias Result = Swift.Result<[Movie], Error>
     func load(completion: @escaping (Result) -> Void)
 }
