@@ -26,9 +26,12 @@ final class RemoteMovieLoader {
     func load(completion: @escaping (MovieLoader.Result) -> Void) {
         client.get(from: url) { result in
             switch result {
-            case .success:
-                completion(.failure(Error.invalidData))
-                
+            case let .success((data, response)):
+                if response.statusCode == 200, !data.isEmpty {
+                    completion(.success([]))
+                } else {
+                    return completion(.failure(Error.invalidData))
+                }
             case let .failure(error):
                 completion(.failure(error))
             }
@@ -93,6 +96,15 @@ final class RemoteMovieLoaderTests: XCTestCase {
         }
     }
     
+    func test_load_deliversNoItemsOn200HTTPURLResponseWithEmptyList() {
+        let receivedData = makeJSON(from: [])
+        let (sut, client) = makeSUT()
+
+        expect(sut, toCompleteWith: .success([]), when: {
+            client.complete(with: receivedData, statusCode: 200)
+        })
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(with url: URL = URL(string: "https://any-url.com")!) -> (RemoteMovieLoader, HTTPClientSpy) {
@@ -128,6 +140,11 @@ final class RemoteMovieLoaderTests: XCTestCase {
         action()
         
         wait(for: [exp], timeout: 1.0)
+    }
+    
+    private func makeJSON(from moviesJSON: [[String: Any]]) -> Data {
+        let json = ["results": moviesJSON]
+        return try! JSONSerialization.data(withJSONObject: json)
     }
     
     private class HTTPClientSpy: HTTPClient {
