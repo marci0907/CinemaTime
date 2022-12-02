@@ -47,11 +47,8 @@ final class RemoteMovieLoader {
             
             switch result {
             case let .success((data, response)):
-                if response.statusCode == 200, let remoteMovies = RemoteMovieLoader.map(data) {
-                    completion(.success(remoteMovies.toModels()))
-                } else {
-                    return completion(.failure(Error.invalidData))
-                }
+                completion(RemoteMovieLoader.map(data, response: response))
+                
             case let .failure(error):
                 completion(.failure(error))
             }
@@ -62,13 +59,27 @@ final class RemoteMovieLoader {
         let results: [RemoteMovie]
     }
     
-    private static func map(_ data: Data) -> [RemoteMovie]? {
+    private static func map(_ data: Data, response: HTTPURLResponse) -> Result {
         do {
-            let movies = try JSONDecoder().decode(Root.self, from: data)
-            return movies.results
+            let remoteMovies = try RemoteMovieMapper.map(data, response: response)
+            return .success(remoteMovies.toModels())
         } catch {
-            return nil
+            return .failure(error)
         }
+    }
+}
+
+final class RemoteMovieMapper {
+    private struct Root: Decodable {
+        let results: [RemoteMovie]
+    }
+    
+    static func map(_ data: Data, response: HTTPURLResponse) throws -> [RemoteMovie] {
+        guard response.statusCode == 200, let movies = try? JSONDecoder().decode(Root.self, from: data) else {
+            throw RemoteMovieLoader.Error.invalidData
+        }
+        
+        return movies.results
     }
 }
 
@@ -151,8 +162,9 @@ final class RemoteMovieLoaderTests: XCTestCase {
         let invalidStatusCodes = [199, 201, 300, 400, 500]
         
         invalidStatusCodes.enumerated().forEach { index, statusCode in
+            let receivedData = makeJSON(from: [])
             expect(sut, toCompleteWith: .failure(RemoteMovieLoader.Error.invalidData), when: {
-                client.complete(with: Data("".utf8), statusCode: statusCode, at: index)
+                client.complete(with: receivedData, statusCode: statusCode, at: index)
             })
         }
     }
