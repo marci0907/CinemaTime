@@ -18,10 +18,18 @@
 		4B0B6923293DF2F000F6BFCE /* URLSessionHTTPClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0B6922293DF2F000F6BFCE /* URLSessionHTTPClientTests.swift */; };
 		4B0B6926293E364A00F6BFCE /* SharedHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0B6925293E364A00F6BFCE /* SharedHelpers.swift */; };
 		4B0B6928293E3ABF00F6BFCE /* URLSessionHTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0B6927293E3ABF00F6BFCE /* URLSessionHTTPClient.swift */; };
+		4B0B6931293E8DDC00F6BFCE /* CinemaTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B0B68F7293A228D00F6BFCE /* CinemaTime.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
 		4B0B6901293A228E00F6BFCE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4B0B68EE293A228D00F6BFCE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4B0B68F6293A228D00F6BFCE;
+			remoteInfo = CinemaTime;
+		};
+		4B0B6932293E8DDC00F6BFCE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 4B0B68EE293A228D00F6BFCE /* Project object */;
 			proxyType = 1;
@@ -43,6 +51,7 @@
 		4B0B6922293DF2F000F6BFCE /* URLSessionHTTPClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionHTTPClientTests.swift; sourceTree = "<group>"; };
 		4B0B6925293E364A00F6BFCE /* SharedHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedHelpers.swift; sourceTree = "<group>"; };
 		4B0B6927293E3ABF00F6BFCE /* URLSessionHTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionHTTPClient.swift; sourceTree = "<group>"; };
+		4B0B692D293E8DDC00F6BFCE /* CinemaTimeAPIEndToEndTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CinemaTimeAPIEndToEndTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +70,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4B0B692A293E8DDC00F6BFCE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4B0B6931293E8DDC00F6BFCE /* CinemaTime.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -69,6 +86,7 @@
 			children = (
 				4B0B68F9293A228D00F6BFCE /* CinemaTime */,
 				4B0B6903293A228E00F6BFCE /* CinemaTimeTests */,
+				4B0B692E293E8DDC00F6BFCE /* CinemaTimeAPIEndToEndTests */,
 				4B0B68F8293A228D00F6BFCE /* Products */,
 			);
 			sourceTree = "<group>";
@@ -78,6 +96,7 @@
 			children = (
 				4B0B68F7293A228D00F6BFCE /* CinemaTime.framework */,
 				4B0B68FF293A228E00F6BFCE /* CinemaTimeTests.xctest */,
+				4B0B692D293E8DDC00F6BFCE /* CinemaTimeAPIEndToEndTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -138,6 +157,13 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
+		4B0B692E293E8DDC00F6BFCE /* CinemaTimeAPIEndToEndTests */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = CinemaTimeAPIEndToEndTests;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -187,6 +213,24 @@
 			productReference = 4B0B68FF293A228E00F6BFCE /* CinemaTimeTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		4B0B692C293E8DDC00F6BFCE /* CinemaTimeAPIEndToEndTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4B0B6934293E8DDC00F6BFCE /* Build configuration list for PBXNativeTarget "CinemaTimeAPIEndToEndTests" */;
+			buildPhases = (
+				4B0B6929293E8DDC00F6BFCE /* Sources */,
+				4B0B692A293E8DDC00F6BFCE /* Frameworks */,
+				4B0B692B293E8DDC00F6BFCE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4B0B6933293E8DDC00F6BFCE /* PBXTargetDependency */,
+			);
+			name = CinemaTimeAPIEndToEndTests;
+			productName = CinemaTimeAPIEndToEndTests;
+			productReference = 4B0B692D293E8DDC00F6BFCE /* CinemaTimeAPIEndToEndTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -205,6 +249,9 @@
 						CreatedOnToolsVersion = 14.1;
 						LastSwiftMigration = 1410;
 					};
+					4B0B692C293E8DDC00F6BFCE = {
+						CreatedOnToolsVersion = 14.1;
+					};
 				};
 			};
 			buildConfigurationList = 4B0B68F1293A228D00F6BFCE /* Build configuration list for PBXProject "CinemaTime" */;
@@ -222,6 +269,7 @@
 			targets = (
 				4B0B68F6293A228D00F6BFCE /* CinemaTime */,
 				4B0B68FE293A228E00F6BFCE /* CinemaTimeTests */,
+				4B0B692C293E8DDC00F6BFCE /* CinemaTimeAPIEndToEndTests */,
 			);
 		};
 /* End PBXProject section */
@@ -235,6 +283,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		4B0B68FD293A228E00F6BFCE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B0B692B293E8DDC00F6BFCE /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -268,6 +323,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4B0B6929293E8DDC00F6BFCE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -275,6 +337,11 @@
 			isa = PBXTargetDependency;
 			target = 4B0B68F6293A228D00F6BFCE /* CinemaTime */;
 			targetProxy = 4B0B6901293A228E00F6BFCE /* PBXContainerItemProxy */;
+		};
+		4B0B6933293E8DDC00F6BFCE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4B0B68F6293A228D00F6BFCE /* CinemaTime */;
+			targetProxy = 4B0B6932293E8DDC00F6BFCE /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -506,6 +573,36 @@
 			};
 			name = Release;
 		};
+		4B0B6935293E8DDC00F6BFCE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4733CLVUX5;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.marcellmagyar.CinemaTimeAPIEndToEndTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		4B0B6936293E8DDC00F6BFCE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4733CLVUX5;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.marcellmagyar.CinemaTimeAPIEndToEndTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -532,6 +629,15 @@
 			buildConfigurations = (
 				4B0B690D293A228E00F6BFCE /* Debug */,
 				4B0B690E293A228E00F6BFCE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4B0B6934293E8DDC00F6BFCE /* Build configuration list for PBXNativeTarget "CinemaTimeAPIEndToEndTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4B0B6935293E8DDC00F6BFCE /* Debug */,
+				4B0B6936293E8DDC00F6BFCE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
