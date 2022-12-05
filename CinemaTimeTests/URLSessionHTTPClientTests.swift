@@ -24,13 +24,12 @@ final class URLSessionHTTPClientTests: XCTestCase {
     
     override func setUp() {
         super.setUp()
-        URLProtocol.registerClass(URLProtocolStub.self)
+        registerStubForTests()
     }
     
     override func tearDown() {
         super.tearDown()
-        URLProtocol.unregisterClass(URLProtocolStub.self)
-        URLProtocolStub.reset()
+        unregisterStubAndReset()
     }
     
     func test_init_doesNotRequestDataFromURL() {
@@ -65,6 +64,15 @@ final class URLSessionHTTPClientTests: XCTestCase {
         trackForMemoryLeaks(sut)
         
         return sut
+    }
+    
+    private func registerStubForTests() {
+        URLProtocol.registerClass(URLProtocolStub.self)
+    }
+    
+    private func unregisterStubAndReset() {
+        URLProtocol.unregisterClass(URLProtocolStub.self)
+        URLProtocolStub.reset()
     }
     
     private class URLProtocolStub: URLProtocol {
