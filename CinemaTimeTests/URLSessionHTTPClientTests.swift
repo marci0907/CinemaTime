@@ -14,8 +14,8 @@ final class URLSessionHTTPClient {
     func get(from url: URL, completion: @escaping (HTTPClient.Result) -> Void) {
         let urlRequest = URLRequest(url: url)
         
-        session.dataTask(with: urlRequest) { _, _, _ in
-            completion(.failure(Error()))
+        session.dataTask(with: urlRequest) { _, _, error in
+            completion(.failure(error ?? Error()))
         }.resume()
     }
 }
@@ -67,6 +67,29 @@ final class URLSessionHTTPClientTests: XCTestCase {
         
         // TODO: check this case
         expect(sut, toCompleteWithErrorForInvalidRepresentationWith: nil, response: anyHTTPURLResponse(), error: nil)
+    }
+    
+    func test_get_deliversErrorOnFailure() {
+        let expectedError = NSError(domain: "Other domain", code: 5)
+        let sut = makeSUT()
+        
+        URLProtocolStub.stub(data: nil, response: nil, error: expectedError)
+        
+        let exp = expectation(description: "Wait for completion")
+        sut.get(from: anyURL()) { result in
+            switch result {
+            case let .failure(receivedError as NSError):
+                XCTAssertEqual(receivedError.code, expectedError.code)
+                XCTAssertEqual(receivedError.domain, expectedError.domain)
+                
+            default:
+                XCTFail("Expected failure, got \(result) instead")
+            }
+            
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1.0)
     }
     
     // MARK: - Helpers
@@ -154,7 +177,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
         private var _receivedURLs = [URL]()
         private let queue = DispatchQueue(label: "\(URLProtocolStub.self)Queue")
         
-        private(set) var stub: Stub?
+        private(set) static var stub: Stub?
         
         var receivedURLs: [URL] {
             get { queue.sync { _receivedURLs }}
@@ -168,7 +191,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
         }
         
         static func stub(data: Data?, response: URLResponse?, error: Error?) {
-            shared?.stub = Stub(data: data, response: response, error: error)
+            stub = Stub(data: data, response: response, error: error)
         }
         
         override class func canInit(with request: URLRequest) -> Bool {
@@ -178,15 +201,15 @@ final class URLSessionHTTPClientTests: XCTestCase {
         override func startLoading() {
             receivedURLs.append(request.url!)
             
-            if let data = stub?.data {
+            if let data = URLProtocolStub.stub?.data {
                 client?.urlProtocol(self, didLoad: data)
             }
             
-            if let response = stub?.response {
+            if let response = URLProtocolStub.stub?.response {
                 client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
             }
             
-            if let error = stub?.error {
+            if let error = URLProtocolStub.stub?.error {
                 client?.urlProtocol(self, didFailWithError: error)
             }
             
@@ -201,7 +224,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
         
         static func reset() {
             shared?.receivedURLs = []
-            shared?.stub = nil
+            URLProtocolStub.stub = nil
         }
     }
 }
