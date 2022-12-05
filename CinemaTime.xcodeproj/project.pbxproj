@@ -15,6 +15,7 @@
 		4B0B6918293A61B500F6BFCE /* HTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0B6917293A61B500F6BFCE /* HTTPClient.swift */; };
 		4B0B691C293A61EE00F6BFCE /* RemoteMovieMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0B691B293A61EE00F6BFCE /* RemoteMovieMapper.swift */; };
 		4B0B691E293A625800F6BFCE /* XCTestCase+MemoryLeakTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0B691D293A625800F6BFCE /* XCTestCase+MemoryLeakTracking.swift */; };
+		4B0B6923293DF2F000F6BFCE /* URLSessionHTTPClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0B6922293DF2F000F6BFCE /* URLSessionHTTPClientTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,6 +38,7 @@
 		4B0B6917293A61B500F6BFCE /* HTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClient.swift; sourceTree = "<group>"; };
 		4B0B691B293A61EE00F6BFCE /* RemoteMovieMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteMovieMapper.swift; sourceTree = "<group>"; };
 		4B0B691D293A625800F6BFCE /* XCTestCase+MemoryLeakTracking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+MemoryLeakTracking.swift"; sourceTree = "<group>"; };
+		4B0B6922293DF2F000F6BFCE /* URLSessionHTTPClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionHTTPClientTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +91,7 @@
 			children = (
 				4B0B6913293A2AB300F6BFCE /* RemoteMovieLoaderTests.swift */,
 				4B0B691D293A625800F6BFCE /* XCTestCase+MemoryLeakTracking.swift */,
+				4B0B6922293DF2F000F6BFCE /* URLSessionHTTPClientTests.swift */,
 			);
 			path = CinemaTimeTests;
 			sourceTree = "<group>";
@@ -244,6 +247,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B0B6914293A2AB300F6BFCE /* RemoteMovieLoaderTests.swift in Sources */,
+				4B0B6923293DF2F000F6BFCE /* URLSessionHTTPClientTests.swift in Sources */,
 				4B0B691E293A625800F6BFCE /* XCTestCase+MemoryLeakTracking.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
