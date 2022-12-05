@@ -10,12 +10,6 @@ final class URLSessionHTTPClientTests: XCTestCase {
         URLProtocolStub.reset()
     }
     
-    func test_init_doesNotRequestDataFromURL() {
-        _ = makeSUT()
-        
-        XCTAssertTrue(URLProtocolStub.shared?.receivedURLs.isEmpty == true)
-    }
-    
     func test_get_requestsDataFromURL() {
         let url = anyURL()
         let sut = makeSUT(with: url)
@@ -202,9 +196,9 @@ final class URLSessionHTTPClientTests: XCTestCase {
             
             if let error = URLProtocolStub.stub?.error {
                 client?.urlProtocol(self, didFailWithError: error)
+            } else {
+                client?.urlProtocolDidFinishLoading(self)
             }
-            
-            client?.urlProtocolDidFinishLoading(self)
         }
         
         override func stopLoading() {}
