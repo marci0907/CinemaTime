@@ -6,13 +6,15 @@ import CinemaTime
 final class URLSessionHTTPClient {
     private let session: URLSession
     
+    typealias Result = HTTPClient.Result
+    
     init(session: URLSession) {
         self.session = session
     }
     
     private struct UnknownCaseRepresentation: Swift.Error {}
     
-    func get(from url: URL, completion: @escaping (HTTPClient.Result) -> Void) {
+    func get(from url: URL, completion: @escaping (Result) -> Void) {
         let urlRequest = URLRequest(url: url)
         
         session.dataTask(with: urlRequest) { data, response, error in
@@ -79,21 +81,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
         
         URLProtocolStub.stub(data: nil, response: nil, error: expectedError)
         
-        let exp = expectation(description: "Wait for completion")
-        sut.get(from: anyURL()) { result in
-            switch result {
-            case let .failure(receivedError as NSError):
-                XCTAssertEqual(receivedError.code, expectedError.code)
-                XCTAssertEqual(receivedError.domain, expectedError.domain)
-                
-            default:
-                XCTFail("Expected failure, got \(result) instead")
-            }
-            
-            exp.fulfill()
-        }
-        
-        wait(for: [exp], timeout: 1.0)
+        expect(sut, toCompleteWith: .failure(expectedError))
     }
     
     func test_get_deliversDataAndHTTPResponseOnSuccess() {
@@ -103,21 +91,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
         
         URLProtocolStub.stub(data: expectedData, response: expectedResponse, error: nil)
         
-        let exp = expectation(description: "Wait for completion")
-        sut.get(from: anyURL()) { result in
-            switch result {
-            case let .success((receivedData, receivedResponse)):
-                XCTAssertEqual(receivedData, expectedData)
-                XCTAssertEqual(receivedResponse.statusCode, expectedResponse.statusCode)
-                
-            default:
-                XCTFail("Expected success, got \(result) instead")
-            }
-            
-            exp.fulfill()
-        }
-        
-        wait(for: [exp], timeout: 1.0)
+        expect(sut, toCompleteWith: .success((expectedData, expectedResponse)))
     }
     
     // MARK: - Helpers
@@ -136,6 +110,33 @@ final class URLSessionHTTPClientTests: XCTestCase {
         trackForMemoryLeaks(sut, file: file, line: line)
         
         return sut
+    }
+    
+    private func expect(
+        _ sut: URLSessionHTTPClient,
+        toCompleteWith expectedResult: URLSessionHTTPClient.Result,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let exp = expectation(description: "Wait for completion")
+        sut.get(from: anyURL()) { receivedResult in
+            switch (receivedResult, expectedResult) {
+            case let (.success((receivedData, receivedResponse)), .success((expectedData, expectedResponse))):
+                XCTAssertEqual(receivedData, expectedData)
+                XCTAssertEqual(receivedResponse.statusCode, expectedResponse.statusCode)
+                
+            case let (.failure(receivedError as NSError), .failure(expectedError as NSError)):
+                XCTAssertEqual(receivedError.code, expectedError.code)
+                XCTAssertEqual(receivedError.domain, expectedError.domain)
+                
+            default:
+                XCTFail("Expected \(expectedResult), got \(receivedResult) instead")
+            }
+            
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1.0)
     }
     
     private func expect(
