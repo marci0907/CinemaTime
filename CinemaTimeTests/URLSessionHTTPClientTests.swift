@@ -33,23 +33,15 @@ final class URLSessionHTTPClientTests: XCTestCase {
         URLProtocolStub.reset()
     }
     
-    func test_init_doesNotExecuteRequest() {
-        let config = URLSessionConfiguration.ephemeral
-        config.protocolClasses = [URLProtocolStub.self]
-        
-        let session = URLSession(configuration: config)
-        _ = URLSessionHTTPClient(session: session)
+    func test_init_doesNotRequestDataFromURL() {
+        _ = makeSUT()
         
         XCTAssertTrue(URLProtocolStub.shared?.receivedURLs.isEmpty == true)
     }
     
     func test_get_requestsDataFromURL() {
         let url = URL(string: "https://any-url.com")!
-        let config = URLSessionConfiguration.ephemeral
-        config.protocolClasses = [URLProtocolStub.self]
-        
-        let session = URLSession(configuration: config)
-        let sut = URLSessionHTTPClient(session: session)
+        let sut = makeSUT(with: url)
         
         let exp = expectation(description: "Wait for completion")
         sut.get(from: url) { _ in
@@ -62,6 +54,18 @@ final class URLSessionHTTPClientTests: XCTestCase {
     }
     
     // MARK: - Helpers
+    
+    private func makeSUT(with url: URL = URL(string: "https://any-url.com")!) -> URLSessionHTTPClient {
+        let config = URLSessionConfiguration.ephemeral
+        config.protocolClasses = [URLProtocolStub.self]
+        
+        let session = URLSession(configuration: config)
+        let sut = URLSessionHTTPClient(session: session)
+        
+        trackForMemoryLeaks(sut)
+        
+        return sut
+    }
     
     private class URLProtocolStub: URLProtocol {
         static var shared: URLProtocolStub?
