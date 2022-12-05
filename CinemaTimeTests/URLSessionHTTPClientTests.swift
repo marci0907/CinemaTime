@@ -94,6 +94,16 @@ final class URLSessionHTTPClientTests: XCTestCase {
         expect(sut, toCompleteWith: .success((expectedData, expectedResponse)))
     }
     
+    func test_get_deliversHTTPResponseOnSuccessWithEmptyData() {
+        let emptyData = Data()
+        let expectedResponse = anyHTTPURLResponse()
+        let sut = makeSUT()
+        
+        URLProtocolStub.stub(data: emptyData, response: expectedResponse, error: nil)
+        
+        expect(sut, toCompleteWith: .success((emptyData, expectedResponse)))
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(
