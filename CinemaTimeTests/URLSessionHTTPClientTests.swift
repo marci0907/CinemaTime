@@ -225,6 +225,10 @@ final class URLSessionHTTPClientTests: XCTestCase {
             return true
         }
         
+        override class func canonicalRequest(for request: URLRequest) -> URLRequest {
+            return request
+        }
+        
         override func startLoading() {
             receivedURLs.append(request.url!)
             
@@ -244,10 +248,6 @@ final class URLSessionHTTPClientTests: XCTestCase {
         }
         
         override func stopLoading() {}
-        
-        override class func canonicalRequest(for request: URLRequest) -> URLRequest {
-            return request
-        }
         
         static func reset() {
             shared?.receivedURLs = []
