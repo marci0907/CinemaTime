@@ -93,10 +93,9 @@
 		4B0B6903293A228E00F6BFCE /* CinemaTimeTests */ = {
 			isa = PBXGroup;
 			children = (
-				4B0B6924293E364100F6BFCE /* Helpers */,
 				4B0B6913293A2AB300F6BFCE /* RemoteMovieLoaderTests.swift */,
-				4B0B691D293A625800F6BFCE /* XCTestCase+MemoryLeakTracking.swift */,
 				4B0B6922293DF2F000F6BFCE /* URLSessionHTTPClientTests.swift */,
+				4B0B6924293E364100F6BFCE /* Helpers */,
 			);
 			path = CinemaTimeTests;
 			sourceTree = "<group>";
@@ -134,6 +133,7 @@
 			isa = PBXGroup;
 			children = (
 				4B0B6925293E364A00F6BFCE /* SharedHelpers.swift */,
+				4B0B691D293A625800F6BFCE /* XCTestCase+MemoryLeakTracking.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
