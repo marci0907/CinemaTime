@@ -3,7 +3,7 @@
 import XCTest
 import CinemaTime
 
-final class URLSessionHTTPClient {
+final class URLSessionHTTPClient: HTTPClient {
     private let session: URLSession
     
     typealias Result = HTTPClient.Result
