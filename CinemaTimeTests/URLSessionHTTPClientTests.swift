@@ -65,14 +65,14 @@ final class URLSessionHTTPClientTests: XCTestCase {
         let sut = makeSUT()
         
         expect(sut, toCompleteWithErrorForInvalidRepresentationWithData: nil, response: nil, error: nil)
-        expect(sut, toCompleteWithErrorForInvalidRepresentationWithData: anyData(), response: anyURLResponse(), error: anyNSError())
+        expect(sut, toCompleteWithErrorForInvalidRepresentationWithData: anyData(), response: nonHTTPURLResponse(), error: anyNSError())
         expect(sut, toCompleteWithErrorForInvalidRepresentationWithData: anyData(), response: anyHTTPURLResponse(), error: anyNSError())
         expect(sut, toCompleteWithErrorForInvalidRepresentationWithData: nil, response: anyHTTPURLResponse(), error: anyNSError())
-        expect(sut, toCompleteWithErrorForInvalidRepresentationWithData: nil, response: anyURLResponse(), error: nil)
-        expect(sut, toCompleteWithErrorForInvalidRepresentationWithData: nil, response: anyURLResponse(), error: anyNSError())
+        expect(sut, toCompleteWithErrorForInvalidRepresentationWithData: nil, response: nonHTTPURLResponse(), error: nil)
+        expect(sut, toCompleteWithErrorForInvalidRepresentationWithData: nil, response: nonHTTPURLResponse(), error: anyNSError())
         expect(sut, toCompleteWithErrorForInvalidRepresentationWithData: anyData(), response: nil, error: nil)
         expect(sut, toCompleteWithErrorForInvalidRepresentationWithData: anyData(), response: nil, error: anyNSError())
-        expect(sut, toCompleteWithErrorForInvalidRepresentationWithData: anyData(), response: anyURLResponse(), error: nil)
+        expect(sut, toCompleteWithErrorForInvalidRepresentationWithData: anyData(), response: nonHTTPURLResponse(), error: nil)
     }
     
     func test_get_deliversErrorOnFailure() {
@@ -175,24 +175,12 @@ final class URLSessionHTTPClientTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
-    private func anyURL() -> URL {
-        URL(string: "https://any-url.com")!
-    }
-    
-    private func anyData() -> Data {
-        Data("".utf8)
-    }
-    
     private func anyHTTPURLResponse() -> HTTPURLResponse {
         HTTPURLResponse()
     }
     
-    private func anyURLResponse() -> URLResponse {
+    private func nonHTTPURLResponse() -> URLResponse {
         URLResponse()
-    }
-    
-    private func anyNSError() -> Error {
-        NSError(domain: "a domain", code: 0)
     }
     
     private func registerStubForTests() {

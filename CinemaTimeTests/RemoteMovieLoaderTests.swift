@@ -12,7 +12,7 @@ final class RemoteMovieLoaderTests: XCTestCase {
     }
     
     func test_load_requestsDataFromURL() {
-        let url = URL(string: "https://any-url.com")!
+        let url = anyURL()
         let (sut , client) = makeSUT(with: url)
         
         sut.load { _ in }
@@ -21,7 +21,7 @@ final class RemoteMovieLoaderTests: XCTestCase {
     }
     
     func test_loadTwice_requestsDataTwiceFromURL() {
-        let url = URL(string: "https://any-url.com")!
+        let url = anyURL()
         let (sut , client) = makeSUT(with: url)
         
         sut.load { _ in }
@@ -32,7 +32,7 @@ final class RemoteMovieLoaderTests: XCTestCase {
     }
     
     func test_load_deliversErrorOnClientError() {
-        let expectedError = NSError(domain: "a domain", code: 0)
+        let expectedError = anyNSError()
         let (sut, client) = makeSUT()
         
         expect(sut, toCompleteWith: .failure(expectedError), when: {
@@ -44,7 +44,7 @@ final class RemoteMovieLoaderTests: XCTestCase {
         let (sut, client) = makeSUT()
         
         expect(sut, toCompleteWith: .failure(RemoteMovieLoader.Error.invalidData), when: {
-            client.complete(with: Data("".utf8), statusCode: 200)
+            client.complete(with: anyData(), statusCode: 200)
         })
     }
     
@@ -98,7 +98,7 @@ final class RemoteMovieLoaderTests: XCTestCase {
     
     func test_load_doesNotDeliverResultAfterSUTHasBeenDeallocated() {
         let client = HTTPClientSpy()
-        var sut: RemoteMovieLoader? = RemoteMovieLoader(url: URL(string: "https://any-url.com")!, client: client)
+        var sut: RemoteMovieLoader? = RemoteMovieLoader(url: anyURL(), client: client)
         
         var deliveredResult: RemoteMovieLoader.Result?
         sut?.load(completion: { deliveredResult = $0 })
