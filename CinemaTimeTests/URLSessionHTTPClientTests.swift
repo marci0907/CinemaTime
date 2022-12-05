@@ -39,12 +39,32 @@ final class URLSessionHTTPClientTests: XCTestCase {
     }
     
     func test_get_requestsDataFromURL() {
-        let url = URL(string: "https://any-url.com")!
+        let url = anyURL()
         let sut = makeSUT(with: url)
         
         let exp = expectation(description: "Wait for completion")
         sut.get(from: url) { _ in
             XCTAssertEqual(URLProtocolStub.shared?.receivedURLs, [url])
+            
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1.0)
+    }
+    
+    func test_get_deliversErrorOnAnInvalidCaseRepresentation() {
+        let sut = makeSUT()
+        
+        URLProtocolStub.stub(data: nil, response: nil, error: nil)
+        
+        let exp = expectation(description: "Wait for completion")
+        sut.get(from: anyURL()) { result in
+            switch result {
+            case .failure: break
+                
+            default:
+                XCTFail("Expected failure, got \(result) instead")
+            }
             
             exp.fulfill()
         }
@@ -66,6 +86,10 @@ final class URLSessionHTTPClientTests: XCTestCase {
         return sut
     }
     
+    private func anyURL() -> URL {
+        URL(string: "https://any-url.com")!
+    }
+    
     private func registerStubForTests() {
         URLProtocol.registerClass(URLProtocolStub.self)
     }
@@ -76,7 +100,23 @@ final class URLSessionHTTPClientTests: XCTestCase {
     }
     
     private class URLProtocolStub: URLProtocol {
+        struct Stub {
+            let data: Data?
+            let response: URLResponse?
+            let error: Error?
+        }
+        
         static var shared: URLProtocolStub?
+        
+        private var _receivedURLs = [URL]()
+        private let queue = DispatchQueue(label: "\(URLProtocolStub.self)Queue")
+        
+        private(set) var stub: Stub?
+        
+        var receivedURLs: [URL] {
+            get { queue.sync { _receivedURLs }}
+            set { queue.sync { _receivedURLs = newValue }}
+        }
         
         override init(request: URLRequest, cachedResponse: CachedURLResponse?, client: URLProtocolClient?) {
             super.init(request: request, cachedResponse: cachedResponse, client: client)
@@ -84,12 +124,8 @@ final class URLSessionHTTPClientTests: XCTestCase {
             URLProtocolStub.shared = self
         }
         
-        private var _receivedURLs = [URL]()
-        private let queue = DispatchQueue(label: "\(URLProtocolStub.self)Queue")
-        
-        var receivedURLs: [URL] {
-            get { queue.sync { _receivedURLs }}
-            set { queue.sync { _receivedURLs = newValue }}
+        static func stub(data: Data?, response: URLResponse?, error: Error?) {
+            shared?.stub = Stub(data: data, response: response, error: error)
         }
         
         override class func canInit(with request: URLRequest) -> Bool {
@@ -98,6 +134,18 @@ final class URLSessionHTTPClientTests: XCTestCase {
         
         override func startLoading() {
             receivedURLs.append(request.url!)
+            
+            if let data = stub?.data {
+                client?.urlProtocol(self, didLoad: data)
+            }
+            
+            if let response = stub?.response {
+                client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+            }
+            
+            if let error = stub?.error {
+                client?.urlProtocol(self, didFailWithError: error)
+            }
             
             client?.urlProtocolDidFinishLoading(self)
         }
