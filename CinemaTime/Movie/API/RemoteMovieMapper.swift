@@ -11,7 +11,7 @@ final class RemoteMovieMapper {
             let title: String?
             let posterPath: String?
             let overview: String?
-            let releaseDate: String?
+            let releaseDate: Date?
             let voteAverage: Double?
             
             enum CodingKeys: String, CodingKey {
@@ -25,10 +25,7 @@ final class RemoteMovieMapper {
         }
         
         var movies: [Movie] {
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyy-MM-dd"
-            
-            return results.compactMap { remoteMovie -> Movie? in
+            results.compactMap { remoteMovie -> Movie? in
                 guard let id = remoteMovie.id, let title = remoteMovie.title else { return nil }
                 
                 return Movie(
@@ -36,7 +33,7 @@ final class RemoteMovieMapper {
                     title: title,
                     imagePath: remoteMovie.posterPath,
                     overview: remoteMovie.overview,
-                    releaseDate: dateFormatter.date(from: remoteMovie.releaseDate),
+                    releaseDate: remoteMovie.releaseDate,
                     rating: remoteMovie.voteAverage
                 )
             }
@@ -44,11 +41,23 @@ final class RemoteMovieMapper {
     }
     
     static func map(_ data: Data, response: HTTPURLResponse) throws -> [Movie] {
-        guard response.statusCode == 200, let root = try? JSONDecoder().decode(Root.self, from: data) else {
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .movieDB
+        
+        guard response.statusCode == 200, let root = try? decoder.decode(Root.self, from: data) else {
             throw RemoteMovieLoader.Error.invalidData
         }
         
         return root.movies
+    }
+}
+
+private extension JSONDecoder.DateDecodingStrategy {
+    static var movieDB: JSONDecoder.DateDecodingStrategy {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        
+        return formatted(dateFormatter)
     }
 }
 
