@@ -31,45 +31,11 @@ public final class RemoteMovieLoader: MovieLoader {
         }
     }
     
-    private struct Root: Decodable {
-        let results: [RemoteMovie]
-    }
-    
     private static func map(_ data: Data, response: HTTPURLResponse) -> Result {
         do {
-            let remoteMovies = try RemoteMovieMapper.map(data, response: response)
-            return .success(remoteMovies.toModels())
+            return .success(try RemoteMovieMapper.map(data, response: response))
         } catch {
             return .failure(error)
         }
-    }
-}
-
-private extension Array where Element == RemoteMovie {
-    func toModels() -> [Movie] {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        
-        return compactMap { remoteMovie -> Movie? in
-            guard let id = remoteMovie.id, let title = remoteMovie.title else { return nil }
-            
-            return Movie(
-                id: id,
-                title: title,
-                imagePath: remoteMovie.posterPath,
-                overview: remoteMovie.overview,
-                releaseDate: dateFormatter.date(from: remoteMovie.releaseDate),
-                rating: remoteMovie.voteAverage
-            )
-        }
-    }
-}
-
-private extension DateFormatter {
-    func date(from string: String?) -> Date? {
-        guard let string = string else {
-            return nil
-        }
-        return date(from: string)
     }
 }
