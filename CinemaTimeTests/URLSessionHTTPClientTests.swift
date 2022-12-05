@@ -31,14 +31,9 @@ final class URLSessionHTTPClient: HTTPClient {
 
 final class URLSessionHTTPClientTests: XCTestCase {
     
-    override func setUp() {
-        super.setUp()
-        registerStubForTests()
-    }
-    
     override func tearDown() {
         super.tearDown()
-        unregisterStubAndReset()
+        URLProtocolStub.reset()
     }
     
     func test_init_doesNotRequestDataFromURL() {
@@ -181,15 +176,6 @@ final class URLSessionHTTPClientTests: XCTestCase {
     
     private func nonHTTPURLResponse() -> URLResponse {
         URLResponse()
-    }
-    
-    private func registerStubForTests() {
-        URLProtocol.registerClass(URLProtocolStub.self)
-    }
-    
-    private func unregisterStubAndReset() {
-        URLProtocol.unregisterClass(URLProtocolStub.self)
-        URLProtocolStub.reset()
     }
     
     private class URLProtocolStub: URLProtocol {
