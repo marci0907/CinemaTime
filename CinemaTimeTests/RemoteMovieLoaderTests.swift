@@ -83,6 +83,19 @@ final class RemoteMovieLoaderTests: XCTestCase {
         })
     }
     
+    func test_load_doesNotDeliverItemsWithoutIdOrTitleOn200HTTPURLResponse() {
+        let (sut, client) = makeSUT()
+        
+        let movie1 = makeItem(id: nil, title: "Some random movie", imagePath: "/1.jpg", overview: nil, releaseDate: nil, rating: 2.1)
+        let movie2 = makeItem(id: 2, title: "Black Adam", imagePath: "/2.jpg", overview: "Some overview", releaseDate: Date(timeIntervalSince1970: 1667948400), rating: 7.7)
+        let movie3 = makeItem(id: 3, title: nil, imagePath: "/3.jpg", overview: "Other overview", releaseDate: Date.now, rating: 1.1)
+        
+        let receivedData = makeJSON(from: [movie1.json, movie2.json, movie3.json])
+        expect(sut, toCompleteWith: .success([movie2.model]), when: {
+            client.complete(with: receivedData, statusCode: 200)
+        })
+    }
+    
     func test_load_doesNotDeliverResultAfterSUTHasBeenDeallocated() {
         let client = HTTPClientSpy()
         var sut: RemoteMovieLoader? = RemoteMovieLoader(url: URL(string: "https://any-url.com")!, client: client)
@@ -140,9 +153,9 @@ final class RemoteMovieLoaderTests: XCTestCase {
     }
     
     private func makeItem(
-        id: Int, title: String, imagePath: String? = nil, overview: String? = nil, releaseDate: Date? = nil, rating: Double? = nil
+        id: Int?, title: String?, imagePath: String? = nil, overview: String? = nil, releaseDate: Date? = nil, rating: Double? = nil
     ) -> (model: Movie, json: [String: Any]) {
-        let model = Movie(id: id, title: title, imagePath: imagePath, overview: overview, releaseDate: releaseDate, rating: rating)
+        let model = Movie(id: id ?? -1, title: title ?? "", imagePath: imagePath, overview: overview, releaseDate: releaseDate, rating: rating)
         
         var stringDate: String?
         if let releaseDate = releaseDate {
@@ -152,8 +165,8 @@ final class RemoteMovieLoaderTests: XCTestCase {
         }
         
         let json: [String: Any] = [
-            "id": id,
-            "title": title,
+            "id": id as Any,
+            "title": title as Any,
             "poster_path": imagePath as Any,
             "overview": overview as Any,
             "release_date": stringDate as Any,
