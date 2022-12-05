@@ -56,6 +56,7 @@ private extension JSONDecoder.DateDecodingStrategy {
     static var movieDB: JSONDecoder.DateDecodingStrategy {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
+        dateFormatter.timeZone = TimeZone(identifier: "UTC")
         
         return formatted(dateFormatter)
     }
