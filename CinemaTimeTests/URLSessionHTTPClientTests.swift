@@ -132,15 +132,15 @@ final class URLSessionHTTPClientTests: XCTestCase {
         sut.get(from: anyURL()) { receivedResult in
             switch (receivedResult, expectedResult) {
             case let (.success((receivedData, receivedResponse)), .success((expectedData, expectedResponse))):
-                XCTAssertEqual(receivedData, expectedData)
-                XCTAssertEqual(receivedResponse.statusCode, expectedResponse.statusCode)
+                XCTAssertEqual(receivedData, expectedData, file: file, line: line)
+                XCTAssertEqual(receivedResponse.statusCode, expectedResponse.statusCode, file: file, line: line)
                 
             case let (.failure(receivedError as NSError), .failure(expectedError as NSError)):
-                XCTAssertEqual(receivedError.code, expectedError.code)
-                XCTAssertEqual(receivedError.domain, expectedError.domain)
+                XCTAssertEqual(receivedError.code, expectedError.code, file: file, line: line)
+                XCTAssertEqual(receivedError.domain, expectedError.domain, file: file, line: line)
                 
             default:
-                XCTFail("Expected \(expectedResult), got \(receivedResult) instead")
+                XCTFail("Expected \(expectedResult), got \(receivedResult) instead", file: file, line: line)
             }
             
             exp.fulfill()
@@ -251,7 +251,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
         
         static func reset() {
             shared?.receivedURLs = []
-            URLProtocolStub.stub = nil
+            stub = nil
         }
     }
 }
