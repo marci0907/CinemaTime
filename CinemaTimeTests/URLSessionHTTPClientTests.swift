@@ -52,10 +52,21 @@ final class URLSessionHTTPClientTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
-    func test_get_deliversErrorOnAnInvalidCaseRepresentation() {
+    func test_get_deliversErrorOnAllInvalidCaseRepresentations() {
         let sut = makeSUT()
         
         expect(sut, toCompleteWithErrorForInvalidRepresentationWith: nil, response: nil, error: nil)
+        expect(sut, toCompleteWithErrorForInvalidRepresentationWith: anyData(), response: anyURLResponse(), error: anyNSError())
+        expect(sut, toCompleteWithErrorForInvalidRepresentationWith: anyData(), response: anyHTTPURLResponse(), error: anyNSError())
+        expect(sut, toCompleteWithErrorForInvalidRepresentationWith: nil, response: anyHTTPURLResponse(), error: anyNSError())
+        expect(sut, toCompleteWithErrorForInvalidRepresentationWith: nil, response: anyURLResponse(), error: nil)
+        expect(sut, toCompleteWithErrorForInvalidRepresentationWith: nil, response: anyURLResponse(), error: anyNSError())
+        expect(sut, toCompleteWithErrorForInvalidRepresentationWith: anyData(), response: nil, error: nil)
+        expect(sut, toCompleteWithErrorForInvalidRepresentationWith: anyData(), response: nil, error: anyNSError())
+        expect(sut, toCompleteWithErrorForInvalidRepresentationWith: anyData(), response: anyURLResponse(), error: nil)
+        
+        // TODO: check this case
+        expect(sut, toCompleteWithErrorForInvalidRepresentationWith: nil, response: anyHTTPURLResponse(), error: nil)
     }
     
     // MARK: - Helpers
@@ -89,7 +100,8 @@ final class URLSessionHTTPClientTests: XCTestCase {
         let exp = expectation(description: "Wait for completion")
         sut.get(from: anyURL()) { result in
             switch result {
-            case .failure: break
+            case let .failure(error):
+                XCTAssertNotNil(error, file: file, line: line)
                 
             default:
                 XCTFail("Expected failure, got \(result) instead", file: file, line: line)
@@ -103,6 +115,22 @@ final class URLSessionHTTPClientTests: XCTestCase {
     
     private func anyURL() -> URL {
         URL(string: "https://any-url.com")!
+    }
+    
+    private func anyData() -> Data {
+        Data("".utf8)
+    }
+    
+    private func anyHTTPURLResponse() -> HTTPURLResponse {
+        HTTPURLResponse()
+    }
+    
+    private func anyURLResponse() -> URLResponse {
+        URLResponse()
+    }
+    
+    private func anyNSError() -> Error {
+        NSError(domain: "a domain", code: 0)
     }
     
     private func registerStubForTests() {
