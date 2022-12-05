@@ -3,32 +3,6 @@
 import XCTest
 import CinemaTime
 
-final class URLSessionHTTPClient: HTTPClient {
-    private let session: URLSession
-    
-    typealias Result = HTTPClient.Result
-    
-    init(session: URLSession) {
-        self.session = session
-    }
-    
-    private struct UnknownCaseRepresentation: Swift.Error {}
-    
-    func get(from url: URL, completion: @escaping (Result) -> Void) {
-        let urlRequest = URLRequest(url: url)
-        
-        session.dataTask(with: urlRequest) { data, response, error in
-            if let error = error {
-                completion(.failure(error))
-            } else if let data = data, let response = response as? HTTPURLResponse {
-                completion(.success((data, response)))
-            } else {
-                completion(.failure(UnknownCaseRepresentation()))
-            }
-        }.resume()
-    }
-}
-
 final class URLSessionHTTPClientTests: XCTestCase {
     
     override func tearDown() {
