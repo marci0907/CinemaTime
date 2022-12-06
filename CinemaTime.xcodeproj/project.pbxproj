@@ -20,6 +20,7 @@
 		4B0B6928293E3ABF00F6BFCE /* URLSessionHTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0B6927293E3ABF00F6BFCE /* URLSessionHTTPClient.swift */; };
 		4B0B6931293E8DDC00F6BFCE /* CinemaTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B0B68F7293A228D00F6BFCE /* CinemaTime.framework */; };
 		4B0B6938293F4B5D00F6BFCE /* CinemaTimeAPIEndToEndTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0B6937293F4B5D00F6BFCE /* CinemaTimeAPIEndToEndTests.swift */; };
+		4B0B693B293F545A00F6BFCE /* Secrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0B693A293F545A00F6BFCE /* Secrets.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +55,7 @@
 		4B0B6927293E3ABF00F6BFCE /* URLSessionHTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionHTTPClient.swift; sourceTree = "<group>"; };
 		4B0B692D293E8DDC00F6BFCE /* CinemaTimeAPIEndToEndTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CinemaTimeAPIEndToEndTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B0B6937293F4B5D00F6BFCE /* CinemaTimeAPIEndToEndTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CinemaTimeAPIEndToEndTests.swift; sourceTree = "<group>"; };
+		4B0B693A293F545A00F6BFCE /* Secrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +108,7 @@
 		4B0B68F9293A228D00F6BFCE /* CinemaTime */ = {
 			isa = PBXGroup;
 			children = (
+				4B0B6939293F544400F6BFCE /* Secrets */,
 				4B0B691F293A628100F6BFCE /* Movie */,
 			);
 			path = CinemaTime;
@@ -165,6 +168,14 @@
 				4B0B6937293F4B5D00F6BFCE /* CinemaTimeAPIEndToEndTests.swift */,
 			);
 			path = CinemaTimeAPIEndToEndTests;
+			sourceTree = "<group>";
+		};
+		4B0B6939293F544400F6BFCE /* Secrets */ = {
+			isa = PBXGroup;
+			children = (
+				4B0B693A293F545A00F6BFCE /* Secrets.swift */,
+			);
+			path = Secrets;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -309,6 +320,7 @@
 			files = (
 				4B0B6916293A618F00F6BFCE /* RemoteMovieLoader.swift in Sources */,
 				4B0B6910293A242C00F6BFCE /* Movie.swift in Sources */,
+				4B0B693B293F545A00F6BFCE /* Secrets.swift in Sources */,
 				4B0B6918293A61B500F6BFCE /* HTTPClient.swift in Sources */,
 				4B0B6912293A254300F6BFCE /* MovieLoader.swift in Sources */,
 				4B0B691C293A61EE00F6BFCE /* RemoteMovieMapper.swift in Sources */,
