@@ -3,7 +3,7 @@
 import XCTest
 import CinemaTime
 
-final class AuthenticatedHTTPClientDecorator {
+final class AuthenticatedHTTPClientDecorator: HTTPClient {
     private let decoratee: HTTPClient
     private let apiKey: String
     
