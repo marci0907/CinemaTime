@@ -8,7 +8,7 @@ class HTTPClientSpy: HTTPClient {
     
     var requestedURLs: [URL] { receivedMessages.map { $0.url } }
     
-    private(set) var receivedMessages = [Message]()
+    private var receivedMessages = [Message]()
     
     func get(from url: URL, completion: @escaping (HTTPClient.Result) -> Void) {
         receivedMessages.append((url, completion))

@@ -15,7 +15,14 @@ final class AuthenticatedHTTPClientDecorator {
     func get(from url: URL, completion: @escaping (HTTPClient.Result) -> Void) {
         let signedURL = signedURL(from: url)
         
-        decoratee.get(from: signedURL) { _ in }
+        decoratee.get(from: signedURL) { result in
+            switch result {
+            case let .failure(error):
+                completion(.failure(error))
+            
+            default: break
+            }
+        }
     }
     
     private func signedURL(from url: URL) -> URL {
@@ -45,6 +52,15 @@ final class AuthenticatedHTTPClientDecoratorTests: XCTestCase {
         XCTAssertEqual(client.requestedURLs, [signedURL])
     }
     
+    func test_get_deliversErrorOnClientError() {
+        let error = anyNSError()
+        let (sut, client) = makeSUT()
+        
+        expect(sut, toCompleteWith: .failure(error), when: {
+            client.complete(with: error)
+        })
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(
@@ -57,6 +73,36 @@ final class AuthenticatedHTTPClientDecoratorTests: XCTestCase {
         trackForMemoryLeaks(client, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
         return (sut, client)
+    }
+    
+    private func expect(
+        _ sut: AuthenticatedHTTPClientDecorator,
+        toCompleteWith expectedResult: HTTPClient.Result,
+        when action: @escaping () -> Void,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let exp = expectation(description: "Wait for completion")
+        sut.get(from: anyURL()) { receivedResult in
+            switch (receivedResult, expectedResult) {
+            case let (.success((receivedData, receivedResponse)), .success((expectedData, expectedResponse))):
+                XCTAssertEqual(receivedData, expectedData, file: file, line: line)
+                XCTAssertEqual(receivedResponse.statusCode, expectedResponse.statusCode, file: file, line: line)
+                
+            case let (.failure(receivedError as NSError), .failure(expectedError as NSError)):
+                XCTAssertEqual(receivedError.code, expectedError.code, file: file, line: line)
+                XCTAssertEqual(receivedError.domain, expectedError.domain, file: file, line: line)
+                
+            default:
+                XCTFail("Expected \(expectedResult), got \(receivedResult) instead", file: file, line: line)
+            }
+            
+            exp.fulfill()
+        }
+        
+        action()
+        
+        wait(for: [exp], timeout: 1.0)
     }
     
     private func signedURL(for url: URL, apiKey: String) -> URL {
