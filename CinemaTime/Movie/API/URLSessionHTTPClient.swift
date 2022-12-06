@@ -16,10 +16,11 @@ public final class URLSessionHTTPClient: HTTPClient {
     private struct UnknownCaseRepresentation: Swift.Error {}
     
     public func get(from url: URL, completion: @escaping (Result) -> Void) {
-        var urlComponents = URLComponents(string: url.absoluteString)!
-        urlComponents.queryItems = [URLQueryItem(name: "api_key", value: apiKey)]
-        
-        let urlRequest = URLRequest(url: urlComponents.url!)
+//        var urlComponents = URLComponents(string: url.absoluteString)!
+//        urlComponents.queryItems = [URLQueryItem(name: "api_key", value: apiKey)]
+//
+//        let urlRequest = URLRequest(url: urlComponents.url!)
+        let urlRequest = URLRequest(url: url)
         
         session.dataTask(with: urlRequest) { data, response, error in
             if let error = error {
