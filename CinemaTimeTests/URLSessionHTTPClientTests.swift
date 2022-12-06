@@ -3,17 +3,11 @@
 import XCTest
 import CinemaTime
 
-final class URLSessionHTTPClientTests: XCTestCase {
+final class URLSessionHTTPClientTests: XCTestCase, HTTPClientTest {
     
     override func tearDown() {
         super.tearDown()
         URLProtocolStub.reset()
-    }
-    
-    func test_init_doesNotRequestDataFromURL() {
-        _ = makeSUT()
-        
-        XCTAssertTrue(URLProtocolStub.shared?.receivedURLs.isEmpty == true)
     }
     
     func test_get_requestsDataFromURL() {
@@ -92,34 +86,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
     }
     
     private func expect(
-        _ sut: URLSessionHTTPClient,
-        toCompleteWith expectedResult: URLSessionHTTPClient.Result,
-        file: StaticString = #file,
-        line: UInt = #line
-    ) {
-        let exp = expectation(description: "Wait for completion")
-        sut.get(from: anyURL()) { receivedResult in
-            switch (receivedResult, expectedResult) {
-            case let (.success((receivedData, receivedResponse)), .success((expectedData, expectedResponse))):
-                XCTAssertEqual(receivedData, expectedData, file: file, line: line)
-                XCTAssertEqual(receivedResponse.statusCode, expectedResponse.statusCode, file: file, line: line)
-                
-            case let (.failure(receivedError as NSError), .failure(expectedError as NSError)):
-                XCTAssertEqual(receivedError.code, expectedError.code, file: file, line: line)
-                XCTAssertEqual(receivedError.domain, expectedError.domain, file: file, line: line)
-                
-            default:
-                XCTFail("Expected \(expectedResult), got \(receivedResult) instead", file: file, line: line)
-            }
-            
-            exp.fulfill()
-        }
-        
-        wait(for: [exp], timeout: 1.0)
-    }
-    
-    private func expect(
-        _ sut: URLSessionHTTPClient,
+        _ sut: HTTPClient,
         toCompleteWithErrorForInvalidRepresentationWithData data: Data?,
         response: URLResponse?,
         error: Error?,
@@ -142,10 +109,6 @@ final class URLSessionHTTPClientTests: XCTestCase {
         }
         
         wait(for: [exp], timeout: 1.0)
-    }
-    
-    private func anyHTTPURLResponse() -> HTTPURLResponse {
-        HTTPURLResponse()
     }
     
     private func nonHTTPURLResponse() -> URLResponse {
@@ -202,9 +165,9 @@ final class URLSessionHTTPClientTests: XCTestCase {
             
             if let error = URLProtocolStub.stub?.error {
                 client?.urlProtocol(self, didFailWithError: error)
+            } else {
+                client?.urlProtocolDidFinishLoading(self)
             }
-            
-            client?.urlProtocolDidFinishLoading(self)
         }
         
         override func stopLoading() {}
