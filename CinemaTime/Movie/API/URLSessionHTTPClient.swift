@@ -4,13 +4,11 @@ import Foundation
 
 public final class URLSessionHTTPClient: HTTPClient {
     private let session: URLSession
-    private let apiKey: String
     
     public typealias Result = HTTPClient.Result
     
-    public init(session: URLSession, apiKey: String) {
+    public init(session: URLSession) {
         self.session = session
-        self.apiKey = apiKey
     }
     
     private struct UnknownCaseRepresentation: Swift.Error {}
