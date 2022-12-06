@@ -5,32 +5,61 @@ import CinemaTime
 
 final class AuthenticatedHTTPClientDecorator {
     private let decoratee: HTTPClient
+    private let apiKey: String
     
-    init(decoratee: HTTPClient) {
+    init(decoratee: HTTPClient, apiKey: String) {
         self.decoratee = decoratee
+        self.apiKey = apiKey
     }
     
     func get(from url: URL, completion: @escaping (HTTPClient.Result) -> Void) {
-        decoratee.get(from: url) { _ in }
+        let signedURL = signedURL(from: url)
+        
+        decoratee.get(from: signedURL) { _ in }
+    }
+    
+    private func signedURL(from url: URL) -> URL {
+        var urlComponents = URLComponents(string: url.absoluteString)!
+        urlComponents.queryItems = [URLQueryItem(name: "api_key", value: apiKey)]
+        
+        return urlComponents.url!
     }
 }
 
 final class AuthenticatedHTTPClientDecoratorTests: XCTestCase {
     
     func test_init_doesNotRequestDataFromURL() {
-        let client = HTTPClientSpy()
-        _ = AuthenticatedHTTPClientDecorator(decoratee: client)
+        let (_, client) = makeSUT()
         
         XCTAssertTrue(client.requestedURLs.isEmpty)
     }
     
-    func test_get_requestsDataFromURL() {
+    func test_get_signsRequestWithApiKey() {
+        let apiKey = "someApiKey"
         let url = anyURL()
-        let client = HTTPClientSpy()
-        let sut = AuthenticatedHTTPClientDecorator(decoratee: client)
+        let (sut, client) = makeSUT(with: apiKey)
         
         sut.get(from: url) { _ in }
         
-        XCTAssertEqual(client.requestedURLs, [url])
+        let signedURL = signedURL(for: url, apiKey: apiKey)
+        XCTAssertEqual(client.requestedURLs, [signedURL])
+    }
+    
+    // MARK: - Helpers
+    
+    private func makeSUT(
+        with apiKey: String = "someKey",
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> (sut: AuthenticatedHTTPClientDecorator, client: HTTPClientSpy) {
+        let client = HTTPClientSpy()
+        let sut = AuthenticatedHTTPClientDecorator(decoratee: client, apiKey: apiKey)
+        trackForMemoryLeaks(client, file: file, line: line)
+        trackForMemoryLeaks(sut, file: file, line: line)
+        return (sut, client)
+    }
+    
+    private func signedURL(for url: URL, apiKey: String) -> URL {
+        URL(string: url.absoluteString + "?api_key=\(apiKey)")!
     }
 }
