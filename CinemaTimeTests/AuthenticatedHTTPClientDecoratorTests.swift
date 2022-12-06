@@ -15,14 +15,7 @@ final class AuthenticatedHTTPClientDecorator {
     func get(from url: URL, completion: @escaping (HTTPClient.Result) -> Void) {
         let signedURL = signedURL(from: url)
         
-        decoratee.get(from: signedURL) { result in
-            switch result {
-            case let .failure(error):
-                completion(.failure(error))
-            
-            default: break
-            }
-        }
+        decoratee.get(from: signedURL, completion: completion)
     }
     
     private func signedURL(from url: URL) -> URL {
@@ -58,6 +51,16 @@ final class AuthenticatedHTTPClientDecoratorTests: XCTestCase {
         
         expect(sut, toCompleteWith: .failure(error), when: {
             client.complete(with: error)
+        })
+    }
+    
+    func test_get_deliversDataAndResponseOnClientSuccess() {
+        let data = anyData()
+        let response = anyHTTPURLResponse()
+        let (sut, client) = makeSUT()
+        
+        expect(sut, toCompleteWith: .success((data, response)), when: {
+            client.complete(with: data, statusCode: 200)
         })
     }
     

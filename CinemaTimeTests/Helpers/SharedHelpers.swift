@@ -13,3 +13,7 @@ func anyData() -> Data {
 func anyNSError() -> Error {
     NSError(domain: "a domain", code: 0)
 }
+
+func anyHTTPURLResponse() -> HTTPURLResponse {
+    HTTPURLResponse()
+}

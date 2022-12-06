@@ -139,10 +139,6 @@ final class URLSessionHTTPClientTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
-    private func anyHTTPURLResponse() -> HTTPURLResponse {
-        HTTPURLResponse()
-    }
-    
     private func nonHTTPURLResponse() -> URLResponse {
         URLResponse()
     }
