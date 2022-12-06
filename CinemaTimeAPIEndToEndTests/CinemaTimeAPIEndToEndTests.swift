@@ -28,24 +28,34 @@ final class CinemaTimeAPIEndToEndTests: XCTestCase {
     }
     
     func test_load_deliversNowPlayingMoviesWithValidAPIKey() {
-        let config = URLSessionConfiguration.ephemeral
-        let client = URLSessionHTTPClient(session: URLSession(configuration: config), apiKey: APIKey)
+        switch nowPlayingMoviesResult() {
+        case let .success(movies):
+            XCTAssertEqual(movies.count, 20)
+            
+        case let .failure(error):
+            XCTFail("Expected success, received \(error) instead")
+            
+        default:
+            XCTFail("Expected success, received no result instead")
+        }
+    }
+    
+    // MARK: - Helpers
+    
+    private func nowPlayingMoviesResult() -> Result<[Movie], Error>? {
+        let client = URLSessionHTTPClient(session: URLSession(configuration: .ephemeral), apiKey: APIKey)
         let url = URL(string: "https://api.themoviedb.org/3/movie/now_playing")!
         let remoteLoader = RemoteMovieLoader(url: url, client: client)
         
         let exp = expectation(description: "Wait for request completion")
-        remoteLoader.load { result in
-            switch result {
-            case let .success(movies):
-                XCTAssertEqual(movies.count, 20)
-                
-            default:
-                XCTFail("Expected success, received \(result)")
-            }
-            
+        var result: Result<[Movie], Error>?
+        remoteLoader.load { receivedResult in
+            result = receivedResult
             exp.fulfill()
         }
         
         wait(for: [exp], timeout: 5.0)
+        
+        return result
     }
 }
