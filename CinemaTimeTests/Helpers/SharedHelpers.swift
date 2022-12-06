@@ -15,5 +15,5 @@ func anyNSError() -> Error {
 }
 
 func anyHTTPURLResponse() -> HTTPURLResponse {
-    HTTPURLResponse()
+    HTTPURLResponse(url: anyURL(), statusCode: 200, httpVersion: nil, headerFields: nil)!
 }
