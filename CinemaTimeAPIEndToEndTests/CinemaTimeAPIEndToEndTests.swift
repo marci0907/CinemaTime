@@ -5,9 +5,9 @@ import CinemaTime
 
 final class CinemaTimeAPIEndToEndTests: XCTestCase {
     
-    func test_load_deliversInvalidDataErrorWithoutAPIKey() {
+    func test_load_deliversInvalidDataErrorWithInvalidAPIKey() {
         let config = URLSessionConfiguration.ephemeral
-        let client = URLSessionHTTPClient(session: URLSession(configuration: config), apiKey: "")
+        let client = URLSessionHTTPClient(session: URLSession(configuration: config), apiKey: "invalid api key")
         let url = URL(string: "https://api.themoviedb.org/3/movie/now_playing")!
         let remoteLoader = RemoteMovieLoader(url: url, client: client)
         
