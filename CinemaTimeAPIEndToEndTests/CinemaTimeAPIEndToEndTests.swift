@@ -6,7 +6,7 @@ import CinemaTime
 final class CinemaTimeAPIEndToEndTests: XCTestCase {
     
     func test_load_deliversInvalidDataErrorWithInvalidAPIKey() {
-        switch nowPlayingMoviesResult(with: .notAuthenticated) {
+        switch nowPlayingMoviesResult(with: "") {
         case let .failure(error as RemoteMovieLoader.Error):
             XCTAssertEqual(error, RemoteMovieLoader.Error.invalidData)
             
@@ -19,7 +19,7 @@ final class CinemaTimeAPIEndToEndTests: XCTestCase {
     }
     
     func test_load_deliversNowPlayingMoviesWithValidAPIKey() {
-        switch nowPlayingMoviesResult(with: .authenticated) {
+        switch nowPlayingMoviesResult(with: APIKey) {
         case let .success(movies):
             XCTAssertEqual(movies.count, 20)
             
@@ -33,10 +33,10 @@ final class CinemaTimeAPIEndToEndTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private func nowPlayingMoviesResult(with clientType: ClientType, file: StaticString = #file, line: UInt = #line) -> Result<[Movie], Error>? {
-        let client = client(forType: clientType)
-        let url = URL(string: "https://api.themoviedb.org/3/movie/now_playing")!
-        let remoteLoader = RemoteMovieLoader(url: url, client: client)
+    private func nowPlayingMoviesResult(with apiKey: String, file: StaticString = #file, line: UInt = #line) -> Result<[Movie], Error>? {
+        let remoteLoader = RemoteMovieLoader(
+            url: URL(string: "https://api.themoviedb.org/3/movie/now_playing")!,
+            client: client(with: apiKey))
         
         trackForMemoryLeaks(remoteLoader, file: file, line: line)
         
@@ -52,21 +52,11 @@ final class CinemaTimeAPIEndToEndTests: XCTestCase {
         return result
     }
     
-    private func client(forType type: ClientType, file: StaticString = #file, line: UInt = #line) -> HTTPClient {
+    private func client(with apiKey: String, file: StaticString = #file, line: UInt = #line) -> HTTPClient {
         let client = URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
+        let authenticatedClient = AuthenticatedHTTPClientDecorator(decoratee: client, apiKey: apiKey)
         trackForMemoryLeaks(client, file: file, line: line)
-        
-        if type == .authenticated {
-            let authenticatedClient = AuthenticatedHTTPClientDecorator(decoratee: client, apiKey: APIKey)
-            trackForMemoryLeaks(authenticatedClient, file: file, line: line)
-            return authenticatedClient
-        } else {
-            return client
-        }
-    }
-    
-    private enum ClientType {
-        case authenticated
-        case notAuthenticated
+        trackForMemoryLeaks(authenticatedClient, file: file, line: line)
+        return authenticatedClient
     }
 }
