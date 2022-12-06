@@ -71,7 +71,6 @@ final class URLSessionHTTPClientTests: XCTestCase, HTTPClientTest {
     
     private func makeSUT(
         with url: URL = URL(string: "https://any-url.com")!,
-        apiKey: String = "not an empty key",
         file: StaticString = #file,
         line: UInt = #line
     ) -> URLSessionHTTPClient {
@@ -79,7 +78,7 @@ final class URLSessionHTTPClientTests: XCTestCase, HTTPClientTest {
         config.protocolClasses = [URLProtocolStub.self]
         
         let session = URLSession(configuration: config)
-        let sut = URLSessionHTTPClient(session: session, apiKey: apiKey)
+        let sut = URLSessionHTTPClient(session: session)
         
         trackForMemoryLeaks(sut, file: file, line: line)
         
