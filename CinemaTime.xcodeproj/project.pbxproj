@@ -19,6 +19,7 @@
 		4B0B6926293E364A00F6BFCE /* SharedHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0B6925293E364A00F6BFCE /* SharedHelpers.swift */; };
 		4B0B6928293E3ABF00F6BFCE /* URLSessionHTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0B6927293E3ABF00F6BFCE /* URLSessionHTTPClient.swift */; };
 		4B0B6931293E8DDC00F6BFCE /* CinemaTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B0B68F7293A228D00F6BFCE /* CinemaTime.framework */; };
+		4B0B6938293F4B5D00F6BFCE /* CinemaTimeAPIEndToEndTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0B6937293F4B5D00F6BFCE /* CinemaTimeAPIEndToEndTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +53,7 @@
 		4B0B6925293E364A00F6BFCE /* SharedHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedHelpers.swift; sourceTree = "<group>"; };
 		4B0B6927293E3ABF00F6BFCE /* URLSessionHTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionHTTPClient.swift; sourceTree = "<group>"; };
 		4B0B692D293E8DDC00F6BFCE /* CinemaTimeAPIEndToEndTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CinemaTimeAPIEndToEndTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4B0B6937293F4B5D00F6BFCE /* CinemaTimeAPIEndToEndTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CinemaTimeAPIEndToEndTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -160,6 +162,7 @@
 		4B0B692E293E8DDC00F6BFCE /* CinemaTimeAPIEndToEndTests */ = {
 			isa = PBXGroup;
 			children = (
+				4B0B6937293F4B5D00F6BFCE /* CinemaTimeAPIEndToEndTests.swift */,
 			);
 			path = CinemaTimeAPIEndToEndTests;
 			sourceTree = "<group>";
@@ -251,6 +254,7 @@
 					};
 					4B0B692C293E8DDC00F6BFCE = {
 						CreatedOnToolsVersion = 14.1;
+						LastSwiftMigration = 1410;
 					};
 				};
 			};
@@ -327,6 +331,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B0B6938293F4B5D00F6BFCE /* CinemaTimeAPIEndToEndTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -576,14 +581,21 @@
 		4B0B6935293E8DDC00F6BFCE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 4733CLVUX5;
 				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.marcellmagyar.CinemaTimeAPIEndToEndTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -591,10 +603,16 @@
 		4B0B6936293E8DDC00F6BFCE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 4733CLVUX5;
 				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.marcellmagyar.CinemaTimeAPIEndToEndTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
