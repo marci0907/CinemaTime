@@ -3,29 +3,6 @@
 import XCTest
 import CinemaTime
 
-final class AuthenticatedHTTPClientDecorator: HTTPClient {
-    private let decoratee: HTTPClient
-    private let apiKey: String
-    
-    init(decoratee: HTTPClient, apiKey: String) {
-        self.decoratee = decoratee
-        self.apiKey = apiKey
-    }
-    
-    func get(from url: URL, completion: @escaping (HTTPClient.Result) -> Void) {
-        let signedURL = signedURL(from: url)
-        
-        decoratee.get(from: signedURL, completion: completion)
-    }
-    
-    private func signedURL(from url: URL) -> URL {
-        var urlComponents = URLComponents(string: url.absoluteString)!
-        urlComponents.queryItems = (urlComponents.queryItems ?? []) + [URLQueryItem(name: "api_key", value: apiKey)]
-        
-        return urlComponents.url!
-    }
-}
-
 final class AuthenticatedHTTPClientDecoratorTests: XCTestCase {
     
     func test_init_doesNotRequestDataFromURL() {
