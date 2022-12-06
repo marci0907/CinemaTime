@@ -20,7 +20,7 @@ final class AuthenticatedHTTPClientDecorator: HTTPClient {
     
     private func signedURL(from url: URL) -> URL {
         var urlComponents = URLComponents(string: url.absoluteString)!
-        urlComponents.queryItems = [URLQueryItem(name: "api_key", value: apiKey)]
+        urlComponents.queryItems = (urlComponents.queryItems ?? []) + [URLQueryItem(name: "api_key", value: apiKey)]
         
         return urlComponents.url!
     }
@@ -42,6 +42,17 @@ final class AuthenticatedHTTPClientDecoratorTests: XCTestCase {
         sut.get(from: url) { _ in }
         
         let signedURL = signedURL(for: url, apiKey: apiKey)
+        XCTAssertEqual(client.requestedURLs, [signedURL])
+    }
+    
+    func test_get_signsRequestWithApiKeyWhenOtherQueryItemsArePresent() {
+        let apiKey = "someApiKey"
+        let url = URL(string: "https://any-url.com?page=1")!
+        let (sut, client) = makeSUT(with: apiKey)
+        
+        sut.get(from: url) { _ in }
+        
+        let signedURL = signedURLWithQueries(for: url, apiKey: apiKey)
         XCTAssertEqual(client.requestedURLs, [signedURL])
     }
     
@@ -110,5 +121,9 @@ final class AuthenticatedHTTPClientDecoratorTests: XCTestCase {
     
     private func signedURL(for url: URL, apiKey: String) -> URL {
         URL(string: url.absoluteString + "?api_key=\(apiKey)")!
+    }
+    
+    private func signedURLWithQueries(for url: URL, apiKey: String) -> URL {
+        URL(string: url.absoluteString + "&api_key=\(apiKey)")!
     }
 }
