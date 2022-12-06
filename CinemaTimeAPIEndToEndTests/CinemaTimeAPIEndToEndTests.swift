@@ -42,10 +42,13 @@ final class CinemaTimeAPIEndToEndTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private func nowPlayingMoviesResult() -> Result<[Movie], Error>? {
+    private func nowPlayingMoviesResult(file: StaticString = #file, line: UInt = #line) -> Result<[Movie], Error>? {
         let client = URLSessionHTTPClient(session: URLSession(configuration: .ephemeral), apiKey: APIKey)
         let url = URL(string: "https://api.themoviedb.org/3/movie/now_playing")!
         let remoteLoader = RemoteMovieLoader(url: url, client: client)
+        
+        trackForMemoryLeaks(client, file: file, line: line)
+        trackForMemoryLeaks(remoteLoader, file: file, line: line)
         
         let exp = expectation(description: "Wait for request completion")
         var result: Result<[Movie], Error>?
