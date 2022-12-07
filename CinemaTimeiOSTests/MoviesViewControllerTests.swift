@@ -147,12 +147,6 @@ extension MoviesViewController: MoviesView {
 
 final class MoviesViewControllerTests: XCTestCase {
     
-    func test_viewDidLoad_startsRefreshing() {
-        let sut = makeSUT()
-        
-        XCTAssertTrue(sut.isShowingLoadingIndicator)
-    }
-    
     func test_userInitiatedRefresh_triggersMovieLoading() {
         let loader = LoaderSpy()
         let sut = makeSUT(with: loader)
