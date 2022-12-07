@@ -100,13 +100,22 @@ final class MoviesViewControllerTests: XCTestCase {
         XCTAssertEqual(loader.receivedMessages.count, 3)
     }
     
-    func test_loaderCompletion_stopsRefreshing() {
+    func test_viewDidLoad_loaderCompletionStopsRefreshing() {
         let loader = LoaderSpy()
         let sut = makeSUT(with: loader)
         
         loader.complete(with: anyNSError())
         
         XCTAssertFalse(sut.isLoading)
+    }
+    
+    func test_viewDidLoad_rendersZeroMoviesFromReceivedEmptyList() {
+        let loader = LoaderSpy()
+        let sut = makeSUT(with: loader)
+        
+        loader.complete(with: [])
+        
+        XCTAssertEqual(sut.renderedMoviesCount, 0)
     }
     
     // MARK: - Helpers
@@ -131,6 +140,10 @@ final class MoviesViewControllerTests: XCTestCase {
             receivedMessages.append(completion)
         }
         
+        func complete(with movies: [Movie], at index: Int = 0) {
+            receivedMessages[index](.success(movies))
+        }
+        
         func complete(with error: Error, at index: Int = 0) {
             receivedMessages[index](.failure(error))
         }
@@ -138,7 +151,7 @@ final class MoviesViewControllerTests: XCTestCase {
 }
 
 private extension MoviesViewController {
-    var renderedMovies: Int {
+    var renderedMoviesCount: Int {
         let ds = tableView.dataSource!
         return ds.tableView(tableView, numberOfRowsInSection: 0)
     }
