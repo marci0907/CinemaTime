@@ -15,17 +15,25 @@ final class MoviesViewController: UITableViewController {
 final class MoviesViewControllerTests: XCTestCase {
     
     func test_init_doesNotRenderMovies() {
-        let sut = MoviesViewController()
+        let sut = makeSUT()
         
         XCTAssertEqual(sut.renderedMovies, 0)
     }
     
     func test_viewDidLoad_startsLoadingMovies() {
-        let sut = MoviesViewController()
+        let sut = makeSUT()
         
         sut.loadViewIfNeeded()
         
         XCTAssertTrue(sut.isLoading)
+    }
+    
+    // MARK: - Helpers
+    
+    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> MoviesViewController {
+        let sut = MoviesViewController()
+        trackForMemoryLeaks(sut, file: file, line: line)
+        return sut
     }
 }
 
