@@ -3,12 +3,12 @@
 import Foundation
 
 public struct Movie: Equatable {
-    let id: Int
-    let title: String
-    let imagePath: String?
-    let overview: String?
-    let releaseDate: Date?
-    let rating: Double?
+    public let id: Int
+    public let title: String
+    public let imagePath: String?
+    public let overview: String?
+    public let releaseDate: Date?
+    public let rating: Double?
     
     public init(id: Int, title: String, imagePath: String?, overview: String?, releaseDate: Date?, rating: Double?) {
         self.id = id
