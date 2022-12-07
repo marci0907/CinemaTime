@@ -7,7 +7,7 @@
 		<key>CI.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>2</integer>
+			<integer>3</integer>
 		</dict>
 		<key>CinemaTime.xcscheme_^#shared#^_</key>
 		<dict>
@@ -15,6 +15,11 @@
 			<integer>0</integer>
 		</dict>
 		<key>CinemaTimeAPIEndToEndTests.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
+		<key>CinemaTimeiOS.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>1</integer>
@@ -28,6 +33,16 @@
 			<true/>
 		</dict>
 		<key>4B0B692C293E8DDC00F6BFCE</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>4B63094D2940BA7100C3FE91</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>4B6309542940BA7200C3FE91</key>
 		<dict>
 			<key>primary</key>
 			<true/>
