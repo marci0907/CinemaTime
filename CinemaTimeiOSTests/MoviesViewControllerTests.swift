@@ -8,8 +8,7 @@ import CinemaTimeiOS
 final class MoviesViewControllerTests: XCTestCase {
     
     func test_userInitiatedRefresh_triggersMovieLoading() {
-        let loader = LoaderSpy()
-        let sut = makeSUT(with: loader)
+        let (sut, loader) = makeSUT()
         XCTAssertEqual(loader.receivedMessages.count, 1)
         
         sut.triggerUserInitiatedRefresh()
@@ -20,8 +19,7 @@ final class MoviesViewControllerTests: XCTestCase {
     }
     
     func test_loaderCompletion_stopsRefreshing() {
-        let loader = LoaderSpy()
-        let sut = makeSUT(with: loader)
+        let (sut, loader) = makeSUT()
         XCTAssertTrue(sut.isShowingLoadingIndicator)
         
         loader.completeMovieLoading(with: [], at: 0)
@@ -40,16 +38,13 @@ final class MoviesViewControllerTests: XCTestCase {
     func test_loaderCompletion_rendersMoviesFromReceivedList() {
         let movie1 = makeMovie(title: "first title", overview: "first overview", rating: 1)
         let movie2 = makeMovie(title: "second title", overview: "second overview", rating: 2)
-        let loader = LoaderSpy()
-        
-        let sut = makeSUT(with: loader)
+        let (sut, loader) = makeSUT()
         assert(sut, isRendering: [])
         
         loader.completeMovieLoading(with: [movie2], at: 0)
         assert(sut, isRendering: [movie2])
         
         sut.triggerUserInitiatedRefresh()
-        
         loader.completeMovieLoading(with: [movie1, movie2], at: 1)
         assert(sut, isRendering: [movie1, movie2])
     }
@@ -57,14 +52,12 @@ final class MoviesViewControllerTests: XCTestCase {
     func test_loaderCompletion_rendersZeroMoviesAfterRenderingNonEmptyMovies() {
         let movie1 = makeMovie(title: "first title", overview: "first overview", rating: 1)
         let movie2 = makeMovie(title: "second title", overview: "second overview", rating: 2)
-        let loader = LoaderSpy()
-        let sut = makeSUT(with: loader)
+        let (sut, loader) = makeSUT()
         
         loader.completeMovieLoading(with: [movie1, movie2], at: 0)
         assert(sut, isRendering: [movie1, movie2])
         
         sut.triggerUserInitiatedRefresh()
-        
         loader.completeMovieLoading(with: [], at: 1)
         assert(sut, isRendering: [])
     }
@@ -72,26 +65,25 @@ final class MoviesViewControllerTests: XCTestCase {
     func test_loaderError_doesNotAlterPreviouslyLoadedMovies() {
         let movie1 = makeMovie(title: "first title", overview: "first overview", rating: 1)
         let movie2 = makeMovie(title: "second title", overview: "second overview", rating: 2)
-        let loader = LoaderSpy()
-        
-        let sut = makeSUT(with: loader)
+        let (sut, loader) = makeSUT()
         
         loader.completeMovieLoading(with: [movie1, movie2], at: 0)
         assert(sut, isRendering: [movie1, movie2])
         
         sut.triggerUserInitiatedRefresh()
-        
         loader.completeMovieLoadingWithError(at: 1)
         assert(sut, isRendering: [movie1, movie2])
     }
     
     // MARK: - Helpers
     
-    private func makeSUT(with loader: MovieLoader = LoaderSpy(), file: StaticString = #file, line: UInt = #line) -> MoviesViewController {
+    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (MoviesViewController, LoaderSpy) {
+        let loader = LoaderSpy()
         let sut = MoviesUIComposer.viewController(loader: loader)
-        sut.loadViewIfNeeded()
+        trackForMemoryLeaks(loader, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
-        return sut
+        sut.loadViewIfNeeded()
+        return (sut, loader)
     }
     
     private func assert(_ sut: MoviesViewController, isRendering movies: [Movie], file: StaticString = #file, line: UInt = #line) {
