@@ -55,7 +55,6 @@ final class MoviesViewControllerTests: XCTestCase {
         let movie1 = makeMovie(title: "first title", overview: "first overview", rating: 1)
         let movie2 = makeMovie(title: "second title", overview: "second overview", rating: 2)
         let loader = LoaderSpy()
-        
         let sut = makeSUT(with: loader)
         
         loader.completeMovieLoading(with: [movie1, movie2], at: 0)
@@ -65,6 +64,22 @@ final class MoviesViewControllerTests: XCTestCase {
         
         loader.completeMovieLoading(with: [], at: 1)
         assert(sut, isRendering: [])
+    }
+    
+    func test_loaderError_doesNotAlterPreviouslyLoadedMovies() {
+        let movie1 = makeMovie(title: "first title", overview: "first overview", rating: 1)
+        let movie2 = makeMovie(title: "second title", overview: "second overview", rating: 2)
+        let loader = LoaderSpy()
+        
+        let sut = makeSUT(with: loader)
+        
+        loader.completeMovieLoading(with: [movie1, movie2], at: 0)
+        assert(sut, isRendering: [movie1, movie2])
+        
+        sut.triggerUserInitiatedRefresh()
+        
+        loader.completeMovieLoadingWithError(at: 1)
+        assert(sut, isRendering: [movie1, movie2])
     }
     
     // MARK: - Helpers
