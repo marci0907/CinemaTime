@@ -38,11 +38,16 @@ protocol MoviesLoaderView {
     func display(_ viewModel: LoadingViewModel)
 }
 
-final class MoviesRefreshController: MoviesLoaderView {
+final class MoviesRefreshController: NSObject, MoviesLoaderView {
     var presenter: MoviesPresenter?
     
-    let view = UIRefreshControl()
+    lazy var view: UIRefreshControl = {
+        let view = UIRefreshControl()
+        view.addTarget(self, action: #selector(refresh), for: .valueChanged)
+        return view
+    }()
     
+    @objc
     func refresh() {
         presenter?.load()
     }
@@ -88,6 +93,18 @@ final class MoviesViewControllerTests: XCTestCase {
         XCTAssertEqual(loader.receivedMessages.count, 1)
     }
     
+    func test_userInitiatedRefresh_triggersMovieLoading() {
+        let loader = LoaderSpy()
+        let sut = makeSUT(with: loader)
+        XCTAssertEqual(loader.receivedMessages.count, 1)
+        
+        sut.triggerUserInitiatedRefresh()
+        XCTAssertEqual(loader.receivedMessages.count, 2)
+        
+        sut.triggerUserInitiatedRefresh()
+        XCTAssertEqual(loader.receivedMessages.count, 3)
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(with loader: MovieLoader = LoaderSpy(), file: StaticString = #file, line: UInt = #line) -> MoviesViewController {
@@ -116,5 +133,19 @@ private extension MoviesViewController {
     
     var isLoading: Bool {
         return refreshControl?.isRefreshing ?? false
+    }
+    
+    func triggerUserInitiatedRefresh() {
+        refreshControl?.triggerRefresh()
+    }
+}
+
+private extension UIRefreshControl {
+    func triggerRefresh() {
+        allTargets.forEach { target in
+            actions(forTarget: target, forControlEvent: .valueChanged)?.forEach { action in
+                (target as NSObject).perform(Selector(action))
+            }
+        }
     }
 }
