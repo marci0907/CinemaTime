@@ -86,13 +86,6 @@ final class MoviesViewControllerTests: XCTestCase {
         XCTAssertTrue(sut.isLoading)
     }
     
-    func test_viewDidLoad_startsLoadingMovies() {
-        let loader = LoaderSpy()
-        _ = makeSUT(with: loader)
-        
-        XCTAssertEqual(loader.receivedMessages.count, 1)
-    }
-    
     func test_userInitiatedRefresh_triggersMovieLoading() {
         let loader = LoaderSpy()
         let sut = makeSUT(with: loader)
