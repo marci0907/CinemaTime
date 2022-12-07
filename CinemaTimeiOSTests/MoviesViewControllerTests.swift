@@ -12,9 +12,27 @@ final class WeakRefProxy<T: AnyObject> {
     }
 }
 
-extension WeakRefProxy: MoviesView where T: MoviesView {
-    func display(_ viewModel: MoviesViewModel) {
+extension WeakRefProxy: MoviesLoadingView where T: MoviesLoadingView {
+    func display(_ viewModel: MoviesLoadingViewModel) {
         object?.display(viewModel)
+    }
+}
+
+final class MovieCellControllerAdapter: MoviesView {
+    private weak var controller: MoviesViewController?
+    
+    init(controller: MoviesViewController) {
+        self.controller = controller
+    }
+    
+    func display(_ viewModel: MoviesViewModel) {
+        controller?.cellControllers = viewModel.movies.map {
+            let cellController = MovieCellController()
+            cellController.presenter = MovieCellPresenter(
+                movie: $0,
+                movieCellView: cellController)
+            return cellController
+        }
     }
 }
 
@@ -24,20 +42,22 @@ final class MoviesUIComposer {
     static func viewController(loader: MovieLoader) -> MoviesViewController {
         let refreshController = MoviesRefreshController()
         let viewController = MoviesViewController(refreshController: refreshController)
-        let presenter = MoviesPresenter(moviesView: WeakRefProxy(viewController), loaderView: refreshController, loader: loader)
-        refreshController.presenter = presenter
+        refreshController.presenter = MoviesPresenter(
+            moviesView: MovieCellControllerAdapter(controller: viewController),
+            loadingView: WeakRefProxy(refreshController),
+            loader: loader)
         return viewController
     }
 }
 
 final class MoviesPresenter {
     private let moviesView: MoviesView
-    private let loaderView: MoviesLoaderView
+    private let loaderView: MoviesLoadingView
     private let loader: MovieLoader
     
-    init(moviesView: MoviesView, loaderView: MoviesLoaderView, loader: MovieLoader) {
+    init(moviesView: MoviesView, loadingView: MoviesLoadingView, loader: MovieLoader) {
         self.moviesView = moviesView
-        self.loaderView = loaderView
+        self.loaderView = loadingView
         self.loader = loader
     }
     
@@ -56,7 +76,7 @@ struct MoviesLoadingViewModel {
     let isLoading: Bool
 }
 
-protocol MoviesLoaderView {
+protocol MoviesLoadingView {
     func display(_ viewModel: MoviesLoadingViewModel)
 }
 
@@ -68,7 +88,7 @@ protocol MoviesView {
     func display(_ viewModel: MoviesViewModel)
 }
 
-final class MoviesRefreshController: NSObject, MoviesLoaderView {
+final class MoviesRefreshController: NSObject, MoviesLoadingView {
     var presenter: MoviesPresenter?
     
     lazy var view: UIRefreshControl = {
@@ -98,10 +118,53 @@ final class MovieCell: UITableViewCell {
     let overviewLabel = UILabel()
 }
 
+final class MovieCellPresenter {
+    private let movieCellView: MovieCellView
+    private let movie: Movie
+    
+    init(movie: Movie, movieCellView: MovieCellView) {
+        self.movie = movie
+        self.movieCellView = movieCellView
+    }
+    
+    func loadImageData() {
+        let ratingString = "\(movie.rating ?? 0.0)"
+        movieCellView.display(MovieCellViewModel(title: movie.title, overview: movie.overview, rating: ratingString))
+    }
+}
+
+struct MovieCellViewModel {
+    let title: String
+    let overview: String?
+    let rating: String?
+}
+
+protocol MovieCellView {
+    func display(_ viewModel: MovieCellViewModel)
+}
+
+final class MovieCellController: MovieCellView {
+    var presenter: MovieCellPresenter?
+    
+    private var view: MovieCell?
+    
+    func view(in tableView: UITableView) -> UITableViewCell {
+        view = tableView.dequeueReusableCell()
+        presenter?.loadImageData()
+        return view!
+    }
+    
+    func display(_ viewModel: MovieCellViewModel) {
+        view?.titleLabel.text = viewModel.title
+        view?.overviewLabel.text = viewModel.overview
+        view?.ratingLabel.text = viewModel.rating
+    }
+}
+
 final class MoviesViewController: UITableViewController {
     private var refreshController: MoviesRefreshController?
     
-    var movies = [Movie]() {
+    var cellControllers = [MovieCellController]() {
         didSet { tableView.reloadData() }
     }
     
@@ -113,7 +176,7 @@ final class MoviesViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableView.register(MovieCell.self, forCellReuseIdentifier: "\(MovieCell.self)")
+        tableView.register(MovieCell.self)
         
         refreshControl = refreshController?.view
         
@@ -121,27 +184,21 @@ final class MoviesViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return movies.count
+        cellControllers.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let movie = movies[indexPath.row]
-        
-        guard let movieCell = tableView.dequeueReusableCell(withIdentifier: "\(MovieCell.self)") as? MovieCell else {
-            return UITableViewCell()
-        }
-        
-        movieCell.titleLabel.text = movie.title
-        movieCell.overviewLabel.text = movie.overview
-        movieCell.ratingLabel.text = String(describing: movie.rating)
-        
-        return movieCell
+        cellControllers[indexPath.row].view(in: tableView)
     }
 }
 
-extension MoviesViewController: MoviesView {
-    func display(_ viewModel: MoviesViewModel) {
-        movies = viewModel.movies
+extension UITableView {
+    func register<T: UITableViewCell>(_ cell: T.Type) {
+        register(T.self, forCellReuseIdentifier: String(describing: T.self))
+    }
+    
+    func dequeueReusableCell<T: UITableViewCell>() -> T {
+        dequeueReusableCell(withIdentifier: String(describing: T.self)) as! T
     }
 }
 
@@ -227,7 +284,7 @@ final class MoviesViewControllerTests: XCTestCase {
         }
         
         XCTAssertEqual(movieCell.titleLabel.text, movie.title, file: file, line: line)
-        XCTAssertEqual(movieCell.ratingLabel.text, String(describing: movie.rating), file: file, line: line)
+        XCTAssertEqual(movieCell.ratingLabel.text, "\(movie.rating ?? 0.0)", file: file, line: line)
         XCTAssertEqual(movieCell.overviewLabel.text, movie.overview, file: file, line: line)
     }
     
