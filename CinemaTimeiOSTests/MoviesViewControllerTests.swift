@@ -24,23 +24,14 @@ final class MoviesViewControllerTests: XCTestCase {
         let sut = makeSUT(with: loader)
         XCTAssertTrue(sut.isShowingLoadingIndicator)
         
-        loader.completeMovieLoading(with: [])
+        loader.completeMovieLoading(with: [], at: 0)
         XCTAssertFalse(sut.isShowingLoadingIndicator)
         
         sut.triggerUserInitiatedRefresh()
         XCTAssertTrue(sut.isShowingLoadingIndicator)
         
-        loader.completeMovieLoading(with: anyNSError())
+        loader.completeMovieLoading(with: anyNSError(), at: 1)
         XCTAssertFalse(sut.isShowingLoadingIndicator)
-    }
-    
-    func test_loaderCompletion_rendersZeroMoviesFromReceivedEmptyList() {
-        let loader = LoaderSpy()
-        let sut = makeSUT(with: loader)
-        
-        loader.completeMovieLoading(with: [])
-        
-        XCTAssertEqual(sut.renderedMoviesCount, 0)
     }
     
     func test_loaderCompletion_rendersMoviesFromReceivedList() {
@@ -51,13 +42,29 @@ final class MoviesViewControllerTests: XCTestCase {
         let sut = makeSUT(with: loader)
         assert(sut, isRendering: [])
         
-        loader.completeMovieLoading(with: [movie2])
+        loader.completeMovieLoading(with: [movie2], at: 0)
         assert(sut, isRendering: [movie2])
         
         sut.triggerUserInitiatedRefresh()
         
-        loader.completeMovieLoading(with: [movie1, movie2])
+        loader.completeMovieLoading(with: [movie1, movie2], at: 1)
         assert(sut, isRendering: [movie1, movie2])
+    }
+    
+    func test_loaderCompletion_rendersZeroMoviesAfterRenderingNonEmptyMovies() {
+        let movie1 = makeMovie(title: "first title", overview: "first overview", rating: 1)
+        let movie2 = makeMovie(title: "second title", overview: "second overview", rating: 2)
+        let loader = LoaderSpy()
+        
+        let sut = makeSUT(with: loader)
+        
+        loader.completeMovieLoading(with: [movie1, movie2], at: 0)
+        assert(sut, isRendering: [movie1, movie2])
+        
+        sut.triggerUserInitiatedRefresh()
+        
+        loader.completeMovieLoading(with: [], at: 1)
+        assert(sut, isRendering: [])
     }
     
     // MARK: - Helpers
