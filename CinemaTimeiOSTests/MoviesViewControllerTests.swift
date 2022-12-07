@@ -30,7 +30,7 @@ final class MoviesViewControllerTests: XCTestCase {
         sut.triggerUserInitiatedRefresh()
         XCTAssertTrue(sut.isShowingLoadingIndicator)
         
-        loader.completeMovieLoading(with: anyNSError(), at: 1)
+        loader.completeMovieLoadingWithError(at: 1)
         XCTAssertFalse(sut.isShowingLoadingIndicator)
     }
     
@@ -119,8 +119,8 @@ final class MoviesViewControllerTests: XCTestCase {
             receivedMessages[index](.success(movies))
         }
         
-        func completeMovieLoading(with error: Error, at index: Int = 0) {
-            receivedMessages[index](.failure(error))
+        func completeMovieLoadingWithError(at index: Int = 0) {
+            receivedMessages[index](.failure(NSError(domain: "a domain", code: 0)))
         }
     }
 }
