@@ -17,5 +17,6 @@ final class MovieCellController: MovieCellView {
         view?.titleLabel.text = viewModel.title
         view?.overviewLabel.text = viewModel.overview
         view?.ratingLabel.text = viewModel.rating
+        view?.retryButton.isHidden = !viewModel.shouldRetry
     }
 }

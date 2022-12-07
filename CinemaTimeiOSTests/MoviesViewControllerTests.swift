@@ -89,15 +89,28 @@ final class MoviesViewControllerTests: XCTestCase {
         XCTAssertEqual(loader.receivedImagePaths, ["/first", "/second"])
     }
     
+    func test_movieCellRetryButton_isNotVisibleOnImageLoaderSuccess() {
+        let movie = makeMovie(title: "first title", imagePath: "/first", overview: "first overview", rating: 1)
+        let (sut, loader) = makeSUT()
+        loader.completeMovieLoading(with: [movie])
+        
+        let movieCell = sut.simulateVisibleMovieCell(at: 0)!
+        XCTAssertFalse(movieCell.isRetryButtonVisible)
+        
+        loader.completeImageLoading(with: anyData(), at: 0)
+        XCTAssertFalse(movieCell.isRetryButtonVisible)
+    }
+    
     func test_movieCellRetryButton_isVisibleOnImageLoaderError() {
         let movie = makeMovie(title: "first title", imagePath: "/first", overview: "first overview", rating: 1)
         let (sut, loader) = makeSUT()
         loader.completeMovieLoading(with: [movie])
         
-        sut.simulateVisibleMovieCell(at: 0)
-        loader.completeImageLoading(with: anyNSError(), at: 0)
+        let movieCell = sut.simulateVisibleMovieCell(at: 0)!
+        XCTAssertFalse(movieCell.isRetryButtonVisible)
         
-        XCTAssertTrue(sut.isRetryButtonVisible(at: 0))
+        loader.completeImageLoading(with: anyNSError(), at: 0)
+        XCTAssertTrue(movieCell.isRetryButtonVisible)
     }
     
     // MARK: - Helpers
@@ -135,6 +148,10 @@ final class MoviesViewControllerTests: XCTestCase {
     
     private func makeMovie(title: String, imagePath: String? = nil, overview: String, rating: Double) -> Movie {
         Movie(id: 0, title: title, imagePath: imagePath, overview: overview, releaseDate: nil, rating: rating)
+    }
+    
+    private func anyData() -> Data {
+        Data("any data".utf8)
     }
     
     private func anyNSError() -> Error {
@@ -175,6 +192,10 @@ final class MoviesViewControllerTests: XCTestCase {
             return Task()
         }
         
+        func completeImageLoading(with data: Data, at index: Int = 0) {
+            receivedImageLoads[index].completion(.success(data))
+        }
+        
         func completeImageLoading(with error: Error, at index: Int = 0) {
             receivedImageLoads[index].completion(.failure(error))
         }
@@ -196,9 +217,10 @@ private extension MoviesViewController {
         return ds?.tableView(tableView, cellForRowAt: IndexPath(row: row, section: 0))
     }
     
-    func simulateVisibleMovieCell(at row: Int) {
+    @discardableResult
+    func simulateVisibleMovieCell(at row: Int) -> MovieCell? {
         let ds = tableView.dataSource
-        _ = ds?.tableView(tableView, cellForRowAt: IndexPath(row: row, section: 0))
+        return ds?.tableView(tableView, cellForRowAt: IndexPath(row: row, section: 0)) as? MovieCell
     }
     
     var isShowingLoadingIndicator: Bool {
@@ -208,11 +230,11 @@ private extension MoviesViewController {
     func triggerUserInitiatedRefresh() {
         refreshControl?.triggerRefresh()
     }
-    
-    func isRetryButtonVisible(at row: Int) -> Bool {
-        guard let movieCell = renderedMovie(at: row) as? MovieCell else { return false }
-        
-        return !movieCell.retryButton.isHidden
+}
+
+private extension MovieCell {
+    var isRetryButtonVisible: Bool {
+        !retryButton.isHidden
     }
 }
 
