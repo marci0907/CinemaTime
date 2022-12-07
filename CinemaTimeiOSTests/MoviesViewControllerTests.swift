@@ -89,6 +89,17 @@ final class MoviesViewControllerTests: XCTestCase {
         XCTAssertEqual(loader.receivedImagePaths, ["/first", "/second"])
     }
     
+    func test_movieCellRetryButton_isVisibleOnImageLoaderError() {
+        let movie = makeMovie(title: "first title", imagePath: "/first", overview: "first overview", rating: 1)
+        let (sut, loader) = makeSUT()
+        loader.completeMovieLoading(with: [movie])
+        
+        sut.simulateVisibleMovieCell(at: 0)
+        loader.completeImageLoading(with: anyNSError(), at: 0)
+        
+        XCTAssertTrue(sut.isRetryButtonVisible(at: 0))
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (MoviesViewController, LoaderSpy) {
@@ -164,6 +175,10 @@ final class MoviesViewControllerTests: XCTestCase {
             return Task()
         }
         
+        func completeImageLoading(with error: Error, at index: Int = 0) {
+            receivedImageLoads[index].completion(.failure(error))
+        }
+        
         private struct Task: MovieImageDataLoaderTask {
             func cancel() {}
         }
@@ -192,6 +207,12 @@ private extension MoviesViewController {
     
     func triggerUserInitiatedRefresh() {
         refreshControl?.triggerRefresh()
+    }
+    
+    func isRetryButtonVisible(at row: Int) -> Bool {
+        guard let movieCell = renderedMovie(at: row) as? MovieCell else { return false }
+        
+        return !movieCell.retryButton.isHidden
     }
 }
 

@@ -3,6 +3,7 @@
 import UIKit
 
 public final class MovieCell: UITableViewCell {
+    public let retryButton = UIButton()
     public let posterView = UIImageView()
     public let titleLabel = UILabel()
     public let ratingLabel = UILabel()
