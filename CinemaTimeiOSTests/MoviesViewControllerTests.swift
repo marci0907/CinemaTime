@@ -2,38 +2,109 @@
 
 import XCTest
 import UIKit
+import CinemaTime
+
+final class MoviesUIComposer {
+    private init() {}
+    
+    static func viewController(loader: MovieLoader) -> MoviesViewController {
+        let refreshController = MoviesRefreshController()
+        let presenter = MoviesPresenter(loaderView: refreshController, loader: loader)
+        refreshController.presenter = presenter
+        return MoviesViewController(refreshController: refreshController)
+    }
+}
+
+final class MoviesPresenter {
+    private let loaderView: MoviesLoaderView
+    private let loader: MovieLoader
+    
+    init(loaderView: MoviesLoaderView, loader: MovieLoader) {
+        self.loaderView = loaderView
+        self.loader = loader
+    }
+    
+    func load() {
+        loaderView.display(LoadingViewModel(isLoading: true))
+        loader.load { _ in }
+    }
+}
+
+struct LoadingViewModel {
+    var isLoading: Bool
+}
+
+protocol MoviesLoaderView {
+    func display(_ viewModel: LoadingViewModel)
+}
+
+final class MoviesRefreshController: MoviesLoaderView {
+    var presenter: MoviesPresenter?
+    
+    let view = UIRefreshControl()
+    
+    func refresh() {
+        presenter?.load()
+    }
+    
+    func display(_ viewModel: LoadingViewModel) {
+        if viewModel.isLoading {
+            view.beginRefreshing()
+        } else {
+            view.endRefreshing()
+        }
+    }
+}
 
 final class MoviesViewController: UITableViewController {
+    private var refreshController: MoviesRefreshController?
+    
+    convenience init(refreshController: MoviesRefreshController) {
+        self.init()
+        self.refreshController = refreshController
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        refreshControl = UIRefreshControl()
-        refreshControl?.beginRefreshing()
+        refreshControl = refreshController?.view
+        
+        refreshController?.refresh()
     }
 }
 
 final class MoviesViewControllerTests: XCTestCase {
     
-    func test_init_doesNotRenderMovies() {
+    func test_viewDidLoad_startsRefreshing() {
         let sut = makeSUT()
-        
-        XCTAssertEqual(sut.renderedMovies, 0)
-    }
-    
-    func test_viewDidLoad_startsLoadingMovies() {
-        let sut = makeSUT()
-        
-        sut.loadViewIfNeeded()
         
         XCTAssertTrue(sut.isLoading)
     }
     
+    func test_viewDidLoad_startsLoadingMovies() {
+        let loader = LoaderSpy()
+        _ = makeSUT(with: loader)
+        
+        XCTAssertEqual(loader.receivedMessages.count, 1)
+    }
+    
     // MARK: - Helpers
     
-    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> MoviesViewController {
-        let sut = MoviesViewController()
+    private func makeSUT(with loader: MovieLoader = LoaderSpy(), file: StaticString = #file, line: UInt = #line) -> MoviesViewController {
+        let sut = MoviesUIComposer.viewController(loader: loader)
+        sut.loadViewIfNeeded()
         trackForMemoryLeaks(sut, file: file, line: line)
         return sut
+    }
+    
+    private class LoaderSpy: MovieLoader {
+        typealias Message = (MovieLoader.Result) -> Void
+        
+        private(set) var receivedMessages = [Message]()
+        
+        func load(completion: @escaping Message) {
+            receivedMessages.append(completion)
+        }
     }
 }
 
