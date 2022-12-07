@@ -165,12 +165,18 @@ final class MoviesViewControllerTests: XCTestCase {
         XCTAssertEqual(loader.receivedMessages.count, 3)
     }
     
-    func test_loaderCompletion_StopsRefreshing() {
+    func test_loaderCompletion_stopsRefreshing() {
         let loader = LoaderSpy()
         let sut = makeSUT(with: loader)
+        XCTAssertTrue(sut.isShowingLoadingIndicator)
+        
+        loader.completeMovieLoading(with: [])
+        XCTAssertFalse(sut.isShowingLoadingIndicator)
+        
+        sut.triggerUserInitiatedRefresh()
+        XCTAssertTrue(sut.isShowingLoadingIndicator)
         
         loader.completeMovieLoading(with: anyNSError())
-        
         XCTAssertFalse(sut.isShowingLoadingIndicator)
     }
     
