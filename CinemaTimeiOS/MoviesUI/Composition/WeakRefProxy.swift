@@ -13,3 +13,9 @@ extension WeakRefProxy: MoviesLoadingView where T: MoviesLoadingView {
         object?.display(viewModel)
     }
 }
+
+extension WeakRefProxy: MovieCellView where T: MovieCellView {
+    func display(_ viewModel: MovieCellViewModel) {
+        object?.display(viewModel)
+    }
+}

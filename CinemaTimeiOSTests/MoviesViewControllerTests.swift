@@ -9,13 +9,13 @@ final class MoviesViewControllerTests: XCTestCase {
     
     func test_userInitiatedRefresh_triggersMovieLoading() {
         let (sut, loader) = makeSUT()
-        XCTAssertEqual(loader.receivedMessages.count, 1)
+        XCTAssertEqual(loader.receivedMovieLoads.count, 1)
         
         sut.triggerUserInitiatedRefresh()
-        XCTAssertEqual(loader.receivedMessages.count, 2)
+        XCTAssertEqual(loader.receivedMovieLoads.count, 2)
         
         sut.triggerUserInitiatedRefresh()
-        XCTAssertEqual(loader.receivedMessages.count, 3)
+        XCTAssertEqual(loader.receivedMovieLoads.count, 3)
     }
     
     func test_loaderCompletion_stopsRefreshing() {
@@ -75,11 +75,25 @@ final class MoviesViewControllerTests: XCTestCase {
         assert(sut, isRendering: [movie1, movie2])
     }
     
+    func test_loadCompletion_triggersImageLoading() {
+        let movie1 = makeMovie(title: "first title", imagePath: "/first", overview: "first overview", rating: 1)
+        let movie2 = makeMovie(title: "second title", imagePath: "/second", overview: "second overview", rating: 2)
+        let (sut, loader) = makeSUT()
+        
+        loader.completeMovieLoading(with: [movie1, movie2])
+        
+        sut.simulateVisibleMovieCell(at: 0)
+        XCTAssertEqual(loader.receivedImagePaths, ["/first"])
+        
+        sut.simulateVisibleMovieCell(at: 1)
+        XCTAssertEqual(loader.receivedImagePaths, ["/first", "/second"])
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (MoviesViewController, LoaderSpy) {
         let loader = LoaderSpy()
-        let sut = MoviesUIComposer.viewController(loader: loader)
+        let sut = MoviesUIComposer.viewController(movieLoader: loader, imageLoader: loader)
         trackForMemoryLeaks(loader, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
         sut.loadViewIfNeeded()
@@ -108,29 +122,50 @@ final class MoviesViewControllerTests: XCTestCase {
         XCTAssertEqual(movieCell.overviewLabel.text, movie.overview, file: file, line: line)
     }
     
-    private func makeMovie(title: String, overview: String, rating: Double) -> Movie {
-        Movie(id: 0, title: title, imagePath: nil, overview: overview, releaseDate: nil, rating: rating)
+    private func makeMovie(title: String, imagePath: String? = nil, overview: String, rating: Double) -> Movie {
+        Movie(id: 0, title: title, imagePath: imagePath, overview: overview, releaseDate: nil, rating: rating)
     }
     
     private func anyNSError() -> Error {
         NSError(domain: "a domain", code: 0)
     }
     
-    private class LoaderSpy: MovieLoader {
+    private class LoaderSpy: MovieLoader, MovieImageDataLoader {
+        
+        // MARK: MovieLoader
+        
         typealias Message = (MovieLoader.Result) -> Void
         
-        private(set) var receivedMessages = [Message]()
+        private(set) var receivedMovieLoads = [Message]()
         
-        func load(completion: @escaping Message) {
-            receivedMessages.append(completion)
+        func load(completion: @escaping (MovieLoader.Result) -> Void) {
+            receivedMovieLoads.append(completion)
         }
         
         func completeMovieLoading(with movies: [Movie], at index: Int = 0) {
-            receivedMessages[index](.success(movies))
+            receivedMovieLoads[index](.success(movies))
         }
         
         func completeMovieLoadingWithError(at index: Int = 0) {
-            receivedMessages[index](.failure(NSError(domain: "a domain", code: 0)))
+            receivedMovieLoads[index](.failure(NSError(domain: "a domain", code: 0)))
+        }
+        
+        // MARK: MovieImageDataLoader
+        
+        typealias ImageMessage = (imagePath: String?, completion: (MovieImageDataLoader.Result) -> Void)
+        
+        private(set) var receivedImageLoads = [ImageMessage]()
+        var receivedImagePaths: [String?] {
+            receivedImageLoads.map { $0.imagePath }
+        }
+        
+        func load(from imagePath: String?, completion: @escaping (MovieImageDataLoader.Result) -> Void) -> MovieImageDataLoaderTask {
+            receivedImageLoads.append((imagePath, completion))
+            return Task()
+        }
+        
+        private struct Task: MovieImageDataLoaderTask {
+            func cancel() {}
         }
     }
 }
@@ -141,9 +176,14 @@ private extension MoviesViewController {
         return ds.tableView(tableView, numberOfRowsInSection: 0)
     }
     
-    func renderedMovie(at index: Int) -> UITableViewCell? {
+    func renderedMovie(at row: Int) -> UITableViewCell? {
         let ds = tableView.dataSource
-        return ds?.tableView(tableView, cellForRowAt: IndexPath(row: index, section: 0))
+        return ds?.tableView(tableView, cellForRowAt: IndexPath(row: row, section: 0))
+    }
+    
+    func simulateVisibleMovieCell(at row: Int) {
+        let ds = tableView.dataSource
+        _ = ds?.tableView(tableView, cellForRowAt: IndexPath(row: row, section: 0))
     }
     
     var isShowingLoadingIndicator: Bool {

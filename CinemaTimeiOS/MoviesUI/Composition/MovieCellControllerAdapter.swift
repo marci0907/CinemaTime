@@ -1,10 +1,14 @@
 //  Created by Marcell Magyar on 07.12.22.
 
+import CinemaTime
+
 final class MovieCellControllerAdapter: MoviesView {
     private weak var controller: MoviesViewController?
+    private let imageDataLoader: MovieImageDataLoader
     
-    init(controller: MoviesViewController) {
+    init(controller: MoviesViewController, imageDataLoader: MovieImageDataLoader) {
         self.controller = controller
+        self.imageDataLoader = imageDataLoader
     }
     
     func display(_ viewModel: MoviesViewModel) {
@@ -12,7 +16,8 @@ final class MovieCellControllerAdapter: MoviesView {
             let cellController = MovieCellController()
             cellController.presenter = MovieCellPresenter(
                 movie: $0,
-                movieCellView: cellController)
+                movieCellView: WeakRefProxy(cellController),
+                imageDataLoader: imageDataLoader)
             return cellController
         }
     }

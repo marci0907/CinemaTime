@@ -5,13 +5,13 @@ import CinemaTime
 public final class MoviesUIComposer {
     private init() {}
     
-    public static func viewController(loader: MovieLoader) -> MoviesViewController {
+    public static func viewController(movieLoader: MovieLoader, imageLoader: MovieImageDataLoader) -> MoviesViewController {
         let refreshController = MoviesRefreshController()
         let viewController = MoviesViewController(refreshController: refreshController)
         refreshController.presenter = MoviesPresenter(
-            moviesView: MovieCellControllerAdapter(controller: viewController),
+            moviesView: MovieCellControllerAdapter(controller: viewController, imageDataLoader: imageLoader),
             loadingView: WeakRefProxy(refreshController),
-            loader: loader)
+            loader: movieLoader)
         return viewController
     }
 }
