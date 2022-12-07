@@ -26,7 +26,9 @@ final class MoviesPresenter {
     
     func load() {
         loaderView.display(LoadingViewModel(isLoading: true))
-        loader.load { _ in }
+        loader.load { _ in
+            self.loaderView.display(LoadingViewModel(isLoading: false))
+        }
     }
 }
 
@@ -98,6 +100,15 @@ final class MoviesViewControllerTests: XCTestCase {
         XCTAssertEqual(loader.receivedMessages.count, 3)
     }
     
+    func test_loaderCompletion_stopsRefreshing() {
+        let loader = LoaderSpy()
+        let sut = makeSUT(with: loader)
+        
+        loader.complete(with: anyNSError())
+        
+        XCTAssertFalse(sut.isLoading)
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(with loader: MovieLoader = LoaderSpy(), file: StaticString = #file, line: UInt = #line) -> MoviesViewController {
@@ -107,6 +118,10 @@ final class MoviesViewControllerTests: XCTestCase {
         return sut
     }
     
+    func anyNSError() -> Error {
+        NSError(domain: "a domain", code: 0)
+    }
+    
     private class LoaderSpy: MovieLoader {
         typealias Message = (MovieLoader.Result) -> Void
         
@@ -114,6 +129,10 @@ final class MoviesViewControllerTests: XCTestCase {
         
         func load(completion: @escaping Message) {
             receivedMessages.append(completion)
+        }
+        
+        func complete(with error: Error, at index: Int = 0) {
+            receivedMessages[index](.failure(error))
         }
     }
 }
