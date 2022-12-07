@@ -34,6 +34,9 @@ final class MoviesViewControllerTests: XCTestCase {
         XCTAssertFalse(sut.isShowingLoadingIndicator)
     }
     
+    // TODO: Tests for error case
+    // test_loaderCompletion_displaysErrorViewOnLoaderError
+    
     func test_loaderCompletion_rendersMoviesFromReceivedList() {
         let movie1 = makeMovie(title: "first title", overview: "first overview", rating: 1)
         let movie2 = makeMovie(title: "second title", overview: "second overview", rating: 2)
