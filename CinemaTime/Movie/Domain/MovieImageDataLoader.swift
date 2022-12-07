@@ -9,5 +9,5 @@ public protocol MovieImageDataLoaderTask {
 public protocol MovieImageDataLoader {
     typealias Result = Swift.Result<Data, Error>
     
-    func load(from url: URL, completion: @escaping (Result) -> Void) -> MovieImageDataLoaderTask
+    func load(from imagePath: String?, completion: @escaping (Result) -> Void) -> MovieImageDataLoaderTask
 }
