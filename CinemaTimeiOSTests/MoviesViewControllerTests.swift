@@ -137,6 +137,22 @@ final class MoviesViewControllerTests: XCTestCase {
         XCTAssertEqual(movieCell.posterView.image?.pngData(), imageData)
     }
     
+    func test_didEndDisplayingCell_cancelsImageLoading() {
+        let movie1 = makeMovie(title: "any", imagePath: "/any.jpg", overview: "any overview", rating: 1)
+        let movie2 = makeMovie(title: "other", imagePath: "/other.jpg", overview: "other overview", rating: 2)
+        let (sut, loader) = makeSUT()
+        loader.completeMovieLoading(with: [movie1, movie2])
+        
+        let movieCell1 = sut.simulateVisibleMovieCell(at: 0)!
+        let movieCell2 = sut.simulateVisibleMovieCell(at: 1)!
+        
+        sut.simulateNotVisibleMovieCell(movieCell1, at: 0)
+        XCTAssertEqual(loader.canceledURLs, [movie1.imagePath])
+        
+        sut.simulateNotVisibleMovieCell(movieCell2, at: 1)
+        XCTAssertEqual(loader.canceledURLs, [movie1.imagePath, movie2.imagePath])
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (MoviesViewController, LoaderSpy) {
@@ -206,6 +222,7 @@ final class MoviesViewControllerTests: XCTestCase {
         
         typealias ImageMessage = (imagePath: String?, completion: (MovieImageDataLoader.Result) -> Void)
         
+        private(set) var canceledURLs = [String?]()
         private(set) var receivedImageLoads = [ImageMessage]()
         var receivedImagePaths: [String?] {
             receivedImageLoads.map { $0.imagePath }
@@ -213,7 +230,9 @@ final class MoviesViewControllerTests: XCTestCase {
         
         func load(from imagePath: String?, completion: @escaping (MovieImageDataLoader.Result) -> Void) -> MovieImageDataLoaderTask {
             receivedImageLoads.append((imagePath, completion))
-            return Task()
+            return Task { [weak self] in
+                self?.canceledURLs.append(imagePath)
+            }
         }
         
         func completeImageLoading(with data: Data, at index: Int = 0) {
@@ -225,7 +244,15 @@ final class MoviesViewControllerTests: XCTestCase {
         }
         
         private struct Task: MovieImageDataLoaderTask {
-            func cancel() {}
+            var completion: () -> Void
+            
+            init(_ completion: @escaping () -> Void) {
+                self.completion = completion
+            }
+            
+            func cancel() {
+                completion()
+            }
         }
     }
 }
@@ -245,6 +272,10 @@ private extension MoviesViewController {
     func simulateVisibleMovieCell(at row: Int) -> MovieCell? {
         let ds = tableView.dataSource
         return ds?.tableView(tableView, cellForRowAt: IndexPath(row: row, section: 0)) as? MovieCell
+    }
+    
+    func simulateNotVisibleMovieCell(_ cell: UITableViewCell, at row: Int) {
+        tableView.delegate?.tableView?(tableView, didEndDisplaying: cell, forRowAt: IndexPath(row: row, section: 0))
     }
     
     var isShowingLoadingIndicator: Bool {

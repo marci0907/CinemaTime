@@ -14,4 +14,8 @@ final class MovieCellPresentationAdapter<Image, View: MovieCellView>: MovieCellC
     func loadImageData() {
         presenter?.loadImageData(from: movie.imagePath)
     }
+    
+    func cancelImageDataLoading() {
+        presenter?.cancelImageDataLoading()
+    }
 }

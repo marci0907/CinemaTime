@@ -10,6 +10,7 @@ struct MovieCellViewModel {
 
 protocol MovieCellControllerDelegate {
     func loadImageData()
+    func cancelImageDataLoading()
 }
 
 final class MovieCellController {
@@ -30,6 +31,10 @@ final class MovieCellController {
         delegate.loadImageData()
         
         return view!
+    }
+    
+    func cancelImageLoading() {
+        delegate.cancelImageDataLoading()
     }
     
     private func configureView() {

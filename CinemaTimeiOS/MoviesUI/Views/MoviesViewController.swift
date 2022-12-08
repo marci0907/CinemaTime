@@ -30,4 +30,8 @@ public final class MoviesViewController: UITableViewController {
     override public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         cellControllers[indexPath.row].view(in: tableView)
     }
+    
+    public override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        cellControllers[indexPath.row].cancelImageLoading()
+    }
 }

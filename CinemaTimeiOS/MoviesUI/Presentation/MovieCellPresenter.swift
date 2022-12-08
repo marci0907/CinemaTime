@@ -10,6 +10,8 @@ final class MovieCellPresenter<Image, View: MovieCellView> where View.Image == I
     private let imageDataLoader: MovieImageDataLoader
     private let imageMapper: (Data) -> Image?
     
+    private var task: MovieImageDataLoaderTask?
+    
     init(
         view: View,
         loadingView: MovieCellLoadingView,
@@ -27,7 +29,7 @@ final class MovieCellPresenter<Image, View: MovieCellView> where View.Image == I
     func loadImageData(from imagePath: String?) {
         loadingStarted()
         
-        _ = imageDataLoader.load(from: imagePath) { [weak self] result in
+        task = imageDataLoader.load(from: imagePath) { [weak self] result in
             switch result {
             case let .success(data):
                 self?.loadingFinished(with: data)
@@ -36,6 +38,10 @@ final class MovieCellPresenter<Image, View: MovieCellView> where View.Image == I
                 self?.loadingFinishedWithError()
             }
         }
+    }
+    
+    func cancelImageDataLoading() {
+        task?.cancel()
     }
     
     static func map(_ movie: Movie) -> MovieCellViewModel {
