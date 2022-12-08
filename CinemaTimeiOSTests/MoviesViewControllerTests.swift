@@ -123,14 +123,22 @@ final class MoviesViewControllerTests: XCTestCase {
     
     func test_imageLoaderCompletion_deliversImageOnSuccessfulLoadingAndImageMapping() {
         let (sut, loader) = makeSUT()
-        loader.completeMovieLoading(with: [makeMovie()])
+        loader.completeMovieLoading(with: [makeMovie(), makeMovie()])
         
-        let movieCell = sut.simulateVisibleMovieCell(at: 0)!
+        let redCell = sut.simulateVisibleMovieCell(at: 0)!
+        let blueCell = sut.simulateVisibleMovieCell(at: 1)!
+        XCTAssertNil(redCell.renderedImageData)
+        XCTAssertNil(blueCell.renderedImageData)
         
-        let imageData = anyImageData()
-        loader.completeImageLoading(with: imageData, at: 0)
+        let redData = UIImage.make(withColor: .red).pngData()!
+        loader.completeImageLoading(with: redData, at: 0)
+        XCTAssertEqual(redCell.renderedImageData, redData)
+        XCTAssertNil(blueCell.renderedImageData)
         
-        XCTAssertEqual(movieCell.renderedImageData, imageData)
+        let blueData = UIImage.make(withColor: .blue).pngData()!
+        loader.completeImageLoading(with: blueData, at: 1)
+        XCTAssertEqual(redCell.renderedImageData, redData)
+        XCTAssertEqual(blueCell.renderedImageData, blueData)
     }
     
     func test_didEndDisplayingCell_cancelsImageLoading() {
@@ -159,6 +167,12 @@ final class MoviesViewControllerTests: XCTestCase {
         
         XCTAssertNil(movieCell.renderedImage)
     }
+    
+    // TODO: preloading
+    
+    // TODO: prefetching
+    
+    // TODO: loader on image
     
     // MARK: - Helpers
     
