@@ -2,15 +2,17 @@
 
 import Foundation
 
-struct MovieCellViewModel {
+struct MovieCellViewModel<Image> {
     let title: String
     let overview: String?
     let rating: String?
-    let imageData: Data?
+    let image: Image?
     let isLoading: Bool
     let shouldRetry: Bool
 }
 
 protocol MovieCellView {
-    func display(_ viewModel: MovieCellViewModel)
+    associatedtype Image
+    
+    func display(_ viewModel: MovieCellViewModel<Image>)
 }

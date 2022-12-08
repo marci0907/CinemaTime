@@ -1,8 +1,9 @@
 //  Created by Marcell Magyar on 07.12.22.
 
+import UIKit
 import CinemaTime
 
-final class MovieCellControllerAdapter: MoviesView {
+final class MoviesViewAdapter: MoviesView {
     private weak var controller: MoviesViewController?
     private let imageDataLoader: MovieImageDataLoader
     
@@ -13,11 +14,13 @@ final class MovieCellControllerAdapter: MoviesView {
     
     func display(_ viewModel: MoviesViewModel) {
         controller?.cellControllers = viewModel.movies.map {
-            let cellController = MovieCellController()
-            cellController.presenter = MovieCellPresenter(
+            let presentationAdapter = MovieCellPresentationAdapter<UIImage, WeakRefProxy<MovieCellController>>()
+            let cellController = MovieCellController(delegate: presentationAdapter)
+            presentationAdapter.presenter = MovieCellPresenter(
                 movie: $0,
                 movieCellView: WeakRefProxy(cellController),
-                imageDataLoader: imageDataLoader)
+                imageDataLoader: imageDataLoader,
+                imageMapper: UIImage.init)
             return cellController
         }
     }

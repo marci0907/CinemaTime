@@ -97,7 +97,7 @@ final class MoviesViewControllerTests: XCTestCase {
         let movieCell = sut.simulateVisibleMovieCell(at: 0)!
         XCTAssertFalse(movieCell.isRetryButtonVisible)
         
-        loader.completeImageLoading(with: anyData(), at: 0)
+        loader.completeImageLoading(with: UIImage.make(withColor: .red).pngData()!, at: 0)
         XCTAssertFalse(movieCell.isRetryButtonVisible)
     }
     
@@ -122,6 +122,19 @@ final class MoviesViewControllerTests: XCTestCase {
         loader.completeImageLoading(with: anyData(), at: 0)
         
         XCTAssertNil(movieCell.posterView.image)
+    }
+    
+    func test_imageLoaderCompletion_deliversImageOnSuccessfulLoadingAndImageMapping() {
+        let movie = makeMovie(title: "first title", imagePath: "/first", overview: "first overview", rating: 1)
+        let (sut, loader) = makeSUT()
+        loader.completeMovieLoading(with: [movie])
+        
+        let movieCell = sut.simulateVisibleMovieCell(at: 0)!
+        
+        let imageData = UIImage.make(withColor: .red).pngData()!
+        loader.completeImageLoading(with: imageData, at: 0)
+        
+        XCTAssertEqual(movieCell.posterView.image?.pngData(), imageData)
     }
     
     // MARK: - Helpers
@@ -255,6 +268,19 @@ private extension UIRefreshControl {
             actions(forTarget: target, forControlEvent: .valueChanged)?.forEach { action in
                 (target as NSObject).perform(Selector(action))
             }
+        }
+    }
+}
+
+extension UIImage {
+    static func make(withColor color: UIColor) -> UIImage {
+        let rect = CGRect(x: 0, y: 0, width: 1, height: 1)
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = 1
+        
+        return UIGraphicsImageRenderer(size: rect.size, format: format).image { rendererContext in
+            color.setFill()
+            rendererContext.fill(rect)
         }
     }
 }

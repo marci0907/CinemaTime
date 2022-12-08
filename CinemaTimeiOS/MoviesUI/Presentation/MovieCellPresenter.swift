@@ -3,15 +3,17 @@
 import Foundation
 import CinemaTime
 
-final class MovieCellPresenter {
+final class MovieCellPresenter<Image, View: MovieCellView> where View.Image == Image {
     private let movie: Movie
-    private let movieCellView: MovieCellView
+    private let movieCellView: View
     private let imageDataLoader: MovieImageDataLoader
+    private let imageMapper: (Data) -> Image?
     
-    init(movie: Movie, movieCellView: MovieCellView, imageDataLoader: MovieImageDataLoader) {
+    init(movie: Movie, movieCellView: View, imageDataLoader: MovieImageDataLoader, imageMapper: @escaping (Data) -> Image?) {
         self.movie = movie
         self.movieCellView = movieCellView
         self.imageDataLoader = imageDataLoader
+        self.imageMapper = imageMapper
     }
     
     func loadImageData() {
@@ -24,30 +26,42 @@ final class MovieCellPresenter {
                 self?.loadingFinished(with: data)
                 
             default:
-                self?.loadingFinished(with: nil)   
+                self?.loadingFinishedWithError()
             }
         }
     }
     
     private func loadingStarted() {
-        movieCellView.display(MovieCellViewModel(
+        movieCellView.display(MovieCellViewModel<Image>(
             title: movie.title,
             overview: movie.overview,
             rating: presentableRating(for: movie.rating),
-            imageData: nil,
+            image: nil,
             isLoading: true,
             shouldRetry: false
         ))
     }
     
-    private func loadingFinished(with data: Data?) {
-        movieCellView.display(MovieCellViewModel(
+    private func loadingFinished(with data: Data) {
+        let image = imageMapper(data)
+        movieCellView.display(MovieCellViewModel<Image>(
             title: movie.title,
             overview: movie.overview,
             rating: presentableRating(for: movie.rating),
-            imageData: data,
+            image: image,
             isLoading: false,
-            shouldRetry: data == nil
+            shouldRetry: image == nil
+        ))
+    }
+    
+    private func loadingFinishedWithError() {
+        movieCellView.display(MovieCellViewModel<Image>(
+            title: movie.title,
+            overview: movie.overview,
+            rating: presentableRating(for: movie.rating),
+            image: nil,
+            isLoading: false,
+            shouldRetry: true
         ))
     }
     
