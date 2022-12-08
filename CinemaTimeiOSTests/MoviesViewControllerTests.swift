@@ -76,35 +76,33 @@ final class MoviesViewControllerTests: XCTestCase {
     }
     
     func test_loadCompletion_triggersImageLoading() {
-        let movie1 = makeMovie(title: "first title", imagePath: "/first", overview: "first overview", rating: 1)
-        let movie2 = makeMovie(title: "second title", imagePath: "/second", overview: "second overview", rating: 2)
+        let movie1 = makeMovie(imagePath: "/first")
+        let movie2 = makeMovie(imagePath: "/second")
         let (sut, loader) = makeSUT()
         
         loader.completeMovieLoading(with: [movie1, movie2])
         
         sut.simulateVisibleMovieCell(at: 0)
-        XCTAssertEqual(loader.receivedImagePaths, ["/first"])
+        XCTAssertEqual(loader.receivedImagePaths, [movie1.imagePath])
         
         sut.simulateVisibleMovieCell(at: 1)
-        XCTAssertEqual(loader.receivedImagePaths, ["/first", "/second"])
+        XCTAssertEqual(loader.receivedImagePaths, [movie1.imagePath, movie2.imagePath])
     }
     
     func test_movieCellRetryButton_isNotVisibleOnImageLoaderSuccess() {
-        let movie = makeMovie(title: "first title", imagePath: "/first", overview: "first overview", rating: 1)
         let (sut, loader) = makeSUT()
-        loader.completeMovieLoading(with: [movie])
+        loader.completeMovieLoading(with: [makeMovie()])
         
         let movieCell = sut.simulateVisibleMovieCell(at: 0)!
         XCTAssertFalse(movieCell.isRetryButtonVisible)
         
-        loader.completeImageLoading(with: UIImage.make(withColor: .red).pngData()!, at: 0)
+        loader.completeImageLoading(with: anyImageData(), at: 0)
         XCTAssertFalse(movieCell.isRetryButtonVisible)
     }
     
     func test_movieCellRetryButton_isVisibleOnImageLoaderError() {
-        let movie = makeMovie(title: "first title", imagePath: "/first", overview: "first overview", rating: 1)
         let (sut, loader) = makeSUT()
-        loader.completeMovieLoading(with: [movie])
+        loader.completeMovieLoading(with: [makeMovie()])
         
         let movieCell = sut.simulateVisibleMovieCell(at: 0)!
         XCTAssertFalse(movieCell.isRetryButtonVisible)
@@ -114,32 +112,30 @@ final class MoviesViewControllerTests: XCTestCase {
     }
     
     func test_imageLoaderCompletion_deliversNoImageOnInvalidImageData() {
-        let movie = makeMovie(title: "first title", imagePath: "/first", overview: "first overview", rating: 1)
         let (sut, loader) = makeSUT()
-        loader.completeMovieLoading(with: [movie])
+        loader.completeMovieLoading(with: [makeMovie()])
         
         let movieCell = sut.simulateVisibleMovieCell(at: 0)!
         loader.completeImageLoading(with: anyData(), at: 0)
         
-        XCTAssertNil(movieCell.posterView.image)
+        XCTAssertNil(movieCell.renderedImage)
     }
     
     func test_imageLoaderCompletion_deliversImageOnSuccessfulLoadingAndImageMapping() {
-        let movie = makeMovie(title: "first title", imagePath: "/first", overview: "first overview", rating: 1)
         let (sut, loader) = makeSUT()
-        loader.completeMovieLoading(with: [movie])
+        loader.completeMovieLoading(with: [makeMovie()])
         
         let movieCell = sut.simulateVisibleMovieCell(at: 0)!
         
         let imageData = anyImageData()
         loader.completeImageLoading(with: imageData, at: 0)
         
-        XCTAssertEqual(movieCell.posterView.image?.pngData(), imageData)
+        XCTAssertEqual(movieCell.renderedImageData, imageData)
     }
     
     func test_didEndDisplayingCell_cancelsImageLoading() {
-        let movie1 = makeMovie(title: "any", imagePath: "/any.jpg", overview: "any overview", rating: 1)
-        let movie2 = makeMovie(title: "other", imagePath: "/other.jpg", overview: "other overview", rating: 2)
+        let movie1 = makeMovie(imagePath: "/any.jpg")
+        let movie2 = makeMovie(imagePath: "/other.jpg")
         let (sut, loader) = makeSUT()
         loader.completeMovieLoading(with: [movie1, movie2])
         
@@ -154,15 +150,14 @@ final class MoviesViewControllerTests: XCTestCase {
     }
     
     func test_cancelingImageDataLoaderTask_doesNotDeliverImageLoaderResult() {
-        let movie = makeMovie(title: "any", imagePath: "/any.jpg", overview: "any overview", rating: 1)
         let (sut, loader) = makeSUT()
-        loader.completeMovieLoading(with: [movie])
+        loader.completeMovieLoading(with: [makeMovie()])
         let movieCell = sut.simulateVisibleMovieCell(at: 0)!
         
         sut.simulateNotVisibleMovieCell(movieCell, at: 0)
         loader.completeImageLoading(with: anyImageData())
         
-        XCTAssertNil(movieCell.posterView.image)
+        XCTAssertNil(movieCell.renderedImage)
     }
     
     // MARK: - Helpers
@@ -198,7 +193,12 @@ final class MoviesViewControllerTests: XCTestCase {
         XCTAssertEqual(movieCell.overviewLabel.text, movie.overview, file: file, line: line)
     }
     
-    private func makeMovie(title: String, imagePath: String? = nil, overview: String, rating: Double) -> Movie {
+    private func makeMovie(
+        title: String = "any title",
+        imagePath: String? = nil,
+        overview: String = "any overview",
+        rating: Double = 1.0
+    ) -> Movie {
         Movie(id: 0, title: title, imagePath: imagePath, overview: overview, releaseDate: nil, rating: rating)
     }
     
@@ -306,6 +306,14 @@ private extension MoviesViewController {
 private extension MovieCell {
     var isRetryButtonVisible: Bool {
         !retryButton.isHidden
+    }
+    
+    var renderedImage: UIImage? {
+        posterView.image
+    }
+    
+    var renderedImageData: Data? {
+        posterView.image?.pngData()
     }
 }
 
