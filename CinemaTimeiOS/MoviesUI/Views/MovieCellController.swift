@@ -35,12 +35,17 @@ final class MovieCellController {
     
     func cancelImageLoading() {
         delegate.cancelImageDataLoading()
+        releaseCellForReuse()
     }
     
     private func configureView() {
         view?.titleLabel.text = viewModel.title
         view?.overviewLabel.text = viewModel.overview
         view?.ratingLabel.text = viewModel.rating
+    }
+    
+    private func releaseCellForReuse() {
+        view = nil
     }
 }
 

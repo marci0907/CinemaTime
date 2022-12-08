@@ -131,7 +131,7 @@ final class MoviesViewControllerTests: XCTestCase {
         
         let movieCell = sut.simulateVisibleMovieCell(at: 0)!
         
-        let imageData = UIImage.make(withColor: .red).pngData()!
+        let imageData = anyImageData()
         loader.completeImageLoading(with: imageData, at: 0)
         
         XCTAssertEqual(movieCell.posterView.image?.pngData(), imageData)
@@ -151,6 +151,18 @@ final class MoviesViewControllerTests: XCTestCase {
         
         sut.simulateNotVisibleMovieCell(movieCell2, at: 1)
         XCTAssertEqual(loader.canceledURLs, [movie1.imagePath, movie2.imagePath])
+    }
+    
+    func test_cancelingImageDataLoaderTask_doesNotDeliverImageLoaderResult() {
+        let movie = makeMovie(title: "any", imagePath: "/any.jpg", overview: "any overview", rating: 1)
+        let (sut, loader) = makeSUT()
+        loader.completeMovieLoading(with: [movie])
+        let movieCell = sut.simulateVisibleMovieCell(at: 0)!
+        
+        sut.simulateNotVisibleMovieCell(movieCell, at: 0)
+        loader.completeImageLoading(with: anyImageData())
+        
+        XCTAssertNil(movieCell.posterView.image)
     }
     
     // MARK: - Helpers
@@ -198,6 +210,10 @@ final class MoviesViewControllerTests: XCTestCase {
         NSError(domain: "a domain", code: 0)
     }
     
+    private func anyImageData() -> Data {
+        UIImage.make(withColor: .red).pngData()!
+    }
+    
     private class LoaderSpy: MovieLoader, MovieImageDataLoader {
         
         // MARK: MovieLoader
@@ -230,7 +246,7 @@ final class MoviesViewControllerTests: XCTestCase {
         
         func load(from imagePath: String?, completion: @escaping (MovieImageDataLoader.Result) -> Void) -> MovieImageDataLoaderTask {
             receivedImageLoads.append((imagePath, completion))
-            return Task { [weak self] in
+            return TaskSpy { [weak self] in
                 self?.canceledURLs.append(imagePath)
             }
         }
@@ -243,7 +259,7 @@ final class MoviesViewControllerTests: XCTestCase {
             receivedImageLoads[index].completion(.failure(error))
         }
         
-        private struct Task: MovieImageDataLoaderTask {
+        private struct TaskSpy: MovieImageDataLoaderTask {
             var completion: () -> Void
             
             init(_ completion: @escaping () -> Void) {
