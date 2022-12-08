@@ -5,13 +5,24 @@ import CinemaTime
 
 final class MovieCellPresenter<Image, View: MovieCellView> where View.Image == Image {
     private let movie: Movie
-    private let movieCellView: View
+    private let view: View
+    private let loadingView: MovieCellLoadingView
+    private let errorView: MovieCellErrorView
     private let imageDataLoader: MovieImageDataLoader
     private let imageMapper: (Data) -> Image?
     
-    init(movie: Movie, movieCellView: View, imageDataLoader: MovieImageDataLoader, imageMapper: @escaping (Data) -> Image?) {
+    init(
+        movie: Movie,
+        view: View,
+        loadingView: MovieCellLoadingView,
+        errorView: MovieCellErrorView,
+        imageDataLoader: MovieImageDataLoader,
+        imageMapper: @escaping (Data) -> Image?
+    ) {
         self.movie = movie
-        self.movieCellView = movieCellView
+        self.view = view
+        self.loadingView = loadingView
+        self.errorView = errorView
         self.imageDataLoader = imageDataLoader
         self.imageMapper = imageMapper
     }
@@ -19,7 +30,6 @@ final class MovieCellPresenter<Image, View: MovieCellView> where View.Image == I
     func loadImageData() {
         loadingStarted()
         
-        let movie = self.movie
         _ = imageDataLoader.load(from: movie.imagePath) { [weak self] result in
             switch result {
             case let .success(data):
@@ -31,41 +41,33 @@ final class MovieCellPresenter<Image, View: MovieCellView> where View.Image == I
         }
     }
     
-    private func loadingStarted() {
-        movieCellView.display(MovieCellViewModel<Image>(
+    static func map(_ movie: Movie) -> MovieCellViewModel {
+        MovieCellViewModel(
             title: movie.title,
             overview: movie.overview,
-            rating: presentableRating(for: movie.rating),
-            image: nil,
-            isLoading: true,
-            shouldRetry: false
-        ))
+            rating: presentableRating(for: movie.rating)
+        )
+    }
+    
+    private func loadingStarted() {
+        loadingView.display(MovieCellLoadingViewModel(isLoading: true))
+        errorView.display(MovieCellErrorViewModel(shouldRetry: false))
     }
     
     private func loadingFinished(with data: Data) {
         let image = imageMapper(data)
-        movieCellView.display(MovieCellViewModel<Image>(
-            title: movie.title,
-            overview: movie.overview,
-            rating: presentableRating(for: movie.rating),
-            image: image,
-            isLoading: false,
-            shouldRetry: image == nil
-        ))
+        
+        view.display(image)
+        loadingView.display(MovieCellLoadingViewModel(isLoading: false))
+        errorView.display(MovieCellErrorViewModel(shouldRetry: image == nil))
     }
     
     private func loadingFinishedWithError() {
-        movieCellView.display(MovieCellViewModel<Image>(
-            title: movie.title,
-            overview: movie.overview,
-            rating: presentableRating(for: movie.rating),
-            image: nil,
-            isLoading: false,
-            shouldRetry: true
-        ))
+        loadingView.display(MovieCellLoadingViewModel(isLoading: false))
+        errorView.display(MovieCellErrorViewModel(shouldRetry: true))
     }
     
-    private func presentableRating(for rating: Double?) -> String {
+    private static func presentableRating(for rating: Double?) -> String {
         "\(rating ?? 0.0)"
     }
 }

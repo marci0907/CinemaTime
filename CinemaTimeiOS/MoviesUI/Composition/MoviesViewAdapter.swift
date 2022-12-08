@@ -15,10 +15,14 @@ final class MoviesViewAdapter: MoviesView {
     func display(_ viewModel: MoviesViewModel) {
         controller?.cellControllers = viewModel.movies.map {
             let presentationAdapter = MovieCellPresentationAdapter<UIImage, WeakRefProxy<MovieCellController>>()
-            let cellController = MovieCellController(delegate: presentationAdapter)
+            let cellController = MovieCellController(
+                viewModel: MovieCellPresenter<UIImage, MovieCellController>.map($0),
+                delegate: presentationAdapter)
             presentationAdapter.presenter = MovieCellPresenter(
                 movie: $0,
-                movieCellView: WeakRefProxy(cellController),
+                view: WeakRefProxy(cellController),
+                loadingView: WeakRefProxy(cellController),
+                errorView: WeakRefProxy(cellController),
                 imageDataLoader: imageDataLoader,
                 imageMapper: UIImage.init)
             return cellController

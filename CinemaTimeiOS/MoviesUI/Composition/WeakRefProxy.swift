@@ -17,7 +17,20 @@ extension WeakRefProxy: MoviesLoadingView where T: MoviesLoadingView {
 }
 
 extension WeakRefProxy: MovieCellView where T: MovieCellView, T.Image == UIImage {
-    func display(_ viewModel: MovieCellViewModel<UIImage>) {
+    func display(_ viewModel: UIImage?) {
         object?.display(viewModel)
     }
 }
+
+extension WeakRefProxy: MovieCellLoadingView where T: MovieCellLoadingView {
+    func display(_ viewModel: MovieCellLoadingViewModel) {
+        object?.display(viewModel)
+    }
+}
+
+extension WeakRefProxy: MovieCellErrorView where T: MovieCellErrorView {
+    func display(_ viewModel: MovieCellErrorViewModel) {
+        object?.display(viewModel)
+    }
+}
+
