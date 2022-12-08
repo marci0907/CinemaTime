@@ -4,7 +4,6 @@ import Foundation
 import CinemaTime
 
 final class MovieCellPresenter<Image, View: MovieCellView> where View.Image == Image {
-    private let movie: Movie
     private let view: View
     private let loadingView: MovieCellLoadingView
     private let errorView: MovieCellErrorView
@@ -12,14 +11,12 @@ final class MovieCellPresenter<Image, View: MovieCellView> where View.Image == I
     private let imageMapper: (Data) -> Image?
     
     init(
-        movie: Movie,
         view: View,
         loadingView: MovieCellLoadingView,
         errorView: MovieCellErrorView,
         imageDataLoader: MovieImageDataLoader,
         imageMapper: @escaping (Data) -> Image?
     ) {
-        self.movie = movie
         self.view = view
         self.loadingView = loadingView
         self.errorView = errorView
@@ -27,10 +24,10 @@ final class MovieCellPresenter<Image, View: MovieCellView> where View.Image == I
         self.imageMapper = imageMapper
     }
     
-    func loadImageData() {
+    func loadImageData(from imagePath: String?) {
         loadingStarted()
         
-        _ = imageDataLoader.load(from: movie.imagePath) { [weak self] result in
+        _ = imageDataLoader.load(from: imagePath) { [weak self] result in
             switch result {
             case let .success(data):
                 self?.loadingFinished(with: data)
