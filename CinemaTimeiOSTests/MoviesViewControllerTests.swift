@@ -100,6 +100,17 @@ final class MoviesViewControllerTests: XCTestCase {
         XCTAssertFalse(movieCell.isRetryButtonVisible)
     }
     
+    func test_movieCellRetryButton_isVisibleOnInvalidImageData() {
+        let (sut, loader) = makeSUT()
+        loader.completeMovieLoading(with: [makeMovie()])
+        
+        let movieCell = sut.simulateVisibleMovieCell(at: 0)!
+        XCTAssertFalse(movieCell.isRetryButtonVisible)
+        
+        loader.completeImageLoading(with: anyData(), at: 0)
+        XCTAssertTrue(movieCell.isRetryButtonVisible)
+    }
+    
     func test_movieCellRetryButton_isVisibleOnImageLoaderError() {
         let (sut, loader) = makeSUT()
         loader.completeMovieLoading(with: [makeMovie()])
