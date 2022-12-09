@@ -64,6 +64,7 @@ extension MovieCellController: MovieCellLoadingView {
 
 extension MovieCellController: MovieCellErrorView {
     func display(_ viewModel: MovieCellErrorViewModel) {
+        view?.imageContainer.isHidden = viewModel.shouldRetry
         view?.retryButton.isHidden = !viewModel.shouldRetry
     }
 }

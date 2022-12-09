@@ -3,15 +3,17 @@
 import UIKit
 
 public final class MovieCell: UITableViewCell {
-    public lazy var retryButton: UIButton = {
-       let button = UIButton()
-        button.addTarget(self, action: #selector(retry), for: .touchUpInside)
-        return button
-    }()
+    public let imageContainer = UIView()
     public let posterView = UIImageView()
     public let titleLabel = UILabel()
     public let ratingLabel = UILabel()
     public let overviewLabel = UILabel()
+    
+    public lazy var retryButton: UIButton = {
+        let button = UIButton()
+        button.addTarget(self, action: #selector(retry), for: .touchUpInside)
+        return button
+    }()
     
     var retryAction: (() -> Void)?
     
