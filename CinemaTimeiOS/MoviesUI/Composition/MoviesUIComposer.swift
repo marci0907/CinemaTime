@@ -9,7 +9,9 @@ public final class MoviesUIComposer {
         let refreshController = MoviesRefreshController()
         let viewController = MoviesViewController(refreshController: refreshController)
         refreshController.presenter = MoviesPresenter(
-            moviesView: MoviesViewAdapter(controller: viewController, imageDataLoader: imageLoader),
+            moviesView: MoviesViewAdapter(
+                controller: viewController,
+                imageDataLoader: MainQueueDispatchDecorator(decoratee: imageLoader)),
             loadingView: WeakRefProxy(refreshController),
             loader: movieLoader)
         return viewController
