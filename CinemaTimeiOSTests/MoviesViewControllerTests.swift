@@ -273,6 +273,20 @@ final class MoviesViewControllerTests: XCTestCase {
         XCTAssertEqual(loader.receivedImagePaths, [movie1.imagePath, movie2.imagePath])
     }
     
+    func test_movieLoaderCompletion_dispatchesUIUpdatesToMainThread() {
+        let (_, loader) = makeSUT()
+        
+        let exp = expectation(description: "Wait for completion")
+        
+        DispatchQueue.global().async {
+            loader.completeMovieLoading(with: [])
+            
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1.0)
+    }
+    
     func test_imageLoaderCompletion_dispatchesUIUpdatesToMainThread() {
         let (sut, loader) = makeSUT()
         loader.completeMovieLoading(with: [makeMovie()])

@@ -19,6 +19,14 @@ final class MainQueueDispatchDecorator<T> {
     }
 }
 
+extension MainQueueDispatchDecorator: MovieLoader where T == MovieLoader {
+    func load(completion: @escaping (MovieLoader.Result) -> Void) {
+        decoratee.load { [weak self] result in
+            self?.dispatch { completion(result) }
+        }
+    }
+}
+
 extension MainQueueDispatchDecorator: MovieImageDataLoader where T == MovieImageDataLoader {
     func load(from imagePath: String?, completion: @escaping (MovieImageDataLoader.Result) -> Void) -> MovieImageDataLoaderTask {
         decoratee.load(from: imagePath) { [weak self] result in

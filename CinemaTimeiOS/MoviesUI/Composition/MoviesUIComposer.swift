@@ -13,7 +13,7 @@ public final class MoviesUIComposer {
                 controller: viewController,
                 imageDataLoader: MainQueueDispatchDecorator(decoratee: imageLoader)),
             loadingView: WeakRefProxy(refreshController),
-            loader: movieLoader)
+            loader: MainQueueDispatchDecorator(decoratee: movieLoader))
         return viewController
     }
 }
