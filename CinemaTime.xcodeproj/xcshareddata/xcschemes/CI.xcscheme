@@ -48,6 +48,34 @@
                ReferencedContainer = "container:CinemaTime.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "4B6309542940BA7200C3FE91"
+               BuildableName = "CinemaTimeiOSTests.xctest"
+               BlueprintName = "CinemaTimeiOSTests"
+               ReferencedContainer = "container:CinemaTime.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "4B63094D2940BA7100C3FE91"
+               BuildableName = "CinemaTimeiOS.framework"
+               BlueprintName = "CinemaTimeiOS"
+               ReferencedContainer = "container:CinemaTime.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -64,6 +92,13 @@
             BlueprintIdentifier = "4B0B68F6293A228D00F6BFCE"
             BuildableName = "CinemaTime.framework"
             BlueprintName = "CinemaTime"
+            ReferencedContainer = "container:CinemaTime.xcodeproj">
+         </BuildableReference>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "4B63094D2940BA7100C3FE91"
+            BuildableName = "CinemaTimeiOS.framework"
+            BlueprintName = "CinemaTimeiOS"
             ReferencedContainer = "container:CinemaTime.xcodeproj">
          </BuildableReference>
       </CodeCoverageTargets>
@@ -87,6 +122,17 @@
                BlueprintIdentifier = "4B0B68FE293A228E00F6BFCE"
                BuildableName = "CinemaTimeTests.xctest"
                BlueprintName = "CinemaTimeTests"
+               ReferencedContainer = "container:CinemaTime.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            testExecutionOrdering = "random">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "4B6309542940BA7200C3FE91"
+               BuildableName = "CinemaTimeiOSTests.xctest"
+               BlueprintName = "CinemaTimeiOSTests"
                ReferencedContainer = "container:CinemaTime.xcodeproj">
             </BuildableReference>
          </TestableReference>
