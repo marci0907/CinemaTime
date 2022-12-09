@@ -227,11 +227,20 @@ final class MoviesViewControllerTests: XCTestCase {
         XCTAssertEqual(loader.receivedImagePaths, [movie.imagePath, movie.imagePath])
     }
     
+    func test_imageLoadingIndicator_isVisibleOnlyDuringImageLoading() {
+        let (sut, loader) = makeSUT()
+        loader.completeMovieLoading(with: [makeMovie()])
+        
+        let movieCell = sut.simulateVisibleMovieCell(at: 0)!
+        XCTAssertTrue(movieCell.isShowingImageLoader)
+        
+        loader.completeImageLoading(with: anyImageData(), at: 0)
+        XCTAssertFalse(movieCell.isShowingImageLoader)
+    }
+    
     // TODO: preloading
     
     // TODO: prefetching
-    
-    // TODO: loading animation on image
     
     // TODO: dispatching
     
@@ -389,6 +398,10 @@ private extension MovieCell {
     
     var renderedImageData: Data? {
         posterView.image?.pngData()
+    }
+    
+    var isShowingImageLoader: Bool {
+        imageLoadingIndicator.isAnimating
     }
     
     func triggerRetryAction() {

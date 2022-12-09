@@ -4,6 +4,7 @@ import UIKit
 
 public final class MovieCell: UITableViewCell {
     public let imageContainer = UIView()
+    public let imageLoadingIndicator = UIActivityIndicatorView(style: .large)
     public let posterView = UIImageView()
     public let titleLabel = UILabel()
     public let ratingLabel = UILabel()

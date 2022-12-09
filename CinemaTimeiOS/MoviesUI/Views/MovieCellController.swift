@@ -58,7 +58,11 @@ extension MovieCellController: MovieCellView {
 
 extension MovieCellController: MovieCellLoadingView {
     func display(_ viewModel: MovieCellLoadingViewModel) {
-        // TODO: isLoading
+        if viewModel.isLoading {
+            view?.imageLoadingIndicator.startAnimating()
+        } else {
+            view?.imageLoadingIndicator.stopAnimating()
+        }
     }
 }
 
