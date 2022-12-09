@@ -34,4 +34,8 @@ public final class MoviesViewController: UITableViewController {
     public override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         cellControllers[indexPath.row].cancelImageLoading()
     }
+    
+    public override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        cellControllers[indexPath.row].preloadImageData(for: cell)
+    }
 }

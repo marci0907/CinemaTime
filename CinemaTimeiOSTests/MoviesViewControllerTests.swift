@@ -260,7 +260,18 @@ final class MoviesViewControllerTests: XCTestCase {
         XCTAssertFalse(movieCell.isShowingImageLoader)
     }
     
-    // TODO: preloading
+    func test_willDisplayCell_startsImageDataPreloadingForCell() {
+        let movie1 = makeMovie(imagePath: "/first.jpg")
+        let movie2 = makeMovie(imagePath: "/second.jpg")
+        let (sut, loader) = makeSUT()
+        loader.completeMovieLoading(with: [movie1, movie2])
+        
+        sut.simulateNearVisibleMovieCell(at: 0)
+        XCTAssertEqual(loader.receivedImagePaths, [movie1.imagePath])
+        
+        sut.simulateNearVisibleMovieCell(at: 1)
+        XCTAssertEqual(loader.receivedImagePaths, [movie1.imagePath, movie2.imagePath])
+    }
     
     // TODO: prefetching
     
@@ -394,6 +405,12 @@ private extension MoviesViewController {
     func simulateVisibleMovieCell(at row: Int) -> MovieCell? {
         let ds = tableView.dataSource
         return ds?.tableView(tableView, cellForRowAt: IndexPath(row: row, section: 0)) as? MovieCell
+    }
+    
+    func simulateNearVisibleMovieCell(at row: Int) {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "\(MovieCell.self)", for: IndexPath(row: row, section: 0))
+        let delegate = tableView.delegate
+        delegate?.tableView?(tableView, willDisplay: cell, forRowAt: IndexPath(row: row, section: 0))
     }
     
     func simulateNotVisibleMovieCell(_ cell: UITableViewCell, at row: Int) {

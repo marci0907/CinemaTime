@@ -33,6 +33,11 @@ final class MovieCellController {
         return view!
     }
     
+    func preloadImageData(for cell: UITableViewCell) {
+        self.view = cell as? MovieCell
+        delegate.loadImageData()
+    }
+    
     func cancelImageLoading() {
         delegate.cancelImageDataLoading()
         releaseCellForReuse()
