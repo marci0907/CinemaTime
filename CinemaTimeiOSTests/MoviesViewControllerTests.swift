@@ -133,6 +133,18 @@ final class MoviesViewControllerTests: XCTestCase {
         XCTAssertTrue(movieCell.imageContainer.isHidden)
     }
     
+    func test_movieCellContainerView_isVisibleAfterRetrySuccessAfterImageLoaderError() {
+        let (sut, loader) = makeSUT()
+        loader.completeMovieLoading(with: [makeMovie()])
+        let movieCell = sut.simulateVisibleMovieCell(at: 0)!
+        loader.completeImageLoading(with: anyNSError(), at: 0)
+        
+        movieCell.triggerRetryAction()
+        loader.completeImageLoading(with: anyImageData(), at: 0)
+        
+        XCTAssertFalse(movieCell.imageContainer.isHidden)
+    }
+    
     func test_imageLoaderCompletion_deliversNoImageOnInvalidImageData() {
         let (sut, loader) = makeSUT()
         loader.completeMovieLoading(with: [makeMovie()])
