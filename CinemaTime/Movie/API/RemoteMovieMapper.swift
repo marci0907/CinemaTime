@@ -61,12 +61,3 @@ private extension JSONDecoder.DateDecodingStrategy {
         return formatted(dateFormatter)
     }
 }
-
-private extension DateFormatter {
-    func date(from string: String?) -> Date? {
-        guard let string = string else {
-            return nil
-        }
-        return date(from: string)
-    }
-}
