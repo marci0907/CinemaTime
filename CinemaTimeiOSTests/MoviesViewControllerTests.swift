@@ -238,6 +238,28 @@ final class MoviesViewControllerTests: XCTestCase {
         XCTAssertFalse(movieCell.isShowingImageLoader)
     }
     
+    func test_imageLoadingIndicator_isNotVisibleOnImageLoaderError() {
+        let (sut, loader) = makeSUT()
+        loader.completeMovieLoading(with: [makeMovie()])
+        
+        let movieCell = sut.simulateVisibleMovieCell(at: 0)!
+        XCTAssertTrue(movieCell.isShowingImageLoader)
+        
+        loader.completeImageLoading(with: anyNSError(), at: 0)
+        XCTAssertFalse(movieCell.isShowingImageLoader)
+    }
+    
+    func test_imageLoadingIndicator_isNotVisibleOnInvalidDataImageLoaderResult() {
+        let (sut, loader) = makeSUT()
+        loader.completeMovieLoading(with: [makeMovie()])
+        
+        let movieCell = sut.simulateVisibleMovieCell(at: 0)!
+        XCTAssertTrue(movieCell.isShowingImageLoader)
+        
+        loader.completeImageLoading(with: anyData(), at: 0)
+        XCTAssertFalse(movieCell.isShowingImageLoader)
+    }
+    
     // TODO: preloading
     
     // TODO: prefetching
