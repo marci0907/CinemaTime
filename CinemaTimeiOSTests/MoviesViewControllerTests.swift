@@ -179,11 +179,26 @@ final class MoviesViewControllerTests: XCTestCase {
         XCTAssertNil(movieCell.renderedImage)
     }
     
+    func test_triggeringRetryAction_loadsImageDataAgain() {
+        let movie = makeMovie(imagePath: "/aPath.jpg")
+        let (sut, loader) = makeSUT()
+        loader.completeMovieLoading(with: [movie])
+        let movieCell = sut.simulateVisibleMovieCell(at: 0)!
+        XCTAssertEqual(loader.receivedImagePaths, [movie.imagePath])
+        
+        loader.completeImageLoading(with: anyData(), at: 0)
+        movieCell.triggerRetryAction()
+        
+        XCTAssertEqual(loader.receivedImagePaths, [movie.imagePath, movie.imagePath])
+    }
+    
     // TODO: preloading
     
     // TODO: prefetching
     
-    // TODO: loader on image
+    // TODO: loading animation on image
+    
+    // TODO: dispatching
     
     // MARK: - Helpers
     
@@ -340,12 +355,26 @@ private extension MovieCell {
     var renderedImageData: Data? {
         posterView.image?.pngData()
     }
+    
+    func triggerRetryAction() {
+        retryButton.triggerAction()
+    }
 }
 
 private extension UIRefreshControl {
     func triggerRefresh() {
         allTargets.forEach { target in
             actions(forTarget: target, forControlEvent: .valueChanged)?.forEach { action in
+                (target as NSObject).perform(Selector(action))
+            }
+        }
+    }
+}
+
+private extension UIButton {
+    func triggerAction() {
+        allTargets.forEach { target in
+            actions(forTarget: target, forControlEvent: .touchUpInside)?.forEach { action in
                 (target as NSObject).perform(Selector(action))
             }
         }

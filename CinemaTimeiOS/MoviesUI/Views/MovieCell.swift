@@ -3,9 +3,20 @@
 import UIKit
 
 public final class MovieCell: UITableViewCell {
-    public let retryButton = UIButton()
+    public lazy var retryButton: UIButton = {
+       let button = UIButton()
+        button.addTarget(self, action: #selector(retry), for: .touchUpInside)
+        return button
+    }()
     public let posterView = UIImageView()
     public let titleLabel = UILabel()
     public let ratingLabel = UILabel()
     public let overviewLabel = UILabel()
+    
+    var retryAction: (() -> Void)?
+    
+    @objc
+    private func retry() {
+        retryAction?()
+    }
 }

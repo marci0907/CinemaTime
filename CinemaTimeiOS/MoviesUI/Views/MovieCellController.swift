@@ -42,6 +42,7 @@ final class MovieCellController {
         view?.titleLabel.text = viewModel.title
         view?.overviewLabel.text = viewModel.overview
         view?.ratingLabel.text = viewModel.rating
+        view?.retryAction = delegate.loadImageData
     }
     
     private func releaseCellForReuse() {
