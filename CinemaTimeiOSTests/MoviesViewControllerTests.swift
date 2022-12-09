@@ -276,15 +276,9 @@ final class MoviesViewControllerTests: XCTestCase {
     func test_movieLoaderCompletion_dispatchesUIUpdatesToMainThread() {
         let (_, loader) = makeSUT()
         
-        let exp = expectation(description: "Wait for completion")
-        
-        DispatchQueue.global().async {
+        executeOnBackgroundThread {
             loader.completeMovieLoading(with: [])
-            
-            exp.fulfill()
         }
-        
-        wait(for: [exp], timeout: 1.0)
     }
     
     func test_imageLoaderCompletion_dispatchesUIUpdatesToMainThread() {
@@ -293,15 +287,10 @@ final class MoviesViewControllerTests: XCTestCase {
         
         _ = sut.simulateVisibleMovieCell(at: 0)!
         
-        let exp = expectation(description: "Wait for completion")
         let imageData = anyImageData()
-        DispatchQueue.global().async {
+        executeOnBackgroundThread {
             loader.completeImageLoading(with: imageData, at: 0)
-            
-            exp.fulfill()
         }
-        
-        wait(for: [exp], timeout: 1.0)
     }
     
     // TODO: prefetching
@@ -337,6 +326,17 @@ final class MoviesViewControllerTests: XCTestCase {
         XCTAssertEqual(movieCell.titleLabel.text, movie.title, file: file, line: line)
         XCTAssertEqual(movieCell.ratingLabel.text, "\(movie.rating ?? 0.0)", file: file, line: line)
         XCTAssertEqual(movieCell.overviewLabel.text, movie.overview, file: file, line: line)
+    }
+    
+    private func executeOnBackgroundThread(action: @escaping () -> Void) {
+        let exp = expectation(description: "Wait for completion")
+        
+        DispatchQueue.global().async {
+            action()
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1.0)
     }
     
     private func makeMovie(
