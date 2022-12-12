@@ -49,6 +49,16 @@ final class MoviesViewControllerTests: XCTestCase {
         assert(sut, isRendering: [movie1, movie2])
     }
     
+    func test_loaderCompletion_rendersMoviesSortedByDateNewestToOldest() {
+        let movie1 = makeMovie(title: "first title", releaseDate: Date(timeIntervalSince1970: 12345))
+        let movie2 = makeMovie(title: "second title", releaseDate: Date(timeIntervalSince1970: 23456))
+        let movie3 = makeMovie(title: "third title", releaseDate: Date(timeIntervalSince1970: 21111))
+        let (sut, loader) = makeSUT()
+        
+        loader.completeMovieLoading(with: [movie1, movie2, movie3], at: 0)
+        assert(sut, isRendering: [movie2, movie3, movie1])
+    }
+    
     func test_loaderCompletion_rendersZeroMoviesAfterRenderingNonEmptyMovies() {
         let movie1 = makeMovie(title: "first title", overview: "first overview", rating: 1)
         let movie2 = makeMovie(title: "second title", overview: "second overview", rating: 2)
@@ -354,9 +364,10 @@ final class MoviesViewControllerTests: XCTestCase {
         title: String = "any title",
         imagePath: String? = "/any.jpg",
         overview: String = "any overview",
+        releaseDate: Date? = nil,
         rating: Double = 1.0
     ) -> Movie {
-        Movie(id: 0, title: title, imagePath: imagePath, overview: overview, releaseDate: nil, rating: rating)
+        Movie(id: 0, title: title, imagePath: imagePath, overview: overview, releaseDate: releaseDate, rating: rating)
     }
     
     private func anyData() -> Data {
