@@ -11,8 +11,12 @@ final class RemoteMovieImageDataLoader {
         case invalidData
     }
     
-    private struct Task: MovieImageDataLoaderTask {
-        func cancel() {}
+    private struct HTTPClientTaskWrapper: MovieImageDataLoaderTask {
+        let wrapped: HTTPClientTask
+        
+        func cancel() {
+            wrapped.cancel()
+        }
     }
     
     init(baseURL: URL, client: HTTPClient) {
@@ -22,7 +26,7 @@ final class RemoteMovieImageDataLoader {
     
     func load(from imagePath: String, completion: @escaping (MovieImageDataLoader.Result) -> Void) -> MovieImageDataLoaderTask {
         let fullImageURL = baseURL.appendingPathComponent(imagePath)
-        client.get(from: fullImageURL) { result in
+        let task = client.get(from: fullImageURL) { result in
             switch result {
             case let .success((data, response)):
                 completion(RemoteImageDataMapper.map(data, response: response))
@@ -31,7 +35,8 @@ final class RemoteMovieImageDataLoader {
                 completion(.failure(error))
             }
         }
-        return Task()
+        
+        return HTTPClientTaskWrapper(wrapped: task)
     }
 }
 
@@ -57,7 +62,7 @@ final class RemoteMovieImageDataLoaderTests: XCTestCase {
     
     func test_loadFromImagePath_requestImageDataFromURL() {
         let imagePath = "/any.jpg"
-        let (sut , client) = makeSUT()
+        let (sut, client) = makeSUT()
         
         _ = sut.load(from: imagePath) { _ in }
         
@@ -67,20 +72,20 @@ final class RemoteMovieImageDataLoaderTests: XCTestCase {
     
     func test_loadFromImagePath_deliversErrorOnClientError() {
         let error = anyNSError()
-        let (sut , client) = makeSUT()
+        let (sut, client) = makeSUT()
         
-        expect(sut, toCompleteWith: .failure(error), when: {
+        expect(sut, toCompleteWith: .failure(error), when: { _ in
             client.complete(with: error)
         })
     }
     
     func test_loadFromImagePath_deliversInvalidDataErrorOnNon200HTTPResponse() {
         let error = RemoteMovieImageDataLoader.Error.invalidData
-        let (sut , client) = makeSUT()
+        let (sut, client) = makeSUT()
         
         let samples = [199, 201, 300, 400, 500]
         samples.enumerated().forEach { index, code in
-            expect(sut, toCompleteWith: .failure(error), when: {
+            expect(sut, toCompleteWith: .failure(error), when: { _ in
                 client.complete(with: anyData(), statusCode: code, at: index)
             })
         }
@@ -88,11 +93,23 @@ final class RemoteMovieImageDataLoaderTests: XCTestCase {
     
     func test_loadFromImagePath_deliversImageDataOn200HTTPReponse() {
         let data = anyData()
-        let (sut , client) = makeSUT()
+        let (sut, client) = makeSUT()
         
-        expect(sut, toCompleteWith: .success(data), when: {
+        expect(sut, toCompleteWith: .success(data), when: { _ in
             client.complete(with: data, statusCode: 200)
         })
+    }
+    
+    func test_cancelingTask_cancelsImageDataLoading() {
+        let imagePath = anyImagePath()
+        let (sut, client) = makeSUT()
+        
+        let task = sut.load(from: imagePath) { _ in }
+        XCTAssertTrue(client.cancelledURLs.isEmpty)
+        
+        task.cancel()
+        let imageURL = URL(string: baseImageURL().absoluteString + imagePath)!
+        XCTAssertEqual(client.cancelledURLs, [imageURL])
     }
     
     // MARK: - Helpers
@@ -112,13 +129,13 @@ final class RemoteMovieImageDataLoaderTests: XCTestCase {
     private func expect(
         _ sut: RemoteMovieImageDataLoader,
         toCompleteWith expectedResult: MovieImageDataLoader.Result,
-        when action: @escaping () -> Void,
+        when action: @escaping (MovieImageDataLoaderTask) -> Void,
         file: StaticString = #file,
         line: UInt = #line
     ) {
         let exp = expectation(description: "Wait for completion")
         
-        _ = sut.load(from: anyImagePath()) { receivedResult in
+        let task = sut.load(from: anyImagePath()) { receivedResult in
             switch (receivedResult, expectedResult) {
             case let (.success(receivedData), .success(expectedData)):
                 XCTAssertEqual(receivedData, expectedData, file: file, line: line)
@@ -133,7 +150,7 @@ final class RemoteMovieImageDataLoaderTests: XCTestCase {
             exp.fulfill()
         }
         
-        action()
+        action(task)
         
         wait(for: [exp], timeout: 1.0)
     }
