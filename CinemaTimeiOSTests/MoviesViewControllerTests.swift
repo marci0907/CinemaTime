@@ -89,6 +89,17 @@ final class MoviesViewControllerTests: XCTestCase {
         XCTAssertEqual(loader.receivedImagePaths, [movie1.imagePath, movie2.imagePath])
     }
     
+    func test_imageDataLoader_showsEmptyImageContainerOnNilImagePath() {
+        let (sut, loader) = makeSUT()
+        
+        loader.completeMovieLoading(with: [makeMovie(imagePath: nil)])
+        
+        let movieCell = sut.simulateVisibleMovieCell(at: 0)!
+        XCTAssertTrue(loader.receivedImagePaths.isEmpty)
+        XCTAssertFalse(movieCell.isRetryButtonVisible)
+        XCTAssertFalse(movieCell.imageContainer.isHidden)
+    }
+    
     func test_movieCellRetryButton_isNotVisibleOnImageLoaderSuccess() {
         let (sut, loader) = makeSUT()
         loader.completeMovieLoading(with: [makeMovie()])
@@ -341,7 +352,7 @@ final class MoviesViewControllerTests: XCTestCase {
     
     private func makeMovie(
         title: String = "any title",
-        imagePath: String? = nil,
+        imagePath: String? = "/any.jpg",
         overview: String = "any overview",
         rating: Double = 1.0
     ) -> Movie {
@@ -390,7 +401,7 @@ final class MoviesViewControllerTests: XCTestCase {
             receivedImageLoads.map { $0.imagePath }
         }
         
-        func load(from imagePath: String?, completion: @escaping (MovieImageDataLoader.Result) -> Void) -> MovieImageDataLoaderTask {
+        func load(from imagePath: String, completion: @escaping (MovieImageDataLoader.Result) -> Void) -> MovieImageDataLoaderTask {
             receivedImageLoads.append((imagePath, completion))
             return TaskSpy { [weak self] in
                 self?.canceledURLs.append(imagePath)

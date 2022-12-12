@@ -16,7 +16,7 @@ final class AuthenticatedHTTPClientDecoratorTests: XCTestCase, HTTPClientTest {
         let url = anyURL()
         let (sut, client) = makeSUT(with: apiKey)
         
-        sut.get(from: url) { _ in }
+        _ = sut.get(from: url) { _ in }
         
         let signedURL = signedURL(for: url, apiKey: apiKey)
         XCTAssertEqual(client.requestedURLs, [signedURL])
@@ -27,7 +27,7 @@ final class AuthenticatedHTTPClientDecoratorTests: XCTestCase, HTTPClientTest {
         let url = URL(string: "https://any-url.com?page=1")!
         let (sut, client) = makeSUT(with: apiKey)
         
-        sut.get(from: url) { _ in }
+        _ = sut.get(from: url) { _ in }
         
         let signedURL = signedURLWithQueries(for: url, apiKey: apiKey)
         XCTAssertEqual(client.requestedURLs, [signedURL])
@@ -37,7 +37,7 @@ final class AuthenticatedHTTPClientDecoratorTests: XCTestCase, HTTPClientTest {
         let error = anyNSError()
         let (sut, client) = makeSUT()
         
-        expect(sut, toCompleteWith: .failure(error), when: {
+        expect(sut, toCompleteWith: .failure(error), when: { _ in
             client.complete(with: error)
         })
     }
@@ -47,9 +47,19 @@ final class AuthenticatedHTTPClientDecoratorTests: XCTestCase, HTTPClientTest {
         let response = anyHTTPURLResponse()
         let (sut, client) = makeSUT()
         
-        expect(sut, toCompleteWith: .success((data, response)), when: {
+        expect(sut, toCompleteWith: .success((data, response)), when: { _ in
             client.complete(with: data, statusCode: 200)
         })
+    }
+    
+    func test_cancelingTask_cancelsClientTask() {
+        let (sut, client) = makeSUT()
+        let url = anyURL()
+        let task = sut.get(from: url) { _ in }
+        
+        task.cancel()
+        
+        XCTAssertEqual(client.cancelledURLs, [signedURL(for: url)])
     }
     
     // MARK: - Helpers
@@ -66,7 +76,7 @@ final class AuthenticatedHTTPClientDecoratorTests: XCTestCase, HTTPClientTest {
         return (sut, client)
     }
     
-    private func signedURL(for url: URL, apiKey: String) -> URL {
+    private func signedURL(for url: URL, apiKey: String = "someKey") -> URL {
         URL(string: url.absoluteString + "?api_key=\(apiKey)")!
     }
     

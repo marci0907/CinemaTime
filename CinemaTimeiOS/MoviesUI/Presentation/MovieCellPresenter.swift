@@ -10,6 +10,8 @@ final class MovieCellPresenter<Image, View: MovieCellView> where View.Image == I
     private let imageDataLoader: MovieImageDataLoader
     private let imageMapper: (Data) -> Image?
     
+    private struct NoImagePathError: Error {}
+    
     private var task: MovieImageDataLoaderTask?
     
     init(
@@ -27,6 +29,10 @@ final class MovieCellPresenter<Image, View: MovieCellView> where View.Image == I
     }
     
     func loadImageData(from imagePath: String?) {
+        guard let imagePath = imagePath else {
+            return loadingFinishedWithError(NoImagePathError())
+        }
+        
         loadingStarted()
         
         task = imageDataLoader.load(from: imagePath) { [weak self] result in
@@ -34,8 +40,8 @@ final class MovieCellPresenter<Image, View: MovieCellView> where View.Image == I
             case let .success(data):
                 self?.loadingFinished(with: data)
                 
-            default:
-                self?.loadingFinishedWithError()
+            case let .failure(error):
+                self?.loadingFinishedWithError(error)
             }
         }
     }
@@ -65,9 +71,9 @@ final class MovieCellPresenter<Image, View: MovieCellView> where View.Image == I
         errorView.display(MovieCellErrorViewModel(shouldRetry: image == nil))
     }
     
-    private func loadingFinishedWithError() {
+    private func loadingFinishedWithError(_ error: Error) {
         loadingView.display(MovieCellLoadingViewModel(isLoading: false))
-        errorView.display(MovieCellErrorViewModel(shouldRetry: true))
+        errorView.display(MovieCellErrorViewModel(shouldRetry: !(error is NoImagePathError)))
     }
     
     private static func presentableRating(for rating: Double?) -> String {

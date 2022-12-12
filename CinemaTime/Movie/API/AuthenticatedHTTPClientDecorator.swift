@@ -11,10 +11,10 @@ public final class AuthenticatedHTTPClientDecorator: HTTPClient {
         self.apiKey = apiKey
     }
     
-    public func get(from url: URL, completion: @escaping (HTTPClient.Result) -> Void) {
+    public func get(from url: URL, completion: @escaping (HTTPClient.Result) -> Void) -> HTTPClientTask {
         let signedURL = signedURL(from: url)
         
-        decoratee.get(from: signedURL, completion: completion)
+        return decoratee.get(from: signedURL, completion: completion)
     }
     
     private func signedURL(from url: URL) -> URL {

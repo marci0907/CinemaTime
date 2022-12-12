@@ -7,7 +7,7 @@ func anyURL() -> URL {
 }
 
 func anyData() -> Data {
-    Data("".utf8)
+    Data("any data".utf8)
 }
 
 func anyNSError() -> Error {
