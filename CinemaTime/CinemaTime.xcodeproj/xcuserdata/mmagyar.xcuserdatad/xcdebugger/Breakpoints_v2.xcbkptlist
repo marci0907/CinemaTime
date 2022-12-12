@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   uuid = "5DC86140-52B7-4C52-87FA-63382DC7DD37"
+   type = "1"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "34BE16CF-C1CA-4172-9CF9-42D22AA4A36F"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CinemaTimeiOS/MoviesUI/Composition/MovieCellControllerAdapter.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "16"
+            endingLineNumber = "16"
+            landmarkName = "display(_:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "34BE16CF-C1CA-4172-9CF9-42D22AA4A36F - b4db2e961e3a69b6"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "CinemaTimeiOS.MovieCellControllerAdapter.display(CinemaTimeiOS.MoviesViewModel) -&gt; ()"
+                  moduleName = "CinemaTimeiOS"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mmagyar/Documents/Developer/Hobbyprojects/CinemaTime/CinemaTimeiOS/MoviesUI/Composition/MovieCellControllerAdapter.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "15"
+                  endingLineNumber = "15"
+                  offsetFromSymbolStart = "72">
+               </Location>
+               <Location
+                  uuid = "34BE16CF-C1CA-4172-9CF9-42D22AA4A36F - 19a15fc9d2d64d74"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (CinemaTime.Movie) -&gt; CinemaTimeiOS.MovieCellController in CinemaTimeiOS.MovieCellControllerAdapter.display(CinemaTimeiOS.MoviesViewModel) -&gt; ()"
+                  moduleName = "CinemaTimeiOS"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mmagyar/Documents/Developer/Hobbyprojects/CinemaTime/CinemaTimeiOS/MoviesUI/Composition/MovieCellControllerAdapter.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "15"
+                  endingLineNumber = "15"
+                  offsetFromSymbolStart = "112">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "656F380E-2753-4DFC-AB08-25EF06ACAEAC"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CinemaTimeiOS/MoviesUI/Presentation/MovieCellPresenter.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "69"
+            endingLineNumber = "69"
+            landmarkName = "loadingFinished(with:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "656F380E-2753-4DFC-AB08-25EF06ACAEAC - 49f977362e1f6c5a"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "CinemaTimeiOS.MovieCellPresenter.loadingFinished(with: Foundation.Data) -&gt; ()"
+                  moduleName = "CinemaTimeiOS"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mmagyar/Documents/Developer/Hobbyprojects/CinemaTime/CinemaTimeiOS/MoviesUI/Presentation/MovieCellPresenter.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "64"
+                  endingLineNumber = "64"
+                  offsetFromSymbolStart = "388">
+               </Location>
+               <Location
+                  uuid = "656F380E-2753-4DFC-AB08-25EF06ACAEAC - 49f977362e1f6c3d"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "CinemaTimeiOS.MovieCellPresenter.loadingFinished(with: Foundation.Data) -&gt; ()"
+                  moduleName = "CinemaTimeiOS"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mmagyar/Documents/Developer/Hobbyprojects/CinemaTime/CinemaTimeiOS/MoviesUI/Presentation/MovieCellPresenter.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "63"
+                  endingLineNumber = "63"
+                  offsetFromSymbolStart = "388">
+               </Location>
+               <Location
+                  uuid = "656F380E-2753-4DFC-AB08-25EF06ACAEAC - cc167cbfdc3a97a7"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "CinemaTimeiOS.MovieCellPresenter.loadingFinished(with: Foundation.Data) -&gt; ()"
+                  moduleName = "CinemaTimeiOS"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mmagyar/Documents/Developer/Hobbyprojects/CinemaTime/CinemaTime/CinemaTimeiOS/MoviesUI/Presentation/MovieCellPresenter.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "69"
+                  endingLineNumber = "69"
+                  offsetFromSymbolStart = "388">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "313CB495-AF9B-4F08-BA57-8EEA6C4E0890"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CinemaTimeiOS/MoviesUI/Presentation/MovieCellPresenter.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "50"
+            endingLineNumber = "50"
+            landmarkName = "cancelImageDataLoading()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "313CB495-AF9B-4F08-BA57-8EEA6C4E0890 - 3192abeb517e0e95"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "CinemaTimeiOS.MovieCellPresenter.cancelImageDataLoading() -&gt; ()"
+                  moduleName = "CinemaTimeiOS"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mmagyar/Documents/Developer/Hobbyprojects/CinemaTime/CinemaTimeiOS/MoviesUI/Presentation/MovieCellPresenter.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "45"
+                  endingLineNumber = "45"
+                  offsetFromSymbolStart = "64">
+               </Location>
+               <Location
+                  uuid = "313CB495-AF9B-4F08-BA57-8EEA6C4E0890 - 3192abeb517e0eb4"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "CinemaTimeiOS.MovieCellPresenter.cancelImageDataLoading() -&gt; ()"
+                  moduleName = "CinemaTimeiOS"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mmagyar/Documents/Developer/Hobbyprojects/CinemaTime/CinemaTimeiOS/MoviesUI/Presentation/MovieCellPresenter.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "44"
+                  endingLineNumber = "44"
+                  offsetFromSymbolStart = "64">
+               </Location>
+               <Location
+                  uuid = "313CB495-AF9B-4F08-BA57-8EEA6C4E0890 - b47da062a35bea52"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "CinemaTimeiOS.MovieCellPresenter.cancelImageDataLoading() -&gt; ()"
+                  moduleName = "CinemaTimeiOS"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mmagyar/Documents/Developer/Hobbyprojects/CinemaTime/CinemaTime/CinemaTimeiOS/MoviesUI/Presentation/MovieCellPresenter.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "50"
+                  endingLineNumber = "50"
+                  offsetFromSymbolStart = "64">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "E23F2795-F14F-49D3-80BF-C41D24173B86"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CinemaTimeAPIEndToEndTests/CinemaTimeAPIEndToEndTests.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "46"
+            endingLineNumber = "46"
+            landmarkName = "nowPlayingMoviesResult(with:file:line:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>
