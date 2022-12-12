@@ -43,6 +43,8 @@
 		4B55D99B2941EDB2004A5073 /* MovieCellErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55D99A2941EDB2004A5073 /* MovieCellErrorView.swift */; };
 		4B55D99D29439C1B004A5073 /* MainQueueDispatchDecorator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55D99C29439C1B004A5073 /* MainQueueDispatchDecorator.swift */; };
 		4B55D99F2944D93F004A5073 /* RemoteMovieImageDataLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55D99E2944D93F004A5073 /* RemoteMovieImageDataLoaderTests.swift */; };
+		4B55D9A129477EE5004A5073 /* RemoteMovieImageDataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55D9A029477EE5004A5073 /* RemoteMovieImageDataLoader.swift */; };
+		4B55D9A329477F00004A5073 /* RemoteMovieImageDataMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55D9A229477F00004A5073 /* RemoteMovieImageDataMapper.swift */; };
 		4B630940293F5AF300C3FE91 /* XCTestCase+MemoryLeakTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0B691D293A625800F6BFCE /* XCTestCase+MemoryLeakTracking.swift */; };
 		4B630942293F691B00C3FE91 /* AuthenticatedHTTPClientDecoratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B630941293F691B00C3FE91 /* AuthenticatedHTTPClientDecoratorTests.swift */; };
 		4B630944293F6B2A00C3FE91 /* HTTPClientSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B630943293F6B2A00C3FE91 /* HTTPClientSpy.swift */; };
@@ -132,6 +134,8 @@
 		4B55D99A2941EDB2004A5073 /* MovieCellErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieCellErrorView.swift; sourceTree = "<group>"; };
 		4B55D99C29439C1B004A5073 /* MainQueueDispatchDecorator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainQueueDispatchDecorator.swift; sourceTree = "<group>"; };
 		4B55D99E2944D93F004A5073 /* RemoteMovieImageDataLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteMovieImageDataLoaderTests.swift; sourceTree = "<group>"; };
+		4B55D9A029477EE5004A5073 /* RemoteMovieImageDataLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteMovieImageDataLoader.swift; sourceTree = "<group>"; };
+		4B55D9A229477F00004A5073 /* RemoteMovieImageDataMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteMovieImageDataMapper.swift; sourceTree = "<group>"; };
 		4B630941293F691B00C3FE91 /* AuthenticatedHTTPClientDecoratorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatedHTTPClientDecoratorTests.swift; sourceTree = "<group>"; };
 		4B630943293F6B2A00C3FE91 /* HTTPClientSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClientSpy.swift; sourceTree = "<group>"; };
 		4B630945293F7A4100C3FE91 /* AuthenticatedHTTPClientDecorator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatedHTTPClientDecorator.swift; sourceTree = "<group>"; };
@@ -247,6 +251,8 @@
 				4B0B6915293A618F00F6BFCE /* RemoteMovieLoader.swift */,
 				4B0B691B293A61EE00F6BFCE /* RemoteMovieMapper.swift */,
 				4B0B6927293E3ABF00F6BFCE /* URLSessionHTTPClient.swift */,
+				4B55D9A029477EE5004A5073 /* RemoteMovieImageDataLoader.swift */,
+				4B55D9A229477F00004A5073 /* RemoteMovieImageDataMapper.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -573,7 +579,9 @@
 				4B0B693B293F545A00F6BFCE /* Secrets.swift in Sources */,
 				4B0B6918293A61B500F6BFCE /* HTTPClient.swift in Sources */,
 				4B0B6912293A254300F6BFCE /* MovieLoader.swift in Sources */,
+				4B55D9A329477F00004A5073 /* RemoteMovieImageDataMapper.swift in Sources */,
 				4B55D99529412CED004A5073 /* MovieImageDataLoader.swift in Sources */,
+				4B55D9A129477EE5004A5073 /* RemoteMovieImageDataLoader.swift in Sources */,
 				4B0B691C293A61EE00F6BFCE /* RemoteMovieMapper.swift in Sources */,
 				4B630946293F7A4100C3FE91 /* AuthenticatedHTTPClientDecorator.swift in Sources */,
 				4B0B6928293E3ABF00F6BFCE /* URLSessionHTTPClient.swift in Sources */,
