@@ -7,6 +7,10 @@ final class RemoteMovieImageDataLoader {
     private let baseURL: URL
     private let client: HTTPClient
     
+    public enum Error: Swift.Error {
+        case invalidData
+    }
+    
     private struct Task: MovieImageDataLoaderTask {
         func cancel() {}
     }
@@ -20,13 +24,22 @@ final class RemoteMovieImageDataLoader {
         let fullImageURL = baseURL.appendingPathComponent(imagePath)
         client.get(from: fullImageURL) { result in
             switch result {
-            case .success: break
+            case let .success((data, response)):
+                completion(RemoteImageDataMapper.map(data, response: response))
                 
             case let .failure(error):
                 completion(.failure(error))
             }
         }
         return Task()
+    }
+}
+
+private class RemoteImageDataMapper {
+    private init() {}
+    
+    static func map(_ data: Data, response: HTTPURLResponse) -> MovieImageDataLoader.Result {
+        return .failure(RemoteMovieImageDataLoader.Error.invalidData)
     }
 }
 
@@ -55,6 +68,18 @@ final class RemoteMovieImageDataLoaderTests: XCTestCase {
         expect(sut, toCompleteWith: .failure(error), when: {
             client.complete(with: error)
         })
+    }
+    
+    func test_loadFromImagePath_deliversInvalidDataErrorOnNon200HTTPResponse() {
+        let error = RemoteMovieImageDataLoader.Error.invalidData
+        let (sut , client) = makeSUT()
+        
+        let samples = [199, 201, 300, 400, 500]
+        samples.enumerated().forEach { index, code in
+            expect(sut, toCompleteWith: .failure(error), when: {
+                client.complete(with: anyData(), statusCode: code, at: index)
+            })
+        }
     }
     
     // MARK: - Helpers
