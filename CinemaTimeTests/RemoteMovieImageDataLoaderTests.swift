@@ -63,7 +63,7 @@ private class RemoteImageDataMapper {
     private init() {}
     
     static func map(_ data: Data, response: HTTPURLResponse) -> RemoteMovieImageDataLoader.Result {
-        guard response.statusCode == 200 else {
+        guard response.statusCode == 200, !data.isEmpty else {
             return .failure(RemoteMovieImageDataLoader.Error.invalidData)
         }
         
@@ -108,6 +108,15 @@ final class RemoteMovieImageDataLoaderTests: XCTestCase {
                 client.complete(with: anyData(), statusCode: code, at: index)
             })
         }
+    }
+    
+    func test_loadFromImagePath_deliversInvalidDataErrorOn200HTTPResponseWithEmptyData() {
+        let (sut, client) = makeSUT()
+        
+        expect(sut, toCompleteWith: .failure(RemoteMovieImageDataLoader.Error.invalidData), when: { _ in
+            let emptyData = Data()
+            client.complete(with: emptyData, statusCode: 200)
+        })
     }
     
     func test_loadFromImagePath_deliversImageDataOn200HTTPReponse() {
