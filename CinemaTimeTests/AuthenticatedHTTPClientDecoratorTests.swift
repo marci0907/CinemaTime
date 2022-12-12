@@ -16,7 +16,7 @@ final class AuthenticatedHTTPClientDecoratorTests: XCTestCase, HTTPClientTest {
         let url = anyURL()
         let (sut, client) = makeSUT(with: apiKey)
         
-        sut.get(from: url) { _ in }
+        _ = sut.get(from: url) { _ in }
         
         let signedURL = signedURL(for: url, apiKey: apiKey)
         XCTAssertEqual(client.requestedURLs, [signedURL])
@@ -27,7 +27,7 @@ final class AuthenticatedHTTPClientDecoratorTests: XCTestCase, HTTPClientTest {
         let url = URL(string: "https://any-url.com?page=1")!
         let (sut, client) = makeSUT(with: apiKey)
         
-        sut.get(from: url) { _ in }
+        _ = sut.get(from: url) { _ in }
         
         let signedURL = signedURLWithQueries(for: url, apiKey: apiKey)
         XCTAssertEqual(client.requestedURLs, [signedURL])
@@ -52,6 +52,16 @@ final class AuthenticatedHTTPClientDecoratorTests: XCTestCase, HTTPClientTest {
         })
     }
     
+    func test_cancelingTask_cancelsClientTask() {
+        let (sut, client) = makeSUT()
+        let url = anyURL()
+        let task = sut.get(from: url) { _ in }
+        
+        task.cancel()
+        
+        XCTAssertEqual(client.cancelledURLs, [signedURL(for: url)])
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(
@@ -66,7 +76,7 @@ final class AuthenticatedHTTPClientDecoratorTests: XCTestCase, HTTPClientTest {
         return (sut, client)
     }
     
-    private func signedURL(for url: URL, apiKey: String) -> URL {
+    private func signedURL(for url: URL, apiKey: String = "someKey") -> URL {
         URL(string: url.absoluteString + "?api_key=\(apiKey)")!
     }
     

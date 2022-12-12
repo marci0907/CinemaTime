@@ -6,12 +6,22 @@ import CinemaTime
 class HTTPClientSpy: HTTPClient {
     typealias Message = (url: URL, completion: (HTTPClient.Result) -> Void)
     
+    private struct Task: HTTPClientTask {
+        let action: () -> Void
+        func cancel() {
+            action()
+        }
+    }
+    
     var requestedURLs: [URL] { receivedMessages.map { $0.url } }
+    var cancelledURLs = [URL]()
     
     private var receivedMessages = [Message]()
     
-    func get(from url: URL, completion: @escaping (HTTPClient.Result) -> Void) {
+    @discardableResult
+    func get(from url: URL, completion: @escaping (HTTPClient.Result) -> Void) -> HTTPClientTask {
         receivedMessages.append((url, completion))
+        return Task { [weak self] in self?.cancelledURLs.append(url) }
     }
     
     func complete(with data: Data, statusCode code: Int, at index: Int = 0) {

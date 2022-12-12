@@ -7,16 +7,22 @@ public final class URLSessionHTTPClient: HTTPClient {
     
     public typealias Result = HTTPClient.Result
     
-    public init(session: URLSession) {
-        self.session = session
+    private struct URLSessionTaskWrapper: HTTPClientTask {
+        let wrapped: URLSessionTask
+        
+        func cancel() {
+            wrapped.cancel()
+        }
     }
     
     private struct UnknownCaseRepresentation: Swift.Error {}
     
-    public func get(from url: URL, completion: @escaping (Result) -> Void) {
-        let urlRequest = URLRequest(url: url)
-        
-        session.dataTask(with: urlRequest) { data, response, error in
+    public init(session: URLSession) {
+        self.session = session
+    }
+    
+    public func get(from url: URL, completion: @escaping (HTTPClient.Result) -> Void) -> HTTPClientTask {
+        let task = session.dataTask(with: url) { data, response, error in
             if let error = error {
                 completion(.failure(error))
             } else if let data = data, let response = response as? HTTPURLResponse {
@@ -24,6 +30,10 @@ public final class URLSessionHTTPClient: HTTPClient {
             } else {
                 completion(.failure(UnknownCaseRepresentation()))
             }
-        }.resume()
+        }
+        
+        task.resume()
+        
+        return URLSessionTaskWrapper(wrapped: task)
     }
 }
