@@ -11,11 +11,17 @@ final class RemoteMovieImageDataLoader {
         case invalidData
     }
     
-    private struct HTTPClientTaskWrapper: MovieImageDataLoaderTask {
-        let wrapped: HTTPClientTask
+    private class HTTPClientTaskWrapper: MovieImageDataLoaderTask {
+        var wrapped: HTTPClientTask?
+        var completion: ((HTTPClient.Result) -> Void)?
+        
+        func complete(with result: HTTPClient.Result) {
+            completion?(result)
+        }
         
         func cancel() {
-            wrapped.cancel()
+            wrapped?.cancel()
+            completion = nil
         }
     }
     
@@ -26,7 +32,9 @@ final class RemoteMovieImageDataLoader {
     
     func load(from imagePath: String, completion: @escaping (MovieImageDataLoader.Result) -> Void) -> MovieImageDataLoaderTask {
         let fullImageURL = baseURL.appendingPathComponent(imagePath)
-        let task = client.get(from: fullImageURL) { result in
+        
+        let wrapper = HTTPClientTaskWrapper()
+        wrapper.completion = { result in
             switch result {
             case let .success((data, response)):
                 completion(RemoteImageDataMapper.map(data, response: response))
@@ -36,7 +44,11 @@ final class RemoteMovieImageDataLoader {
             }
         }
         
-        return HTTPClientTaskWrapper(wrapped: task)
+        wrapper.wrapped = client.get(from: fullImageURL) { result in
+            wrapper.complete(with: result)
+        }
+        
+        return wrapper
     }
 }
 
@@ -110,6 +122,17 @@ final class RemoteMovieImageDataLoaderTests: XCTestCase {
         task.cancel()
         let imageURL = URL(string: baseImageURL().absoluteString + imagePath)!
         XCTAssertEqual(client.cancelledURLs, [imageURL])
+    }
+    
+    func test_cancelingTask_doesNotDeliverImageLoaderResult() {
+        let (sut, client) = makeSUT()
+        var results = [MovieImageDataLoader.Result]()
+        let task = sut.load(from: anyImagePath()) { results.append($0) }
+        
+        task.cancel()
+        client.complete(with: anyData(), statusCode: 200)
+        
+        XCTAssertTrue(results.isEmpty)
     }
     
     // MARK: - Helpers
