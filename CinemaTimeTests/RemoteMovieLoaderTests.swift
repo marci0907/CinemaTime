@@ -61,6 +61,19 @@ final class RemoteMovieLoaderTests: XCTestCase {
         }
     }
     
+    func test_load_doesNotDeliverItemsWithoutIdOrTitleOn200HTTPURLResponse() {
+        let (sut, client) = makeSUT()
+        
+        let movie1 = makeItem(id: nil, title: "Some random movie", imagePath: "/1.jpg", overview: nil, releaseDate: nil, rating: 2.1)
+        let movie2 = makeItem(id: 2, title: "Black Adam", imagePath: "/2.jpg", overview: "Some overview", releaseDate: (Date(timeIntervalSince1970: 1666137600), "2022-10-19"), rating: 7.7)
+        let movie3 = makeItem(id: 3, title: nil, imagePath: "/3.jpg", overview: "Other overview", releaseDate: (Date(timeIntervalSince1970: 1590278400), "2020-05-24"), rating: 1.1)
+        
+        let receivedData = makeJSON(from: [movie1.json, movie2.json, movie3.json])
+        expect(sut, toCompleteWith: .success([movie2.model]), when: {
+            client.complete(with: receivedData, statusCode: 200)
+        })
+    }
+    
     func test_load_deliversNoItemsOn200HTTPURLResponseWithEmptyList() {
         let receivedData = makeJSON(from: [])
         let (sut, client) = makeSUT()
@@ -83,23 +96,9 @@ final class RemoteMovieLoaderTests: XCTestCase {
         })
     }
     
-    func test_load_doesNotDeliverItemsWithoutIdOrTitleOn200HTTPURLResponse() {
-        let (sut, client) = makeSUT()
-        
-        let movie1 = makeItem(id: nil, title: "Some random movie", imagePath: "/1.jpg", overview: nil, releaseDate: nil, rating: 2.1)
-        let movie2 = makeItem(id: 2, title: "Black Adam", imagePath: "/2.jpg", overview: "Some overview", releaseDate: (Date(timeIntervalSince1970: 1666137600), "2022-10-19"), rating: 7.7)
-        let movie3 = makeItem(id: 3, title: nil, imagePath: "/3.jpg", overview: "Other overview", releaseDate: (Date(timeIntervalSince1970: 1590278400), "2020-05-24"), rating: 1.1)
-        
-        let receivedData = makeJSON(from: [movie1.json, movie2.json, movie3.json])
-        expect(sut, toCompleteWith: .success([movie2.model]), when: {
-            client.complete(with: receivedData, statusCode: 200)
-        })
-    }
-    
-    func test_load_doesNotDeliverResultAfterSUTHasBeenDeallocated() {
+    func test_load_doesNotDeliverResultAfterSutHasBeenDeallocated() {
         let client = HTTPClientSpy()
         var sut: RemoteMovieLoader? = RemoteMovieLoader(url: anyURL(), client: client)
-        
         var deliveredResult: RemoteMovieLoader.Result?
         sut?.load(completion: { deliveredResult = $0 })
         

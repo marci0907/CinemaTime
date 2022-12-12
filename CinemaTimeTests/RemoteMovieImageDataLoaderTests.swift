@@ -99,12 +99,12 @@ final class RemoteMovieImageDataLoaderTests: XCTestCase {
     }
     
     func test_loadFromImagePath_deliversInvalidDataErrorOnNon200HTTPResponse() {
-        let error = RemoteMovieImageDataLoader.Error.invalidData
         let (sut, client) = makeSUT()
         
-        let samples = [199, 201, 300, 400, 500]
-        samples.enumerated().forEach { index, code in
-            expect(sut, toCompleteWith: .failure(error), when: { _ in
+        let invalidStatusCodes = [199, 201, 300, 400, 500]
+        
+        invalidStatusCodes.enumerated().forEach { index, code in
+            expect(sut, toCompleteWith: .failure(RemoteMovieImageDataLoader.Error.invalidData), when: { _ in
                 client.complete(with: anyData(), statusCode: code, at: index)
             })
         }
@@ -147,8 +147,8 @@ final class RemoteMovieImageDataLoaderTests: XCTestCase {
         var sut: RemoteMovieImageDataLoader? = RemoteMovieImageDataLoader(baseURL: baseImageURL(), client: client)
         var results = [RemoteMovieImageDataLoader.Result]()
         _ = sut?.load(from: anyImagePath()) { results.append($0) }
-        sut = nil
         
+        sut = nil
         client.complete(with: anyData(), statusCode: 200)
         
         XCTAssertTrue(results.isEmpty)
