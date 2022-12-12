@@ -3,7 +3,7 @@
 import XCTest
 import CinemaTime
 
-final class RemoteMovieImageDataLoader {
+final class RemoteMovieImageDataLoader: MovieImageDataLoader {
     private let baseURL: URL
     private let client: HTTPClient
     
