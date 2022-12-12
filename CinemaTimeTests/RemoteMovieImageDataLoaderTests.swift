@@ -12,16 +12,21 @@ final class RemoteMovieImageDataLoader {
     }
     
     private class HTTPClientTaskWrapper: MovieImageDataLoaderTask {
-        var wrapped: HTTPClientTask?
         var completion: ((HTTPClient.Result) -> Void)?
+        
+        var wrapped: HTTPClientTask?
+        
+        init(_ completion: @escaping (HTTPClient.Result) -> Void) {
+            self.completion = completion
+        }
         
         func complete(with result: HTTPClient.Result) {
             completion?(result)
         }
         
         func cancel() {
-            wrapped?.cancel()
             completion = nil
+            wrapped?.cancel()
         }
     }
     
@@ -31,10 +36,7 @@ final class RemoteMovieImageDataLoader {
     }
     
     func load(from imagePath: String, completion: @escaping (MovieImageDataLoader.Result) -> Void) -> MovieImageDataLoaderTask {
-        let fullImageURL = baseURL.appendingPathComponent(imagePath)
-        
-        let wrapper = HTTPClientTaskWrapper()
-        wrapper.completion = { result in
+        let task = HTTPClientTaskWrapper { result in
             switch result {
             case let .success((data, response)):
                 completion(RemoteImageDataMapper.map(data, response: response))
@@ -44,11 +46,10 @@ final class RemoteMovieImageDataLoader {
             }
         }
         
-        wrapper.wrapped = client.get(from: fullImageURL) { result in
-            wrapper.complete(with: result)
-        }
+        let fullImageURL = baseURL.appendingPathComponent(imagePath)
+        task.wrapped = client.get(from: fullImageURL) { task.complete(with: $0) }
         
-        return wrapper
+        return task
     }
 }
 
