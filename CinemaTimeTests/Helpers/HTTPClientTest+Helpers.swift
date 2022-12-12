@@ -9,12 +9,12 @@ extension HTTPClientTest where Self: XCTestCase {
     func expect(
         _ sut: HTTPClient,
         toCompleteWith expectedResult: HTTPClient.Result,
-        when action: @escaping () -> Void = {},
+        when action: @escaping (HTTPClientTask) -> Void = { _ in },
         file: StaticString = #file,
         line: UInt = #line
     ) {
         let exp = expectation(description: "Wait for completion")
-        sut.get(from: anyURL()) { receivedResult in
+        let task = sut.get(from: anyURL()) { receivedResult in
             switch (receivedResult, expectedResult) {
             case let (.success((receivedData, receivedResponse)), .success((expectedData, expectedResponse))):
                 XCTAssertEqual(receivedData, expectedData, file: file, line: line)
@@ -31,7 +31,7 @@ extension HTTPClientTest where Self: XCTestCase {
             exp.fulfill()
         }
         
-        action()
+        action(task)
         
         wait(for: [exp], timeout: 1.0)
     }

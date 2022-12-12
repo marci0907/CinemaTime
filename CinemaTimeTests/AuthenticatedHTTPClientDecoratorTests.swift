@@ -37,7 +37,7 @@ final class AuthenticatedHTTPClientDecoratorTests: XCTestCase, HTTPClientTest {
         let error = anyNSError()
         let (sut, client) = makeSUT()
         
-        expect(sut, toCompleteWith: .failure(error), when: {
+        expect(sut, toCompleteWith: .failure(error), when: { _ in
             client.complete(with: error)
         })
     }
@@ -47,7 +47,7 @@ final class AuthenticatedHTTPClientDecoratorTests: XCTestCase, HTTPClientTest {
         let response = anyHTTPURLResponse()
         let (sut, client) = makeSUT()
         
-        expect(sut, toCompleteWith: .success((data, response)), when: {
+        expect(sut, toCompleteWith: .success((data, response)), when: { _ in
             client.complete(with: data, statusCode: 200)
         })
     }

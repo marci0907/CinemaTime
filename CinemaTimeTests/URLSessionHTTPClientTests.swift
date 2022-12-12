@@ -67,24 +67,11 @@ final class URLSessionHTTPClientTests: XCTestCase, HTTPClientTest {
         expect(sut, toCompleteWith: .success((emptyData, expectedResponse)))
     }
     
-    func test_cancelingTask_cancelsURLSessionDataTask() {
+    func test_cancelingTask_cancelsURLRequestAndDeliversCancelledURLError() {
         let sut = makeSUT()
         
-        let exp = expectation(description: "Wait for completion")
-        let task = sut.get(from: anyURL()) { result in
-            switch result {
-            case let .failure(error as NSError):
-                XCTAssertEqual(error.code, URLError.cancelled.rawValue)
-                
-            default:
-                XCTFail("Expected failure with cancelled error, got \(result) instead")
-            }
-            exp.fulfill()
-        }
-        
-        task.cancel()
-        
-        wait(for: [exp], timeout: 1.0)
+        let cancelledError = NSError(domain: NSURLErrorDomain, code: URLError.cancelled.rawValue)
+        expect(sut, toCompleteWith: .failure(cancelledError), when: { $0.cancel() })
     }
     
     // MARK: - Helpers
