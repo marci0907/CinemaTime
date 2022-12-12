@@ -7,6 +7,8 @@ final class RemoteMovieImageDataLoader {
     private let baseURL: URL
     private let client: HTTPClient
     
+    public typealias Result = MovieImageDataLoader.Result
+    
     public enum Error: Swift.Error {
         case invalidData
     }
@@ -35,7 +37,7 @@ final class RemoteMovieImageDataLoader {
         self.client = client
     }
     
-    func load(from imagePath: String, completion: @escaping (MovieImageDataLoader.Result) -> Void) -> MovieImageDataLoaderTask {
+    func load(from imagePath: String, completion: @escaping (Result) -> Void) -> MovieImageDataLoaderTask {
         let task = HTTPClientTaskWrapper { result in
             switch result {
             case let .success((data, response)):
@@ -60,7 +62,7 @@ final class RemoteMovieImageDataLoader {
 private class RemoteImageDataMapper {
     private init() {}
     
-    static func map(_ data: Data, response: HTTPURLResponse) -> MovieImageDataLoader.Result {
+    static func map(_ data: Data, response: HTTPURLResponse) -> RemoteMovieImageDataLoader.Result {
         guard response.statusCode == 200 else {
             return .failure(RemoteMovieImageDataLoader.Error.invalidData)
         }
@@ -131,7 +133,7 @@ final class RemoteMovieImageDataLoaderTests: XCTestCase {
     
     func test_cancelingTask_doesNotDeliverImageLoaderResult() {
         let (sut, client) = makeSUT()
-        var results = [MovieImageDataLoader.Result]()
+        var results = [RemoteMovieImageDataLoader.Result]()
         let task = sut.load(from: anyImagePath()) { results.append($0) }
         
         task.cancel()
@@ -143,7 +145,7 @@ final class RemoteMovieImageDataLoaderTests: XCTestCase {
     func test_loadFromImagePath_doesNotDeliverResultAfterSutHasBeenDeallocated() {
         let client = HTTPClientSpy()
         var sut: RemoteMovieImageDataLoader? = RemoteMovieImageDataLoader(baseURL: baseImageURL(), client: client)
-        var results = [MovieImageDataLoader.Result]()
+        var results = [RemoteMovieImageDataLoader.Result]()
         _ = sut?.load(from: anyImagePath()) { results.append($0) }
         sut = nil
         
@@ -168,7 +170,7 @@ final class RemoteMovieImageDataLoaderTests: XCTestCase {
     
     private func expect(
         _ sut: RemoteMovieImageDataLoader,
-        toCompleteWith expectedResult: MovieImageDataLoader.Result,
+        toCompleteWith expectedResult: RemoteMovieImageDataLoader.Result,
         when action: @escaping (MovieImageDataLoaderTask) -> Void,
         file: StaticString = #file,
         line: UInt = #line
