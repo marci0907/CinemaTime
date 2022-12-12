@@ -45,6 +45,7 @@
 		4B55D9A129477EE5004A5073 /* RemoteMovieImageDataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55D9A029477EE5004A5073 /* RemoteMovieImageDataLoader.swift */; };
 		4B55D9A329477F00004A5073 /* RemoteMovieImageDataMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55D9A229477F00004A5073 /* RemoteMovieImageDataMapper.swift */; };
 		4B55DA6E2947CBFF004A5073 /* Secrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55DA6D2947CBFF004A5073 /* Secrets.swift */; };
+		4B55DA702947D27D004A5073 /* UIImageView+Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55DA6F2947D27D004A5073 /* UIImageView+Animation.swift */; };
 		4B630940293F5AF300C3FE91 /* XCTestCase+MemoryLeakTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0B691D293A625800F6BFCE /* XCTestCase+MemoryLeakTracking.swift */; };
 		4B630942293F691B00C3FE91 /* AuthenticatedHTTPClientDecoratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B630941293F691B00C3FE91 /* AuthenticatedHTTPClientDecoratorTests.swift */; };
 		4B630944293F6B2A00C3FE91 /* HTTPClientSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B630943293F6B2A00C3FE91 /* HTTPClientSpy.swift */; };
@@ -136,6 +137,7 @@
 		4B55D9A029477EE5004A5073 /* RemoteMovieImageDataLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteMovieImageDataLoader.swift; sourceTree = "<group>"; };
 		4B55D9A229477F00004A5073 /* RemoteMovieImageDataMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteMovieImageDataMapper.swift; sourceTree = "<group>"; };
 		4B55DA6D2947CBFF004A5073 /* Secrets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Secrets.swift; path = Secrets/Secrets.swift; sourceTree = SOURCE_ROOT; };
+		4B55DA6F2947D27D004A5073 /* UIImageView+Animation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Animation.swift"; sourceTree = "<group>"; };
 		4B630941293F691B00C3FE91 /* AuthenticatedHTTPClientDecoratorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatedHTTPClientDecoratorTests.swift; sourceTree = "<group>"; };
 		4B630943293F6B2A00C3FE91 /* HTTPClientSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClientSpy.swift; sourceTree = "<group>"; };
 		4B630945293F7A4100C3FE91 /* AuthenticatedHTTPClientDecorator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatedHTTPClientDecorator.swift; sourceTree = "<group>"; };
@@ -345,6 +347,7 @@
 				4B55D98129410911004A5073 /* MoviesRefreshController.swift */,
 				4B55D9892941093D004A5073 /* MoviesViewController.swift */,
 				4B55D98C29410975004A5073 /* UITableView+Dequeueing.swift */,
+				4B55DA6F2947D27D004A5073 /* UIImageView+Animation.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -623,6 +626,7 @@
 				4B55D9972941C916004A5073 /* MovieCellPresentationAdapter.swift in Sources */,
 				4B55D99D29439C1B004A5073 /* MainQueueDispatchDecorator.swift in Sources */,
 				4B55D98229410911004A5073 /* MoviesRefreshController.swift in Sources */,
+				4B55DA702947D27D004A5073 /* UIImageView+Animation.swift in Sources */,
 				4B55D99329410AEE004A5073 /* MovieCellView.swift in Sources */,
 				4B55D98D29410975004A5073 /* UITableView+Dequeueing.swift in Sources */,
 				4B55D99B2941EDB2004A5073 /* MovieCellErrorView.swift in Sources */,

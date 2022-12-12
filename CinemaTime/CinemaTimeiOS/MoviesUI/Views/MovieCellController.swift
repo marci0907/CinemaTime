@@ -44,6 +44,7 @@ final class MovieCellController {
     }
     
     private func configureView() {
+        view?.posterView.setImageAnimated(nil)
         view?.titleLabel.text = viewModel.title
         view?.overviewLabel.text = viewModel.overview
         view?.ratingLabel.text = viewModel.rating
@@ -57,7 +58,7 @@ final class MovieCellController {
 
 extension MovieCellController: MovieCellView {
     func display(_ viewModel: UIImage?) {
-        view?.posterView.image = viewModel
+        view?.posterView.setImageAnimated(viewModel)
     }
 }
 

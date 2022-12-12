@@ -18,6 +18,8 @@ public final class MoviesViewController: UITableViewController {
         super.viewDidLoad()
         
         tableView.register(MovieCell.self)
+        tableView.separatorStyle = .none
+        tableView.allowsSelection = false
         
         refreshControl = refreshController?.view
         refreshController?.refresh()

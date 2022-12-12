@@ -15,7 +15,8 @@ public final class MovieCell: UITableViewCell {
     
     public lazy var retryButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Retry", for: .normal)
+        button.tintColor = .black
+        button.setImage(UIImage(systemName: "arrow.counterclockwise"), for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.addTarget(self, action: #selector(retry), for: .touchUpInside)
         return button
@@ -46,7 +47,7 @@ private extension MovieCell {
         
         NSLayoutConstraint.activate([
             contentStackView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            contentStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            contentStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -30),
             contentStackView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 20),
             contentStackView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -20)
         ])
@@ -59,13 +60,17 @@ private extension MovieCell {
         contentStackView.addArrangedSubview(imageContentView)
         
         setupImageContainer()
+        setupRatingView()
         setupRetryButton()
     }
     
     func setupImageContainer() {
         imageContentView.addSubview(imageContainer)
         imageContainer.translatesAutoresizingMaskIntoConstraints = false
-
+        
+        imageContainer.clipsToBounds = true
+        imageContainer.layer.cornerRadius = 15
+        
         NSLayoutConstraint.activate([
             imageContainer.topAnchor.constraint(equalTo: imageContentView.topAnchor),
             imageContainer.bottomAnchor.constraint(equalTo: imageContentView.bottomAnchor),
@@ -79,6 +84,7 @@ private extension MovieCell {
         NSLayoutConstraint.activate([
             posterView.topAnchor.constraint(equalTo: imageContainer.topAnchor),
             posterView.bottomAnchor.constraint(equalTo: imageContainer.bottomAnchor),
+            posterView.heightAnchor.constraint(equalTo: posterView.widthAnchor, multiplier: 1.5),
             posterView.leftAnchor.constraint(equalTo: imageContainer.leftAnchor),
             posterView.rightAnchor.constraint(equalTo: imageContainer.rightAnchor)
         ])
@@ -90,20 +96,18 @@ private extension MovieCell {
             imageLoadingIndicator.centerXAnchor.constraint(equalTo: imageContainer.centerXAnchor),
             imageLoadingIndicator.centerYAnchor.constraint(equalTo: imageContainer.centerYAnchor)
         ])
-        
-        setupRatingView()
     }
     
     func setupRatingView() {
-        imageContainer.addSubview(ratingView)
+        imageContentView.addSubview(ratingView)
         ratingView.translatesAutoresizingMaskIntoConstraints = false
         
         ratingView.axis = .horizontal
-        ratingView.spacing = 5
+        ratingView.spacing = 3
         
         NSLayoutConstraint.activate([
-            ratingView.bottomAnchor.constraint(equalTo: imageContainer.bottomAnchor, constant: -15),
-            ratingView.rightAnchor.constraint(equalTo: imageContainer.rightAnchor, constant: -15)
+            ratingView.bottomAnchor.constraint(equalTo: imageContentView.bottomAnchor, constant: -15),
+            ratingView.rightAnchor.constraint(equalTo: imageContentView.rightAnchor, constant: -15)
         ])
         
         ratingView.addArrangedSubview(ratingLabel)
@@ -118,7 +122,7 @@ private extension MovieCell {
     }
     
     func setupRetryButton() {
-        imageContentView.addSubview(retryButton)
+        imageContentView.insertSubview(retryButton, belowSubview: ratingView)
         retryButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
