@@ -47,7 +47,11 @@ final class RemoteMovieImageDataLoader {
         }
         
         let fullImageURL = baseURL.appendingPathComponent(imagePath)
-        task.wrapped = client.get(from: fullImageURL) { task.complete(with: $0) }
+        task.wrapped = client.get(from: fullImageURL) { [weak self] result in
+            guard self != nil else { return }
+            
+            task.complete(with: result)
+        }
         
         return task
     }
@@ -131,6 +135,18 @@ final class RemoteMovieImageDataLoaderTests: XCTestCase {
         let task = sut.load(from: anyImagePath()) { results.append($0) }
         
         task.cancel()
+        client.complete(with: anyData(), statusCode: 200)
+        
+        XCTAssertTrue(results.isEmpty)
+    }
+    
+    func test_loadFromImagePath_doesNotDeliverResultAfterSutHasBeenDeallocated() {
+        let client = HTTPClientSpy()
+        var sut: RemoteMovieImageDataLoader? = RemoteMovieImageDataLoader(baseURL: baseImageURL(), client: client)
+        var results = [MovieImageDataLoader.Result]()
+        _ = sut?.load(from: anyImagePath()) { results.append($0) }
+        sut = nil
+        
         client.complete(with: anyData(), statusCode: 200)
         
         XCTAssertTrue(results.isEmpty)
