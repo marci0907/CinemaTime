@@ -2,8 +2,8 @@
 
 import UIKit
 
-final class MoviesRefreshController: NSObject, MoviesLoadingView {
-    var presenter: MoviesPresenter?
+public final class MoviesRefreshController: NSObject, MoviesLoadingView {
+    public var presenter: MoviesPresenter?
     
     lazy var view: UIRefreshControl = {
         let view = UIRefreshControl()
@@ -16,7 +16,7 @@ final class MoviesRefreshController: NSObject, MoviesLoadingView {
         presenter?.load()
     }
     
-    func display(_ viewModel: MoviesLoadingViewModel) {
+    public func display(_ viewModel: MoviesLoadingViewModel) {
         if viewModel.isLoading {
             view.beginRefreshing()
         } else {

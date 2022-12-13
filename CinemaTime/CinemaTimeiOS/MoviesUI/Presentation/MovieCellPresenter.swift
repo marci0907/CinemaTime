@@ -3,7 +3,7 @@
 import Foundation
 import CinemaTime
 
-final class MovieCellPresenter<Image, View: MovieCellView> where View.Image == Image {
+public final class MovieCellPresenter<Image, View: MovieCellView> where View.Image == Image {
     private let view: View
     private let loadingView: MovieCellLoadingView
     private let errorView: MovieCellErrorView
@@ -14,7 +14,7 @@ final class MovieCellPresenter<Image, View: MovieCellView> where View.Image == I
     
     private var task: MovieImageDataLoaderTask?
     
-    init(
+    public init(
         view: View,
         loadingView: MovieCellLoadingView,
         errorView: MovieCellErrorView,
@@ -28,7 +28,7 @@ final class MovieCellPresenter<Image, View: MovieCellView> where View.Image == I
         self.imageMapper = imageMapper
     }
     
-    func loadImageData(from imagePath: String?) {
+    public func loadImageData(from imagePath: String?) {
         guard let imagePath = imagePath else {
             return loadingFinishedWithError(NoImagePathError())
         }
@@ -46,11 +46,11 @@ final class MovieCellPresenter<Image, View: MovieCellView> where View.Image == I
         }
     }
     
-    func cancelImageDataLoading() {
+    public func cancelImageDataLoading() {
         task?.cancel()
     }
     
-    static func map(_ movie: Movie) -> MovieCellViewModel {
+    public static func map(_ movie: Movie) -> MovieCellViewModel {
         MovieCellViewModel(
             title: movie.title,
             overview: movie.overview,

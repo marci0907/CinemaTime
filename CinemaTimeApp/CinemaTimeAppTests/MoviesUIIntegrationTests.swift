@@ -4,8 +4,9 @@ import XCTest
 import UIKit
 import CinemaTime
 import CinemaTimeiOS
+import CinemaTimeApp
 
-final class MoviesViewControllerTests: XCTestCase {
+final class MoviesUIIntegrationTests: XCTestCase {
     
     func test_userInitiatedRefresh_triggersMovieLoading() {
         let (sut, loader) = makeSUT()

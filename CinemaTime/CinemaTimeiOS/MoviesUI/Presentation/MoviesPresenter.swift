@@ -2,12 +2,12 @@
 
 import CinemaTime
 
-final class MoviesPresenter {
+public final class MoviesPresenter {
     private let moviesView: MoviesView
     private let loadingView: MoviesLoadingView
     private let loader: MovieLoader
     
-    init(moviesView: MoviesView, loadingView: MoviesLoadingView, loader: MovieLoader) {
+    public init(moviesView: MoviesView, loadingView: MoviesLoadingView, loader: MovieLoader) {
         self.moviesView = moviesView
         self.loadingView = loadingView
         self.loader = loader

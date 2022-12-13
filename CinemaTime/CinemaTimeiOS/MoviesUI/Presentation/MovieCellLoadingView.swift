@@ -1,9 +1,9 @@
 //  Created by Marcell Magyar on 08.12.22.
 
-struct MovieCellLoadingViewModel {
+public struct MovieCellLoadingViewModel {
     let isLoading: Bool
 }
 
-protocol MovieCellLoadingView {
+public protocol MovieCellLoadingView {
     func display(_ viewModel: MovieCellLoadingViewModel)
 }

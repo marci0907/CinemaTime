@@ -2,10 +2,10 @@
 
 import CinemaTime
 
-struct MoviesViewModel {
-    let movies: [Movie]
+public struct MoviesViewModel {
+    public let movies: [Movie]
 }
 
-protocol MoviesView {
+public protocol MoviesView {
     func display(_ viewModel: MoviesViewModel)
 }

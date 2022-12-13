@@ -2,24 +2,24 @@
 
 import UIKit
 
-struct MovieCellViewModel {
+public struct MovieCellViewModel {
     let title: String
     let overview: String?
     let rating: String?
 }
 
-protocol MovieCellControllerDelegate {
+public protocol MovieCellControllerDelegate {
     func loadImageData()
     func cancelImageDataLoading()
 }
 
-final class MovieCellController {
+public final class MovieCellController {
     private let viewModel: MovieCellViewModel
     private let delegate: MovieCellControllerDelegate
     
     private var view: MovieCell?
     
-    init(viewModel: MovieCellViewModel, delegate: MovieCellControllerDelegate) {
+    public init(viewModel: MovieCellViewModel, delegate: MovieCellControllerDelegate) {
         self.delegate = delegate
         self.viewModel = viewModel
     }
@@ -57,13 +57,13 @@ final class MovieCellController {
 }
 
 extension MovieCellController: MovieCellView {
-    func display(_ viewModel: UIImage?) {
+    public func display(_ viewModel: UIImage?) {
         view?.posterView.setImageAnimated(viewModel)
     }
 }
 
 extension MovieCellController: MovieCellLoadingView {
-    func display(_ viewModel: MovieCellLoadingViewModel) {
+    public func display(_ viewModel: MovieCellLoadingViewModel) {
         if viewModel.isLoading {
             view?.imageLoadingIndicator.startAnimating()
         } else {
@@ -73,7 +73,7 @@ extension MovieCellController: MovieCellLoadingView {
 }
 
 extension MovieCellController: MovieCellErrorView {
-    func display(_ viewModel: MovieCellErrorViewModel) {
+    public func display(_ viewModel: MovieCellErrorViewModel) {
         view?.imageContainer.isHidden = viewModel.shouldRetry
         view?.retryButton.isHidden = !viewModel.shouldRetry
     }

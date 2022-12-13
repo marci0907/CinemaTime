@@ -1,6 +1,7 @@
 //  Created by Marcell Magyar on 08.12.22.
 
 import CinemaTime
+import CinemaTimeiOS
 
 final class MovieCellPresentationAdapter<Image, View: MovieCellView>: MovieCellControllerDelegate where View.Image == Image {
     private let movie: Movie

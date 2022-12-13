@@ -2,6 +2,7 @@
 
 import UIKit
 import CinemaTime
+import CinemaTimeiOS
 
 final class MoviesViewAdapter: MoviesView {
     private weak var controller: MoviesViewController?

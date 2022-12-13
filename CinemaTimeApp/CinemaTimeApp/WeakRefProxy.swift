@@ -1,6 +1,7 @@
 //  Created by Marcell Magyar on 07.12.22.
 
 import UIKit
+import CinemaTimeiOS
 
 final class WeakRefProxy<T: AnyObject> {
     weak var object: T?

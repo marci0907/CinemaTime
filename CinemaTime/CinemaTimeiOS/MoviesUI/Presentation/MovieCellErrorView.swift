@@ -1,9 +1,9 @@
 //  Created by Marcell Magyar on 08.12.22.
 
-struct MovieCellErrorViewModel {
+public struct MovieCellErrorViewModel {
     let shouldRetry: Bool
 }
 
-protocol MovieCellErrorView {
+public protocol MovieCellErrorView {
     func display(_ viewModel: MovieCellErrorViewModel)
 }

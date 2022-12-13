@@ -5,11 +5,11 @@ import UIKit
 public final class MoviesViewController: UITableViewController {
     private var refreshController: MoviesRefreshController?
     
-    var cellControllers = [MovieCellController]() {
+    public var cellControllers = [MovieCellController]() {
         didSet { tableView.reloadData() }
     }
     
-    convenience init(refreshController: MoviesRefreshController) {
+    public convenience init(refreshController: MoviesRefreshController) {
         self.init()
         self.refreshController = refreshController
     }
