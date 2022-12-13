@@ -207,7 +207,7 @@
 			isa = PBXGroup;
 			children = (
 				4BC4EB0929488DF70014BE6E /* Secrets */,
-				4B0B691F293A628100F6BFCE /* Movie */,
+				4B0B691F293A628100F6BFCE /* Movies */,
 			);
 			path = CinemaTime;
 			sourceTree = "<group>";
@@ -224,14 +224,14 @@
 			path = CinemaTimeTests;
 			sourceTree = "<group>";
 		};
-		4B0B691F293A628100F6BFCE /* Movie */ = {
+		4B0B691F293A628100F6BFCE /* Movies */ = {
 			isa = PBXGroup;
 			children = (
 				4B0B6920293A629700F6BFCE /* API */,
 				4B0B6921293A62AA00F6BFCE /* Domain */,
 				4B55D97D294108EE004A5073 /* Presentation */,
 			);
-			path = Movie;
+			path = Movies;
 			sourceTree = "<group>";
 		};
 		4B0B6920293A629700F6BFCE /* API */ = {
@@ -284,13 +284,13 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		4B55D975294108C3004A5073 /* MoviesUI */ = {
+		4B55D975294108C3004A5073 /* Movies */ = {
 			isa = PBXGroup;
 			children = (
 				4BC4EB0829488D0E0014BE6E /* Controllers */,
 				4B55D98029410905004A5073 /* Views */,
 			);
-			path = MoviesUI;
+			path = Movies;
 			sourceTree = "<group>";
 		};
 		4B55D97D294108EE004A5073 /* Presentation */ = {
@@ -320,7 +320,7 @@
 		4B63094F2940BA7100C3FE91 /* CinemaTimeiOS */ = {
 			isa = PBXGroup;
 			children = (
-				4B55D975294108C3004A5073 /* MoviesUI */,
+				4B55D975294108C3004A5073 /* Movies */,
 			);
 			path = CinemaTimeiOS;
 			sourceTree = "<group>";
