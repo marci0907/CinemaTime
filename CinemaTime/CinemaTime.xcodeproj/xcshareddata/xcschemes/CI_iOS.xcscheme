@@ -76,6 +76,34 @@
                ReferencedContainer = "container:CinemaTime.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "4B55DA302947C5C1004A5073"
+               BuildableName = "CinemaTimeApp.app"
+               BlueprintName = "CinemaTimeApp"
+               ReferencedContainer = "container:../CinemaTimeApp/CinemaTimeApp.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "4B55DA462947C5C3004A5073"
+               BuildableName = "CinemaTimeAppTests.xctest"
+               BlueprintName = "CinemaTimeAppTests"
+               ReferencedContainer = "container:../CinemaTimeApp/CinemaTimeApp.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -100,6 +128,13 @@
             BuildableName = "CinemaTimeiOS.framework"
             BlueprintName = "CinemaTimeiOS"
             ReferencedContainer = "container:CinemaTime.xcodeproj">
+         </BuildableReference>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "4B55DA302947C5C1004A5073"
+            BuildableName = "CinemaTimeApp.app"
+            BlueprintName = "CinemaTimeApp"
+            ReferencedContainer = "container:../CinemaTimeApp/CinemaTimeApp.xcodeproj">
          </BuildableReference>
       </CodeCoverageTargets>
       <Testables>
@@ -134,6 +169,17 @@
                BuildableName = "CinemaTimeiOSTests.xctest"
                BlueprintName = "CinemaTimeiOSTests"
                ReferencedContainer = "container:CinemaTime.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            testExecutionOrdering = "random">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "4B55DA462947C5C3004A5073"
+               BuildableName = "CinemaTimeAppTests.xctest"
+               BlueprintName = "CinemaTimeAppTests"
+               ReferencedContainer = "container:../CinemaTimeApp/CinemaTimeApp.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
