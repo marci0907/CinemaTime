@@ -9,10 +9,8 @@
 /* Begin PBXBuildFile section */
 		4B55DA352947C5C1004A5073 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55DA342947C5C1004A5073 /* AppDelegate.swift */; };
 		4B55DA372947C5C1004A5073 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55DA362947C5C1004A5073 /* SceneDelegate.swift */; };
-		4B55DA392947C5C1004A5073 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55DA382947C5C1004A5073 /* ViewController.swift */; };
 		4B55DA3E2947C5C3004A5073 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B55DA3D2947C5C3004A5073 /* Assets.xcassets */; };
 		4B55DA412947C5C3004A5073 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4B55DA3F2947C5C3004A5073 /* LaunchScreen.storyboard */; };
-		4B55DA4C2947C5C3004A5073 /* CinemaTimeAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55DA4B2947C5C3004A5073 /* CinemaTimeAppTests.swift */; };
 		4B55DA672947C6AC004A5073 /* CinemaTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B55DA652947C6AC004A5073 /* CinemaTime.framework */; };
 		4B55DA682947C6AC004A5073 /* CinemaTime.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B55DA652947C6AC004A5073 /* CinemaTime.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4B55DA692947C6AC004A5073 /* CinemaTimeiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B55DA662947C6AC004A5073 /* CinemaTimeiOS.framework */; };
@@ -48,12 +46,10 @@
 		4B55DA312947C5C1004A5073 /* CinemaTimeApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CinemaTimeApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B55DA342947C5C1004A5073 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4B55DA362947C5C1004A5073 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		4B55DA382947C5C1004A5073 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		4B55DA3D2947C5C3004A5073 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4B55DA402947C5C3004A5073 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4B55DA422947C5C3004A5073 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4B55DA472947C5C3004A5073 /* CinemaTimeAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CinemaTimeAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		4B55DA4B2947C5C3004A5073 /* CinemaTimeAppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CinemaTimeAppTests.swift; sourceTree = "<group>"; };
 		4B55DA652947C6AC004A5073 /* CinemaTime.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CinemaTime.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B55DA662947C6AC004A5073 /* CinemaTimeiOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CinemaTimeiOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -100,12 +96,9 @@
 		4B55DA332947C5C1004A5073 /* CinemaTimeApp */ = {
 			isa = PBXGroup;
 			children = (
+				4B55DA7129488924004A5073 /* SupportingFiles */,
 				4B55DA342947C5C1004A5073 /* AppDelegate.swift */,
 				4B55DA362947C5C1004A5073 /* SceneDelegate.swift */,
-				4B55DA382947C5C1004A5073 /* ViewController.swift */,
-				4B55DA3D2947C5C3004A5073 /* Assets.xcassets */,
-				4B55DA3F2947C5C3004A5073 /* LaunchScreen.storyboard */,
-				4B55DA422947C5C3004A5073 /* Info.plist */,
 			);
 			path = CinemaTimeApp;
 			sourceTree = "<group>";
@@ -113,7 +106,6 @@
 		4B55DA4A2947C5C3004A5073 /* CinemaTimeAppTests */ = {
 			isa = PBXGroup;
 			children = (
-				4B55DA4B2947C5C3004A5073 /* CinemaTimeAppTests.swift */,
 			);
 			path = CinemaTimeAppTests;
 			sourceTree = "<group>";
@@ -125,6 +117,16 @@
 				4B55DA662947C6AC004A5073 /* CinemaTimeiOS.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		4B55DA7129488924004A5073 /* SupportingFiles */ = {
+			isa = PBXGroup;
+			children = (
+				4B55DA3D2947C5C3004A5073 /* Assets.xcassets */,
+				4B55DA3F2947C5C3004A5073 /* LaunchScreen.storyboard */,
+				4B55DA422947C5C3004A5073 /* Info.plist */,
+			);
+			path = SupportingFiles;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -228,7 +230,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B55DA392947C5C1004A5073 /* ViewController.swift in Sources */,
 				4B55DA352947C5C1004A5073 /* AppDelegate.swift in Sources */,
 				4B55DA372947C5C1004A5073 /* SceneDelegate.swift in Sources */,
 			);
@@ -238,7 +239,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B55DA4C2947C5C3004A5073 /* CinemaTimeAppTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -387,7 +387,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 4733CLVUX5;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = CinemaTimeApp/Info.plist;
+				INFOPLIST_FILE = CinemaTimeApp/SupportingFiles/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
@@ -418,7 +418,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 4733CLVUX5;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = CinemaTimeApp/Info.plist;
+				INFOPLIST_FILE = CinemaTimeApp/SupportingFiles/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
