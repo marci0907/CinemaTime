@@ -1,6 +1,7 @@
 //  Created by Marcell Magyar on 07.12.22.
 
 import UIKit
+import CinemaTime
 
 public final class MoviesRefreshController: NSObject, MoviesLoadingView {
     public var presenter: MoviesPresenter?

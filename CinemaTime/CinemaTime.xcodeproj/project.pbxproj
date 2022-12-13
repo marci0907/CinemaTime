@@ -23,19 +23,12 @@
 		4B55D96E2940BF0F004A5073 /* XCTestCase+MemoryLeakTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0B691D293A625800F6BFCE /* XCTestCase+MemoryLeakTracking.swift */; };
 		4B55D9702940C2F1004A5073 /* CinemaTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B0B68F7293A228D00F6BFCE /* CinemaTime.framework */; };
 		4B55D9712940C2F1004A5073 /* CinemaTime.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4B0B68F7293A228D00F6BFCE /* CinemaTime.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4B55D97F294108FB004A5073 /* MoviesPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55D97E294108FB004A5073 /* MoviesPresenter.swift */; };
 		4B55D98229410911004A5073 /* MoviesRefreshController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55D98129410911004A5073 /* MoviesRefreshController.swift */; };
 		4B55D98429410924004A5073 /* MovieCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55D98329410924004A5073 /* MovieCell.swift */; };
-		4B55D9862941092B004A5073 /* MovieCellPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55D9852941092B004A5073 /* MovieCellPresenter.swift */; };
 		4B55D98829410935004A5073 /* MovieCellController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55D98729410935004A5073 /* MovieCellController.swift */; };
 		4B55D98A2941093D004A5073 /* MoviesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55D9892941093D004A5073 /* MoviesViewController.swift */; };
 		4B55D98D29410975004A5073 /* UITableView+Dequeueing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55D98C29410975004A5073 /* UITableView+Dequeueing.swift */; };
-		4B55D98F29410AC2004A5073 /* MoviesLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55D98E29410AC2004A5073 /* MoviesLoadingView.swift */; };
-		4B55D99129410ACB004A5073 /* MoviesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55D99029410ACB004A5073 /* MoviesView.swift */; };
-		4B55D99329410AEE004A5073 /* MovieCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55D99229410AEE004A5073 /* MovieCellView.swift */; };
 		4B55D99529412CED004A5073 /* MovieImageDataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55D99429412CED004A5073 /* MovieImageDataLoader.swift */; };
-		4B55D9992941EDAC004A5073 /* MovieCellLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55D9982941EDAC004A5073 /* MovieCellLoadingView.swift */; };
-		4B55D99B2941EDB2004A5073 /* MovieCellErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55D99A2941EDB2004A5073 /* MovieCellErrorView.swift */; };
 		4B55D99F2944D93F004A5073 /* RemoteMovieImageDataLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55D99E2944D93F004A5073 /* RemoteMovieImageDataLoaderTests.swift */; };
 		4B55D9A129477EE5004A5073 /* RemoteMovieImageDataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55D9A029477EE5004A5073 /* RemoteMovieImageDataLoader.swift */; };
 		4B55D9A329477F00004A5073 /* RemoteMovieImageDataMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55D9A229477F00004A5073 /* RemoteMovieImageDataMapper.swift */; };
@@ -47,6 +40,13 @@
 		4B630948293F7A9C00C3FE91 /* HTTPClientTest+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B630947293F7A9C00C3FE91 /* HTTPClientTest+Helpers.swift */; };
 		4B6309562940BA7200C3FE91 /* CinemaTimeiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B63094E2940BA7100C3FE91 /* CinemaTimeiOS.framework */; };
 		4BC4EB0B29488DF70014BE6E /* Secrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC4EB0A29488DF70014BE6E /* Secrets.swift */; };
+		4BC4EB0C29488EB20014BE6E /* MovieCellErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55D99A2941EDB2004A5073 /* MovieCellErrorView.swift */; };
+		4BC4EB0D29488EB70014BE6E /* MoviesPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55D97E294108FB004A5073 /* MoviesPresenter.swift */; };
+		4BC4EB0E29488EB70014BE6E /* MovieCellLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55D9982941EDAC004A5073 /* MovieCellLoadingView.swift */; };
+		4BC4EB0F29488EB70014BE6E /* MovieCellPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55D9852941092B004A5073 /* MovieCellPresenter.swift */; };
+		4BC4EB1029488EB70014BE6E /* MovieCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55D99229410AEE004A5073 /* MovieCellView.swift */; };
+		4BC4EB1129488EB70014BE6E /* MoviesLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55D98E29410AC2004A5073 /* MoviesLoadingView.swift */; };
+		4BC4EB1229488EB70014BE6E /* MoviesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55D99029410ACB004A5073 /* MoviesView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -229,6 +229,7 @@
 			children = (
 				4B0B6920293A629700F6BFCE /* API */,
 				4B0B6921293A62AA00F6BFCE /* Domain */,
+				4B55D97D294108EE004A5073 /* Presentation */,
 			);
 			path = Movie;
 			sourceTree = "<group>";
@@ -287,7 +288,6 @@
 			isa = PBXGroup;
 			children = (
 				4BC4EB0829488D0E0014BE6E /* Controllers */,
-				4B55D97D294108EE004A5073 /* Presentation */,
 				4B55D98029410905004A5073 /* Views */,
 			);
 			path = MoviesUI;
@@ -562,11 +562,18 @@
 				4BC4EB0B29488DF70014BE6E /* Secrets.swift in Sources */,
 				4B0B6916293A618F00F6BFCE /* RemoteMovieLoader.swift in Sources */,
 				4B0B6910293A242C00F6BFCE /* Movie.swift in Sources */,
+				4BC4EB0F29488EB70014BE6E /* MovieCellPresenter.swift in Sources */,
 				4B0B6918293A61B500F6BFCE /* HTTPClient.swift in Sources */,
 				4B0B6912293A254300F6BFCE /* MovieLoader.swift in Sources */,
+				4BC4EB1129488EB70014BE6E /* MoviesLoadingView.swift in Sources */,
+				4BC4EB1229488EB70014BE6E /* MoviesView.swift in Sources */,
 				4B55D9A329477F00004A5073 /* RemoteMovieImageDataMapper.swift in Sources */,
+				4BC4EB0E29488EB70014BE6E /* MovieCellLoadingView.swift in Sources */,
 				4B55D99529412CED004A5073 /* MovieImageDataLoader.swift in Sources */,
+				4BC4EB1029488EB70014BE6E /* MovieCellView.swift in Sources */,
 				4B55D9A129477EE5004A5073 /* RemoteMovieImageDataLoader.swift in Sources */,
+				4BC4EB0D29488EB70014BE6E /* MoviesPresenter.swift in Sources */,
+				4BC4EB0C29488EB20014BE6E /* MovieCellErrorView.swift in Sources */,
 				4B0B691C293A61EE00F6BFCE /* RemoteMovieMapper.swift in Sources */,
 				4B630946293F7A4100C3FE91 /* AuthenticatedHTTPClientDecorator.swift in Sources */,
 				4B0B6928293E3ABF00F6BFCE /* URLSessionHTTPClient.swift in Sources */,
@@ -601,18 +608,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B55D98F29410AC2004A5073 /* MoviesLoadingView.swift in Sources */,
-				4B55D99129410ACB004A5073 /* MoviesView.swift in Sources */,
 				4B55D98829410935004A5073 /* MovieCellController.swift in Sources */,
 				4B55D98229410911004A5073 /* MoviesRefreshController.swift in Sources */,
 				4B55DA702947D27D004A5073 /* UIImageView+Animation.swift in Sources */,
-				4B55D99329410AEE004A5073 /* MovieCellView.swift in Sources */,
 				4B55D98D29410975004A5073 /* UITableView+Dequeueing.swift in Sources */,
-				4B55D99B2941EDB2004A5073 /* MovieCellErrorView.swift in Sources */,
 				4B55D98429410924004A5073 /* MovieCell.swift in Sources */,
-				4B55D9992941EDAC004A5073 /* MovieCellLoadingView.swift in Sources */,
-				4B55D9862941092B004A5073 /* MovieCellPresenter.swift in Sources */,
-				4B55D97F294108FB004A5073 /* MoviesPresenter.swift in Sources */,
 				4B55D98A2941093D004A5073 /* MoviesViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

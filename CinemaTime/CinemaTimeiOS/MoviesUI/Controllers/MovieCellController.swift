@@ -1,12 +1,7 @@
 //  Created by Marcell Magyar on 07.12.22.
 
 import UIKit
-
-public struct MovieCellViewModel {
-    let title: String
-    let overview: String?
-    let rating: String?
-}
+import CinemaTime
 
 public protocol MovieCellControllerDelegate {
     func loadImageData()

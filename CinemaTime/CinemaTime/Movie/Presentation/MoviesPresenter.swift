@@ -1,7 +1,5 @@
 //  Created by Marcell Magyar on 07.12.22.
 
-import CinemaTime
-
 public final class MoviesPresenter {
     private let moviesView: MoviesView
     private let loadingView: MoviesLoadingView
@@ -13,7 +11,7 @@ public final class MoviesPresenter {
         self.loader = loader
     }
     
-    func load() {
+    public func load() {
         loadingView.display(MoviesLoadingViewModel(isLoading: true))
         loader.load { [weak self] result in
             self?.loadingView.display(MoviesLoadingViewModel(isLoading: false))

@@ -1,7 +1,12 @@
 //  Created by Marcell Magyar on 07.12.22.
 
 import Foundation
-import CinemaTime
+
+public struct MovieCellViewModel {
+    public let title: String
+    public let overview: String?
+    public let rating: String?
+}
 
 public final class MovieCellPresenter<Image, View: MovieCellView> where View.Image == Image {
     private let view: View
