@@ -63,11 +63,9 @@
 		4B55DA7529488A2E004A5073 /* XCTestCase+MemoryLeakTracking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "XCTestCase+MemoryLeakTracking.swift"; sourceTree = "<group>"; };
 		4B55DA7829488A4D004A5073 /* MoviesViewAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesViewAdapter.swift; sourceTree = "<group>"; };
 		4B55DA7B29488A4E004A5073 /* MovieCellPresentationAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieCellPresentationAdapter.swift; sourceTree = "<group>"; };
-		4B55DA8129488AA6004A5073 /* MovieCellPresentationAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MovieCellPresentationAdapter.swift; sourceTree = "<group>"; };
 		4B55DA8229488AA7004A5073 /* WeakRefProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeakRefProxy.swift; sourceTree = "<group>"; };
 		4B55DA8329488AA7004A5073 /* MoviesUIComposer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoviesUIComposer.swift; sourceTree = "<group>"; };
 		4B55DA8429488AA7004A5073 /* MainQueueDispatchDecorator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainQueueDispatchDecorator.swift; sourceTree = "<group>"; };
-		4B55DA8529488AA7004A5073 /* MoviesViewAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoviesViewAdapter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,7 +95,6 @@
 				4B55DA4A2947C5C3004A5073 /* CinemaTimeAppTests */,
 				4B55DA322947C5C1004A5073 /* Products */,
 				4B55DA642947C6AC004A5073 /* Frameworks */,
-				4BC4EB0729488B140014BE6E /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -159,15 +156,6 @@
 				4B55DA7529488A2E004A5073 /* XCTestCase+MemoryLeakTracking.swift */,
 			);
 			path = Helpers;
-			sourceTree = "<group>";
-		};
-		4BC4EB0729488B140014BE6E /* Recovered References */ = {
-			isa = PBXGroup;
-			children = (
-				4B55DA8129488AA6004A5073 /* MovieCellPresentationAdapter.swift */,
-				4B55DA8529488AA7004A5073 /* MoviesViewAdapter.swift */,
-			);
-			name = "Recovered References";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
