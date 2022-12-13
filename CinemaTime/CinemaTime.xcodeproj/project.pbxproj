@@ -183,11 +183,11 @@
 			children = (
 				4B0B68F9293A228D00F6BFCE /* CinemaTime */,
 				4B0B6903293A228E00F6BFCE /* CinemaTimeTests */,
-				4B0B692E293E8DDC00F6BFCE /* CinemaTimeAPIEndToEndTests */,
 				4B63094F2940BA7100C3FE91 /* CinemaTimeiOS */,
 				4B6309592940BA7200C3FE91 /* CinemaTimeiOSTests */,
-				4B0B68F8293A228D00F6BFCE /* Products */,
+				4B0B692E293E8DDC00F6BFCE /* CinemaTimeAPIEndToEndTests */,
 				4B55D96F2940C2F1004A5073 /* Frameworks */,
+				4B0B68F8293A228D00F6BFCE /* Products */,
 			);
 			sourceTree = "<group>";
 		};
@@ -206,8 +206,8 @@
 		4B0B68F9293A228D00F6BFCE /* CinemaTime */ = {
 			isa = PBXGroup;
 			children = (
-				4BC4EB0929488DF70014BE6E /* Secrets */,
 				4B0B691F293A628100F6BFCE /* Movies */,
+				4BC4EB0929488DF70014BE6E /* Secrets */,
 			);
 			path = CinemaTime;
 			sourceTree = "<group>";
@@ -239,11 +239,11 @@
 			children = (
 				4B630945293F7A4100C3FE91 /* AuthenticatedHTTPClientDecorator.swift */,
 				4B0B6917293A61B500F6BFCE /* HTTPClient.swift */,
+				4B55D9A029477EE5004A5073 /* RemoteMovieImageDataLoader.swift */,
+				4B55D9A229477F00004A5073 /* RemoteMovieImageDataMapper.swift */,
 				4B0B6915293A618F00F6BFCE /* RemoteMovieLoader.swift */,
 				4B0B691B293A61EE00F6BFCE /* RemoteMovieMapper.swift */,
 				4B0B6927293E3ABF00F6BFCE /* URLSessionHTTPClient.swift */,
-				4B55D9A029477EE5004A5073 /* RemoteMovieImageDataLoader.swift */,
-				4B55D9A229477F00004A5073 /* RemoteMovieImageDataMapper.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -252,8 +252,8 @@
 			isa = PBXGroup;
 			children = (
 				4B0B690F293A242C00F6BFCE /* Movie.swift */,
-				4B0B6911293A254300F6BFCE /* MovieLoader.swift */,
 				4B55D99429412CED004A5073 /* MovieImageDataLoader.swift */,
+				4B0B6911293A254300F6BFCE /* MovieLoader.swift */,
 			);
 			path = Domain;
 			sourceTree = "<group>";
@@ -311,8 +311,8 @@
 			isa = PBXGroup;
 			children = (
 				4B55D98329410924004A5073 /* MovieCell.swift */,
-				4B55D98C29410975004A5073 /* UITableView+Dequeueing.swift */,
 				4B55DA6F2947D27D004A5073 /* UIImageView+Animation.swift */,
+				4B55D98C29410975004A5073 /* UITableView+Dequeueing.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";

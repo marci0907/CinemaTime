@@ -137,10 +137,10 @@
 		4B55DA4A2947C5C3004A5073 /* CinemaTimeAppTests */ = {
 			isa = PBXGroup;
 			children = (
-				4B55DA7429488A26004A5073 /* Helpers */,
-				4B55DA72294889BF004A5073 /* MoviesUIIntegrationTests.swift */,
 				4BC4EB13294907030014BE6E /* CinemaTimeAcceptanceTests.swift */,
+				4B55DA72294889BF004A5073 /* MoviesUIIntegrationTests.swift */,
 				4BC4EB1D2949264F0014BE6E /* SceneDelegateTests.swift */,
+				4B55DA7429488A26004A5073 /* Helpers */,
 			);
 			path = CinemaTimeAppTests;
 			sourceTree = "<group>";
@@ -167,11 +167,11 @@
 		4B55DA7429488A26004A5073 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				4B55DA7529488A2E004A5073 /* XCTestCase+MemoryLeakTracking.swift */,
-				4BC4EB1529490E1A0014BE6E /* MoviesViewController+DSL.swift */,
 				4BC4EB1729490E670014BE6E /* MovieCell+DSL.swift */,
-				4BC4EB1929490EB90014BE6E /* UIKit+Helpers.swift */,
+				4BC4EB1529490E1A0014BE6E /* MoviesViewController+DSL.swift */,
 				4BC4EB1B294915A90014BE6E /* SharedHelpers.swift */,
+				4BC4EB1929490EB90014BE6E /* UIKit+Helpers.swift */,
+				4B55DA7529488A2E004A5073 /* XCTestCase+MemoryLeakTracking.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
