@@ -361,16 +361,6 @@ final class MoviesUIIntegrationTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
-    private func makeMovie(
-        title: String = "any title",
-        imagePath: String? = "/any.jpg",
-        overview: String = "any overview",
-        releaseDate: Date? = nil,
-        rating: Double = 1.0
-    ) -> Movie {
-        Movie(id: 0, title: title, imagePath: imagePath, overview: overview, releaseDate: releaseDate, rating: rating)
-    }
-    
     private func anyData() -> Data {
         Data("any data".utf8)
     }
@@ -438,97 +428,6 @@ final class MoviesUIIntegrationTests: XCTestCase {
             func cancel() {
                 completion()
             }
-        }
-    }
-}
-
-private extension MoviesViewController {
-    var renderedMoviesCount: Int {
-        let ds = tableView.dataSource!
-        return ds.tableView(tableView, numberOfRowsInSection: 0)
-    }
-    
-    func renderedMovie(at row: Int) -> UITableViewCell? {
-        let ds = tableView.dataSource
-        return ds?.tableView(tableView, cellForRowAt: IndexPath(row: row, section: 0))
-    }
-    
-    @discardableResult
-    func simulateVisibleMovieCell(at row: Int) -> MovieCell? {
-        let ds = tableView.dataSource
-        return ds?.tableView(tableView, cellForRowAt: IndexPath(row: row, section: 0)) as? MovieCell
-    }
-    
-    func simulateNearVisibleMovieCell(at row: Int) {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "\(MovieCell.self)", for: IndexPath(row: row, section: 0))
-        let delegate = tableView.delegate
-        delegate?.tableView?(tableView, willDisplay: cell, forRowAt: IndexPath(row: row, section: 0))
-    }
-    
-    func simulateNotVisibleMovieCell(_ cell: UITableViewCell, at row: Int) {
-        tableView.delegate?.tableView?(tableView, didEndDisplaying: cell, forRowAt: IndexPath(row: row, section: 0))
-    }
-    
-    var isShowingLoadingIndicator: Bool {
-        return refreshControl?.isRefreshing ?? false
-    }
-    
-    func triggerUserInitiatedRefresh() {
-        refreshControl?.triggerRefresh()
-    }
-}
-
-private extension MovieCell {
-    var isRetryButtonVisible: Bool {
-        !retryButton.isHidden
-    }
-    
-    var renderedImage: UIImage? {
-        posterView.image
-    }
-    
-    var renderedImageData: Data? {
-        posterView.image?.pngData()
-    }
-    
-    var isShowingImageLoader: Bool {
-        imageLoadingIndicator.isAnimating
-    }
-    
-    func triggerRetryAction() {
-        retryButton.triggerAction()
-    }
-}
-
-private extension UIRefreshControl {
-    func triggerRefresh() {
-        allTargets.forEach { target in
-            actions(forTarget: target, forControlEvent: .valueChanged)?.forEach { action in
-                (target as NSObject).perform(Selector(action))
-            }
-        }
-    }
-}
-
-private extension UIButton {
-    func triggerAction() {
-        allTargets.forEach { target in
-            actions(forTarget: target, forControlEvent: .touchUpInside)?.forEach { action in
-                (target as NSObject).perform(Selector(action))
-            }
-        }
-    }
-}
-
-extension UIImage {
-    static func make(withColor color: UIColor) -> UIImage {
-        let rect = CGRect(x: 0, y: 0, width: 1, height: 1)
-        let format = UIGraphicsImageRendererFormat()
-        format.scale = 1
-        
-        return UIGraphicsImageRenderer(size: rect.size, format: format).image { rendererContext in
-            color.setFill()
-            rendererContext.fill(rect)
         }
     }
 }

@@ -22,6 +22,11 @@
 		4B55DA8729488AA7004A5073 /* WeakRefProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55DA8229488AA7004A5073 /* WeakRefProxy.swift */; };
 		4B55DA8829488AA7004A5073 /* MoviesUIComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55DA8329488AA7004A5073 /* MoviesUIComposer.swift */; };
 		4B55DA8929488AA7004A5073 /* MainQueueDispatchDecorator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55DA8429488AA7004A5073 /* MainQueueDispatchDecorator.swift */; };
+		4BC4EB14294907030014BE6E /* CinemaTimeAcceptanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC4EB13294907030014BE6E /* CinemaTimeAcceptanceTests.swift */; };
+		4BC4EB1629490E1A0014BE6E /* MoviesViewController+DSL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC4EB1529490E1A0014BE6E /* MoviesViewController+DSL.swift */; };
+		4BC4EB1829490E670014BE6E /* MovieCell+DSL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC4EB1729490E670014BE6E /* MovieCell+DSL.swift */; };
+		4BC4EB1A29490EB90014BE6E /* UIKit+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC4EB1929490EB90014BE6E /* UIKit+Helpers.swift */; };
+		4BC4EB1C294915A90014BE6E /* SharedHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC4EB1B294915A90014BE6E /* SharedHelpers.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,6 +71,11 @@
 		4B55DA8229488AA7004A5073 /* WeakRefProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeakRefProxy.swift; sourceTree = "<group>"; };
 		4B55DA8329488AA7004A5073 /* MoviesUIComposer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoviesUIComposer.swift; sourceTree = "<group>"; };
 		4B55DA8429488AA7004A5073 /* MainQueueDispatchDecorator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainQueueDispatchDecorator.swift; sourceTree = "<group>"; };
+		4BC4EB13294907030014BE6E /* CinemaTimeAcceptanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CinemaTimeAcceptanceTests.swift; sourceTree = "<group>"; };
+		4BC4EB1529490E1A0014BE6E /* MoviesViewController+DSL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MoviesViewController+DSL.swift"; sourceTree = "<group>"; };
+		4BC4EB1729490E670014BE6E /* MovieCell+DSL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MovieCell+DSL.swift"; sourceTree = "<group>"; };
+		4BC4EB1929490EB90014BE6E /* UIKit+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIKit+Helpers.swift"; sourceTree = "<group>"; };
+		4BC4EB1B294915A90014BE6E /* SharedHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedHelpers.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,6 +137,7 @@
 			children = (
 				4B55DA7429488A26004A5073 /* Helpers */,
 				4B55DA72294889BF004A5073 /* MoviesUIIntegrationTests.swift */,
+				4BC4EB13294907030014BE6E /* CinemaTimeAcceptanceTests.swift */,
 			);
 			path = CinemaTimeAppTests;
 			sourceTree = "<group>";
@@ -154,6 +165,10 @@
 			isa = PBXGroup;
 			children = (
 				4B55DA7529488A2E004A5073 /* XCTestCase+MemoryLeakTracking.swift */,
+				4BC4EB1529490E1A0014BE6E /* MoviesViewController+DSL.swift */,
+				4BC4EB1729490E670014BE6E /* MovieCell+DSL.swift */,
+				4BC4EB1929490EB90014BE6E /* UIKit+Helpers.swift */,
+				4BC4EB1B294915A90014BE6E /* SharedHelpers.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -273,7 +288,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4BC4EB14294907030014BE6E /* CinemaTimeAcceptanceTests.swift in Sources */,
+				4BC4EB1C294915A90014BE6E /* SharedHelpers.swift in Sources */,
+				4BC4EB1629490E1A0014BE6E /* MoviesViewController+DSL.swift in Sources */,
+				4BC4EB1829490E670014BE6E /* MovieCell+DSL.swift in Sources */,
 				4B55DA73294889BF004A5073 /* MoviesUIIntegrationTests.swift in Sources */,
+				4BC4EB1A29490EB90014BE6E /* UIKit+Helpers.swift in Sources */,
 				4B55DA7629488A2E004A5073 /* XCTestCase+MemoryLeakTracking.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
