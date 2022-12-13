@@ -13,4 +13,12 @@ final class SceneDelegateTests: XCTestCase {
         
         XCTAssertTrue(sceneDelegate.window?.rootViewController is MoviesViewController)
     }
+    
+    func test_sceneWillConnectToSession_setsWindowVisible() {
+        let sceneDelegate = SceneDelegate()
+        
+        sceneDelegate.configure(window: UIWindow())
+        
+        XCTAssertFalse(sceneDelegate.window?.isHidden ?? false)
+    }
 }
