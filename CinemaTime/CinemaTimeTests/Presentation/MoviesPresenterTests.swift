@@ -21,6 +21,30 @@ final class MoviesPresenterTests: XCTestCase {
         XCTAssertEqual(loader.receivedMovieLoads.count, 1)
     }
     
+    func test_loaderCompletion_stopsLoadingOnSuccessfulResponse() {
+        let (sut, view, loader) = makeSUT()
+        sut.load()
+        
+        loader.completeMovieLoading(with: [])
+        
+        XCTAssertEqual(view.receivedMessages, [
+            .display(isLoading: true),
+            .display(isLoading: false)
+        ])
+    }
+    
+    func test_loaderCompletion_stopsLoadingOnError() {
+        let (sut, view, loader) = makeSUT()
+        sut.load()
+        
+        loader.completeMovieLoadingWithError()
+        
+        XCTAssertEqual(view.receivedMessages, [
+            .display(isLoading: true),
+            .display(isLoading: false)
+        ])
+    }
+    
     // MARK: -
     
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (MoviesPresenter, ViewSpy, LoaderSpy) {
