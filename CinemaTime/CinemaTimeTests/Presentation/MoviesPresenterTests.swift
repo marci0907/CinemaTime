@@ -5,6 +5,10 @@ import CinemaTime
 
 final class MoviesPresenterTests: XCTestCase {
     
+    func test_title_isLocalized() {
+        XCTAssertEqual(MoviesPresenter.title, localized("NOW_PLAYING_MOVIES_TITLE"))
+    }
+    
     func test_init_doesNotRequestMovieLoadingFromLoader() {
         let (_, view, loader) = makeSUT()
         
@@ -70,6 +74,16 @@ final class MoviesPresenterTests: XCTestCase {
         trackForMemoryLeaks(loader, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
         return (sut, view, loader)
+    }
+    
+    private func localized(_ key: String, file: StaticString = #file, line: UInt = #line) -> String {
+        let table = "Movies"
+        let bundle = Bundle(for: MoviesPresenter.self)
+        let localizedString = bundle.localizedString(forKey: key, value: nil, table: table)
+        if localizedString == key {
+            XCTFail("Localized string for key \(key) in table \(table) not found", file: file, line: line)
+        }
+        return localizedString
     }
     
     func makeMovie(

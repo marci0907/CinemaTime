@@ -1,9 +1,19 @@
 //  Created by Marcell Magyar on 07.12.22.
 
+import Foundation
+
 public final class MoviesPresenter {
     private let moviesView: MoviesView
     private let loadingView: MoviesLoadingView
     private let loader: MovieLoader
+    
+    public static var title: String {
+        NSLocalizedString(
+            "NOW_PLAYING_MOVIES_TITLE",
+            tableName: "Movies",
+            bundle: Bundle(for: MoviesPresenter.self),
+            comment: "Title for movies view")
+    }
     
     public init(moviesView: MoviesView, loadingView: MoviesLoadingView, loader: MovieLoader) {
         self.moviesView = moviesView
