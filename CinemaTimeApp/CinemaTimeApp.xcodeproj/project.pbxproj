@@ -125,6 +125,7 @@
 			isa = PBXGroup;
 			children = (
 				4B55DA342947C5C1004A5073 /* AppDelegate.swift */,
+				4BC4EB2D294A03870014BE6E /* Locale+tmdb.swift */,
 				4B55DA8429488AA7004A5073 /* MainQueueDispatchDecorator.swift */,
 				4B55DA7B29488A4E004A5073 /* MovieCellPresentationAdapter.swift */,
 				4B55DA8329488AA7004A5073 /* MoviesUIComposer.swift */,
@@ -132,7 +133,6 @@
 				4B55DA362947C5C1004A5073 /* SceneDelegate.swift */,
 				4B55DA8229488AA7004A5073 /* WeakRefProxy.swift */,
 				4B55DA7129488924004A5073 /* SupportingFiles */,
-				4BC4EB2D294A03870014BE6E /* Locale+tmdb.swift */,
 			);
 			path = CinemaTimeApp;
 			sourceTree = "<group>";
