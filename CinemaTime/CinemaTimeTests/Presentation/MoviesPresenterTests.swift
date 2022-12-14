@@ -20,6 +20,14 @@ final class MoviesPresenterTests: XCTestCase {
         XCTAssertEqual(view.receivedMessages, [.display(isLoading: true)])
     }
     
+    func test_load_requestsMovieLoadingFromLoader() {
+        let (sut, _, loader) = makeSUT()
+        
+        sut.load()
+        
+        XCTAssertEqual(loader.receivedMovieLoads.count, 1)
+    }
+    
     // MARK: -
     
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (MoviesPresenter, ViewSpy, LoaderSpy) {
