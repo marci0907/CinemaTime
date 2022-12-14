@@ -6,17 +6,14 @@ import CinemaTime
 final class MoviesPresenterTests: XCTestCase {
     
     func test_init_doesNotRequestMovieLoadingFromLoader() {
-        let view = ViewSpy()
-        let loader = LoaderSpy()
-        _ = MoviesPresenter(moviesView: view, loadingView: view, loader: loader)
+        let (_, view, loader) = makeSUT()
         
         XCTAssertTrue(view.receivedMessages.isEmpty)
         XCTAssertTrue(loader.receivedMovieLoads.isEmpty)
     }
     
     func test_load_startsLoading() {
-        let view = ViewSpy()
-        let sut = MoviesPresenter(moviesView: view, loadingView: view, loader: LoaderSpy())
+        let (sut, view, _) = makeSUT()
         
         sut.load()
         
@@ -24,6 +21,16 @@ final class MoviesPresenterTests: XCTestCase {
     }
     
     // MARK: -
+    
+    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (MoviesPresenter, ViewSpy, LoaderSpy) {
+        let view = ViewSpy()
+        let loader = LoaderSpy()
+        let sut = MoviesPresenter(moviesView: view, loadingView: view, loader: loader)
+        trackForMemoryLeaks(view, file: file, line: line)
+        trackForMemoryLeaks(loader, file: file, line: line)
+        trackForMemoryLeaks(sut, file: file, line: line)
+        return (sut, view, loader)
+    }
     
     private class LoaderSpy: MovieLoader {
         typealias Message = (MovieLoader.Result) -> Void
