@@ -206,7 +206,9 @@
 		4B0B68F9293A228D00F6BFCE /* CinemaTime */ = {
 			isa = PBXGroup;
 			children = (
-				4B0B691F293A628100F6BFCE /* Movies */,
+				4B0B6920293A629700F6BFCE /* API */,
+				4B0B6921293A62AA00F6BFCE /* Domain */,
+				4B55D97D294108EE004A5073 /* Presentation */,
 				4BC4EB0929488DF70014BE6E /* Secrets */,
 			);
 			path = CinemaTime;
@@ -215,23 +217,10 @@
 		4B0B6903293A228E00F6BFCE /* CinemaTimeTests */ = {
 			isa = PBXGroup;
 			children = (
-				4B630941293F691B00C3FE91 /* AuthenticatedHTTPClientDecoratorTests.swift */,
-				4B55D99E2944D93F004A5073 /* RemoteMovieImageDataLoaderTests.swift */,
-				4B0B6913293A2AB300F6BFCE /* RemoteMovieLoaderTests.swift */,
-				4B0B6922293DF2F000F6BFCE /* URLSessionHTTPClientTests.swift */,
+				4BC4EB1F2949C3A20014BE6E /* API */,
 				4B0B6924293E364100F6BFCE /* Helpers */,
 			);
 			path = CinemaTimeTests;
-			sourceTree = "<group>";
-		};
-		4B0B691F293A628100F6BFCE /* Movies */ = {
-			isa = PBXGroup;
-			children = (
-				4B0B6920293A629700F6BFCE /* API */,
-				4B0B6921293A62AA00F6BFCE /* Domain */,
-				4B55D97D294108EE004A5073 /* Presentation */,
-			);
-			path = Movies;
 			sourceTree = "<group>";
 		};
 		4B0B6920293A629700F6BFCE /* API */ = {
@@ -284,15 +273,6 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		4B55D975294108C3004A5073 /* Movies */ = {
-			isa = PBXGroup;
-			children = (
-				4BC4EB0829488D0E0014BE6E /* Controllers */,
-				4B55D98029410905004A5073 /* Views */,
-			);
-			path = Movies;
-			sourceTree = "<group>";
-		};
 		4B55D97D294108EE004A5073 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
@@ -320,7 +300,8 @@
 		4B63094F2940BA7100C3FE91 /* CinemaTimeiOS */ = {
 			isa = PBXGroup;
 			children = (
-				4B55D975294108C3004A5073 /* Movies */,
+				4BC4EB0829488D0E0014BE6E /* Controllers */,
+				4B55D98029410905004A5073 /* Views */,
 			);
 			path = CinemaTimeiOS;
 			sourceTree = "<group>";
@@ -349,6 +330,17 @@
 			);
 			path = Secrets;
 			sourceTree = SOURCE_ROOT;
+		};
+		4BC4EB1F2949C3A20014BE6E /* API */ = {
+			isa = PBXGroup;
+			children = (
+				4B630941293F691B00C3FE91 /* AuthenticatedHTTPClientDecoratorTests.swift */,
+				4B55D99E2944D93F004A5073 /* RemoteMovieImageDataLoaderTests.swift */,
+				4B0B6913293A2AB300F6BFCE /* RemoteMovieLoaderTests.swift */,
+				4B0B6922293DF2F000F6BFCE /* URLSessionHTTPClientTests.swift */,
+			);
+			path = API;
+			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
