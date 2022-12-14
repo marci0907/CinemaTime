@@ -47,6 +47,7 @@
 		4BC4EB1029488EB70014BE6E /* MovieCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55D99229410AEE004A5073 /* MovieCellView.swift */; };
 		4BC4EB1129488EB70014BE6E /* MoviesLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55D98E29410AC2004A5073 /* MoviesLoadingView.swift */; };
 		4BC4EB1229488EB70014BE6E /* MoviesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55D99029410ACB004A5073 /* MoviesView.swift */; };
+		4BC4EB222949C46A0014BE6E /* MoviesPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC4EB212949C46A0014BE6E /* MoviesPresenterTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -133,6 +134,7 @@
 		4B63094E2940BA7100C3FE91 /* CinemaTimeiOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CinemaTimeiOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B6309552940BA7200C3FE91 /* CinemaTimeiOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CinemaTimeiOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BC4EB0A29488DF70014BE6E /* Secrets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
+		4BC4EB212949C46A0014BE6E /* MoviesPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesPresenterTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -218,6 +220,7 @@
 			isa = PBXGroup;
 			children = (
 				4BC4EB1F2949C3A20014BE6E /* API */,
+				4BC4EB202949C4550014BE6E /* Presentation */,
 				4B0B6924293E364100F6BFCE /* Helpers */,
 			);
 			path = CinemaTimeTests;
@@ -340,6 +343,14 @@
 				4B0B6922293DF2F000F6BFCE /* URLSessionHTTPClientTests.swift */,
 			);
 			path = API;
+			sourceTree = "<group>";
+		};
+		4BC4EB202949C4550014BE6E /* Presentation */ = {
+			isa = PBXGroup;
+			children = (
+				4BC4EB212949C46A0014BE6E /* MoviesPresenterTests.swift */,
+			);
+			path = Presentation;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -584,6 +595,7 @@
 				4B0B6923293DF2F000F6BFCE /* URLSessionHTTPClientTests.swift in Sources */,
 				4B630942293F691B00C3FE91 /* AuthenticatedHTTPClientDecoratorTests.swift in Sources */,
 				4B0B691E293A625800F6BFCE /* XCTestCase+MemoryLeakTracking.swift in Sources */,
+				4BC4EB222949C46A0014BE6E /* MoviesPresenterTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
