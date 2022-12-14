@@ -321,8 +321,6 @@ final class MoviesUIIntegrationTests: XCTestCase {
         }
     }
     
-    // TODO: prefetching
-    
     // MARK: - Helpers
     
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (MoviesViewController, LoaderSpy) {
