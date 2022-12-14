@@ -21,18 +21,6 @@ final class MoviesPresenterTests: XCTestCase {
         XCTAssertEqual(loader.receivedMovieLoads.count, 1)
     }
     
-    func test_loaderCompletion_stopsLoadingOnSuccessfulResponse() {
-        let (sut, view, loader) = makeSUT()
-        sut.load()
-        
-        loader.completeMovieLoading(with: [])
-        
-        XCTAssertEqual(view.receivedMessages, [
-            .display(isLoading: true),
-            .display(isLoading: false)
-        ])
-    }
-    
     func test_loaderCompletion_stopsLoadingOnError() {
         let (sut, view, loader) = makeSUT()
         sut.load()
@@ -42,6 +30,19 @@ final class MoviesPresenterTests: XCTestCase {
         XCTAssertEqual(view.receivedMessages, [
             .display(isLoading: true),
             .display(isLoading: false)
+        ])
+    }
+    
+    func test_loaderCompletion_stopsLoadingAndDisplaysZeroMoviesOnEmptyList() {
+        let (sut, view, loader) = makeSUT()
+        sut.load()
+        
+        loader.completeMovieLoading(with: [])
+        
+        XCTAssertEqual(view.receivedMessages, [
+            .display(isLoading: true),
+            .display(isLoading: false),
+            .display(movies: [])
         ])
     }
     
