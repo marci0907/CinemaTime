@@ -46,6 +46,20 @@ final class MoviesPresenterTests: XCTestCase {
         ])
     }
     
+    func test_loaderCompletion_stopsLoadingAndDisplaysReceivedMovies() {
+        let movies = [makeMovie(title: "first"), makeMovie(title: "second"), makeMovie(title: "third")]
+        let (sut, view, loader) = makeSUT()
+        sut.load()
+        
+        loader.completeMovieLoading(with: movies)
+        
+        XCTAssertEqual(view.receivedMessages, [
+            .display(isLoading: true),
+            .display(isLoading: false),
+            .display(movies: movies)
+        ])
+    }
+    
     // MARK: -
     
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (MoviesPresenter, ViewSpy, LoaderSpy) {
@@ -56,6 +70,16 @@ final class MoviesPresenterTests: XCTestCase {
         trackForMemoryLeaks(loader, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
         return (sut, view, loader)
+    }
+    
+    func makeMovie(
+        title: String = "any title",
+        imagePath: String? = "/any.jpg",
+        overview: String = "any overview",
+        releaseDate: Date? = nil,
+        rating: Double = 1.0
+    ) -> Movie {
+        Movie(id: 0, title: title, imagePath: imagePath, overview: overview, releaseDate: releaseDate, rating: rating)
     }
     
     private class LoaderSpy: MovieLoader {
