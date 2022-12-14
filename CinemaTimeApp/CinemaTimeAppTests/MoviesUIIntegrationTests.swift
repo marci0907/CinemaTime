@@ -8,6 +8,12 @@ import CinemaTimeApp
 
 final class MoviesUIIntegrationTests: XCTestCase {
     
+    func test_view_hasTitle() {
+        let (sut, _) = makeSUT()
+        
+        XCTAssertEqual(sut.title, localized("NOW_PLAYING_MOVIES_TITLE"))
+    }
+    
     func test_userInitiatedRefresh_triggersMovieLoading() {
         let (sut, loader) = makeSUT()
         XCTAssertEqual(loader.receivedMovieLoads.count, 1)
@@ -348,6 +354,16 @@ final class MoviesUIIntegrationTests: XCTestCase {
         XCTAssertEqual(movieCell.titleLabel.text, movie.title, file: file, line: line)
         XCTAssertEqual(movieCell.ratingLabel.text, "\(movie.rating ?? 0.0)", file: file, line: line)
         XCTAssertEqual(movieCell.overviewLabel.text, movie.overview, file: file, line: line)
+    }
+    
+    private func localized(_ key: String, file: StaticString = #file, line: UInt = #line) -> String {
+        let table = "Movies"
+        let bundle = Bundle(for: MoviesPresenter.self)
+        let localizedString = bundle.localizedString(forKey: key, value: nil, table: table)
+        if localizedString == key {
+            XCTFail("Localized string for key \(key) in table \(table) not found", file: file, line: line)
+        }
+        return localizedString
     }
     
     private func executeOnBackgroundThread(action: @escaping () -> Void) {

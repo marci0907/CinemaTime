@@ -9,6 +9,7 @@ public final class MoviesUIComposer {
     public static func viewController(movieLoader: MovieLoader, imageLoader: MovieImageDataLoader) -> MoviesViewController {
         let refreshController = MoviesRefreshController()
         let viewController = MoviesViewController(refreshController: refreshController)
+        viewController.title = MoviesPresenter.title
         refreshController.presenter = MoviesPresenter(
             moviesView: MoviesViewAdapter(
                 controller: viewController,
