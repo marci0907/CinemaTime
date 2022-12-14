@@ -12,19 +12,12 @@ final class MoviesPresenterTests: XCTestCase {
         XCTAssertTrue(loader.receivedMovieLoads.isEmpty)
     }
     
-    func test_load_startsLoading() {
-        let (sut, view, _) = makeSUT()
+    func test_load_startsLoadingAndRequestsMovieLoadingFromLoader() {
+        let (sut, view, loader) = makeSUT()
         
         sut.load()
         
         XCTAssertEqual(view.receivedMessages, [.display(isLoading: true)])
-    }
-    
-    func test_load_requestsMovieLoadingFromLoader() {
-        let (sut, _, loader) = makeSUT()
-        
-        sut.load()
-        
         XCTAssertEqual(loader.receivedMovieLoads.count, 1)
     }
     
