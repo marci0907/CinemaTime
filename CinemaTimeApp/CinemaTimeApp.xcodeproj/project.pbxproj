@@ -28,6 +28,7 @@
 		4BC4EB1A29490EB90014BE6E /* UIKit+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC4EB1929490EB90014BE6E /* UIKit+Helpers.swift */; };
 		4BC4EB1C294915A90014BE6E /* SharedHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC4EB1B294915A90014BE6E /* SharedHelpers.swift */; };
 		4BC4EB1E2949264F0014BE6E /* SceneDelegateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC4EB1D2949264F0014BE6E /* SceneDelegateTests.swift */; };
+		4BC4EB2E294A03870014BE6E /* Locale+tmdb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC4EB2D294A03870014BE6E /* Locale+tmdb.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -78,6 +79,7 @@
 		4BC4EB1929490EB90014BE6E /* UIKit+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIKit+Helpers.swift"; sourceTree = "<group>"; };
 		4BC4EB1B294915A90014BE6E /* SharedHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedHelpers.swift; sourceTree = "<group>"; };
 		4BC4EB1D2949264F0014BE6E /* SceneDelegateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegateTests.swift; sourceTree = "<group>"; };
+		4BC4EB2D294A03870014BE6E /* Locale+tmdb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Locale+tmdb.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -130,6 +132,7 @@
 				4B55DA362947C5C1004A5073 /* SceneDelegate.swift */,
 				4B55DA8229488AA7004A5073 /* WeakRefProxy.swift */,
 				4B55DA7129488924004A5073 /* SupportingFiles */,
+				4BC4EB2D294A03870014BE6E /* Locale+tmdb.swift */,
 			);
 			path = CinemaTimeApp;
 			sourceTree = "<group>";
@@ -284,6 +287,7 @@
 				4B55DA8829488AA7004A5073 /* MoviesUIComposer.swift in Sources */,
 				4B55DA8729488AA7004A5073 /* WeakRefProxy.swift in Sources */,
 				4B55DA372947C5C1004A5073 /* SceneDelegate.swift in Sources */,
+				4BC4EB2E294A03870014BE6E /* Locale+tmdb.swift in Sources */,
 				4B55DA8029488A4E004A5073 /* MovieCellPresentationAdapter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

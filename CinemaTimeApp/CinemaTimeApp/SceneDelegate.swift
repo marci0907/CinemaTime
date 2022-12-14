@@ -41,13 +41,3 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.window?.makeKeyAndVisible()
     }
 }
-
-extension Locale {
-    static var tmdb: String {
-        if current.identifier.contains("_") {
-            return current.identifier.replacingOccurrences(of: "_", with: "-")
-        } else {
-            return current.identifier + "-" + current.identifier.uppercased()
-        }
-    }
-}
