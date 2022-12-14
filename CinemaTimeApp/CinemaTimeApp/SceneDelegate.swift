@@ -29,7 +29,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let authenticatedClient = AuthenticatedHTTPClientDecorator(decoratee: httpClient, apiKey: APIKey)
         
         let movieLoader = RemoteMovieLoader(
-            url: URL(string: "https://api.themoviedb.org/3/movie/now_playing")!,
+            url: URL(string: "https://api.themoviedb.org/3/movie/now_playing?language=\(Locale.tmdb)")!,
             client: authenticatedClient)
         
         let imageLoader = RemoteMovieImageDataLoader(baseURL: URL(string: "https://image.tmdb.org/t/p/w500/")!, client: httpClient)
@@ -39,5 +39,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.window = window
         self.window?.rootViewController = UINavigationController(rootViewController: moviesViewController)
         self.window?.makeKeyAndVisible()
+    }
+}
+
+extension Locale {
+    static var tmdb: String {
+        if current.identifier.contains("_") {
+            return current.identifier.replacingOccurrences(of: "_", with: "-")
+        } else {
+            return current.identifier + "-" + current.identifier.uppercased()
+        }
     }
 }

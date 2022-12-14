@@ -55,7 +55,7 @@ final class CinemaTimeAcceptanceTests: XCTestCase {
     }
     
     private func signedURL() -> URL {
-        URL(string: "https://api.themoviedb.org/3/movie/now_playing?api_key=\(APIKey)")!
+        URL(string: "https://api.themoviedb.org/3/movie/now_playing?language=\(Locale.tmdb)&api_key=\(APIKey)")!
     }
     
     private class HTTPClientStub: HTTPClient {
