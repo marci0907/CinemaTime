@@ -48,7 +48,8 @@
 		4BC4EB1129488EB70014BE6E /* MoviesLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55D98E29410AC2004A5073 /* MoviesLoadingView.swift */; };
 		4BC4EB1229488EB70014BE6E /* MoviesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B55D99029410ACB004A5073 /* MoviesView.swift */; };
 		4BC4EB222949C46A0014BE6E /* MoviesPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC4EB212949C46A0014BE6E /* MoviesPresenterTests.swift */; };
-		4BC4EB242949CD260014BE6E /* Movies.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4BC4EB232949CD260014BE6E /* Movies.strings */; };
+		4BC4EB262949D0570014BE6E /* MoviesLocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC4EB252949D0570014BE6E /* MoviesLocalizationTests.swift */; };
+		4BC4EB272949D14A0014BE6E /* Movies.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4BC4EB292949D14A0014BE6E /* Movies.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -136,7 +137,9 @@
 		4B6309552940BA7200C3FE91 /* CinemaTimeiOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CinemaTimeiOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BC4EB0A29488DF70014BE6E /* Secrets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
 		4BC4EB212949C46A0014BE6E /* MoviesPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesPresenterTests.swift; sourceTree = "<group>"; };
-		4BC4EB232949CD260014BE6E /* Movies.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Movies.strings; sourceTree = "<group>"; };
+		4BC4EB252949D0570014BE6E /* MoviesLocalizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesLocalizationTests.swift; sourceTree = "<group>"; };
+		4BC4EB282949D14A0014BE6E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Movies.strings; sourceTree = "<group>"; };
+		4BC4EB2A2949D14C0014BE6E /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/Movies.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -288,7 +291,7 @@
 				4B55D98E29410AC2004A5073 /* MoviesLoadingView.swift */,
 				4B55D97E294108FB004A5073 /* MoviesPresenter.swift */,
 				4B55D99029410ACB004A5073 /* MoviesView.swift */,
-				4BC4EB232949CD260014BE6E /* Movies.strings */,
+				4BC4EB292949D14A0014BE6E /* Movies.strings */,
 			);
 			path = Presentation;
 			sourceTree = "<group>";
@@ -352,6 +355,7 @@
 			isa = PBXGroup;
 			children = (
 				4BC4EB212949C46A0014BE6E /* MoviesPresenterTests.swift */,
+				4BC4EB252949D0570014BE6E /* MoviesLocalizationTests.swift */,
 			);
 			path = Presentation;
 			sourceTree = "<group>";
@@ -507,6 +511,7 @@
 			knownRegions = (
 				en,
 				Base,
+				hu,
 			);
 			mainGroup = 4B0B68ED293A228D00F6BFCE;
 			productRefGroup = 4B0B68F8293A228D00F6BFCE /* Products */;
@@ -527,7 +532,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4BC4EB242949CD260014BE6E /* Movies.strings in Resources */,
+				4BC4EB272949D14A0014BE6E /* Movies.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -598,6 +603,7 @@
 				4B55D99F2944D93F004A5073 /* RemoteMovieImageDataLoaderTests.swift in Sources */,
 				4B0B6923293DF2F000F6BFCE /* URLSessionHTTPClientTests.swift in Sources */,
 				4B630942293F691B00C3FE91 /* AuthenticatedHTTPClientDecoratorTests.swift in Sources */,
+				4BC4EB262949D0570014BE6E /* MoviesLocalizationTests.swift in Sources */,
 				4B0B691E293A625800F6BFCE /* XCTestCase+MemoryLeakTracking.swift in Sources */,
 				4BC4EB222949C46A0014BE6E /* MoviesPresenterTests.swift in Sources */,
 			);
@@ -657,6 +663,18 @@
 			targetProxy = 4B6309572940BA7200C3FE91 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		4BC4EB292949D14A0014BE6E /* Movies.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4BC4EB282949D14A0014BE6E /* en */,
+				4BC4EB2A2949D14C0014BE6E /* hu */,
+			);
+			name = Movies.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		4B0B6907293A228E00F6BFCE /* Debug */ = {
