@@ -139,7 +139,7 @@
 		4BC4EB212949C46A0014BE6E /* MoviesPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesPresenterTests.swift; sourceTree = "<group>"; };
 		4BC4EB252949D0570014BE6E /* MoviesLocalizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesLocalizationTests.swift; sourceTree = "<group>"; };
 		4BC4EB282949D14A0014BE6E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Movies.strings; sourceTree = "<group>"; };
-		4BC4EB2A2949D14C0014BE6E /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/Movies.strings; sourceTree = "<group>"; };
+		4BC4EB2B2949E6AF0014BE6E /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/Movies.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -669,7 +669,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				4BC4EB282949D14A0014BE6E /* en */,
-				4BC4EB2A2949D14C0014BE6E /* hu */,
+				4BC4EB2B2949E6AF0014BE6E /* hu */,
 			);
 			name = Movies.strings;
 			sourceTree = "<group>";
