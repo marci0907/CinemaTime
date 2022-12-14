@@ -11,7 +11,8 @@ final class CinemaTimeAcceptanceTests: XCTestCase {
         let sceneDelegate = SceneDelegate(httpClient: HTTPClientStub.successful(with: response))
         sceneDelegate.configure(window: UIWindow())
         
-        let moviesVC = sceneDelegate.window?.rootViewController as? MoviesViewController
+        let root = sceneDelegate.window?.rootViewController as? UINavigationController
+        let moviesVC = root?.topViewController as? MoviesViewController
         
         XCTAssertEqual(moviesVC?.renderedMoviesCount, 3)
         XCTAssertEqual(moviesVC?.renderedMovieData(at: 0), makeImageData())

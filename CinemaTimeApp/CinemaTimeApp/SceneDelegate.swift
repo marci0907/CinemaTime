@@ -37,7 +37,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let moviesViewController = MoviesUIComposer.viewController(movieLoader: movieLoader, imageLoader: imageLoader)
         
         self.window = window
-        self.window?.rootViewController = moviesViewController
+        self.window?.rootViewController = UINavigationController(rootViewController: moviesViewController)
         self.window?.makeKeyAndVisible()
     }
 }

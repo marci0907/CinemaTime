@@ -11,7 +11,9 @@ final class SceneDelegateTests: XCTestCase {
         
         sceneDelegate.configure(window: UIWindow())
         
-        XCTAssertTrue(sceneDelegate.window?.rootViewController is MoviesViewController)
+        let root = sceneDelegate.window?.rootViewController
+        XCTAssertTrue(root is UINavigationController)
+        XCTAssertTrue((root as? UINavigationController)?.topViewController is MoviesViewController)
     }
     
     func test_sceneWillConnectToSession_setsWindowVisible() {
