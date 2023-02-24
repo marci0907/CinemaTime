@@ -3,7 +3,9 @@
 import XCTest
 import CinemaTime
 
-protocol MovieStore {}
+protocol MovieStore {
+    func retrieve()
+}
 
 final class LocalMovieLoader: MovieLoader {
     private let store: MovieStore
@@ -13,7 +15,7 @@ final class LocalMovieLoader: MovieLoader {
     }
     
     func load(completion: @escaping (MovieLoader.Result) -> Void) {
-        
+        store.retrieve()
     }
 }
 
@@ -22,7 +24,15 @@ final class LocalMovieLoaderTests: XCTestCase {
     func test_init_doesNotCallStore() {
         let (_, store) = makeSUT()
         
-        XCTAssertTrue(store.receivedMessages.isEmpty)
+        XCTAssertTrue(store.messages.isEmpty)
+    }
+    
+    func test_load_requestCacheRetrieval() {
+        let (sut, store) = makeSUT()
+        
+        sut.load() { _ in }
+        
+        XCTAssertEqual(store.messages, [.retrieve])
     }
     
     // MARK: - Helpers
@@ -39,6 +49,10 @@ final class LocalMovieLoaderTests: XCTestCase {
             case retrieve
         }
         
-        private(set) var receivedMessages = [Message]()
+        private(set) var messages = [Message]()
+        
+        func retrieve() {
+            messages.append(.retrieve)
+        }
     }
 }
