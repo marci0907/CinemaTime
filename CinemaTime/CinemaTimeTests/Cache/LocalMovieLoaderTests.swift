@@ -2,16 +2,6 @@
 
 import XCTest
 import CinemaTime
-struct CachedMovies {
-    let movies: [LocalMovie]
-    let timestamp: Date
-}
-
-protocol MovieStore {
-    typealias RetrievalCompletion = (Result<CachedMovies?, Error>) -> Void
-    
-    func retrieve(completion: @escaping RetrievalCompletion)
-}
 
 final class LocalMovieLoader: MovieLoader {
     private let store: MovieStore
