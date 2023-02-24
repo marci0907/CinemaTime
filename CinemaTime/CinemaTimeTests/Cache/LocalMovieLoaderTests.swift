@@ -182,7 +182,7 @@ final class LocalMovieLoaderTests: XCTestCase {
         XCTAssertEqual(repo.messages, [.retrieve])
     }
     
-    func test_validate_doesNotRequestsCacheDeletionOnRetrievalError() {
+    func test_validate_doesNotRequestCacheDeletionOnRetrievalError() {
         let (sut, repo) = makeSUT()
         
         sut.validateCache() { _ in }
@@ -191,7 +191,7 @@ final class LocalMovieLoaderTests: XCTestCase {
         XCTAssertEqual(repo.messages, [.retrieve])
     }
     
-    func test_validate_doesNotRequestsCacheDeletionOnEmptyCache() {
+    func test_validate_doesNotRequestCacheDeletionOnEmptyCache() {
         let (sut, repo) = makeSUT()
         
         sut.validateCache() { _ in }
@@ -200,7 +200,7 @@ final class LocalMovieLoaderTests: XCTestCase {
         XCTAssertEqual(repo.messages, [.retrieve])
     }
     
-    func test_validate_doesNotRequestsCacheDeletionOnNonExpiredCache() {
+    func test_validate_doesNotRequestCacheDeletionOnNonExpiredCache() {
         let nonExpiredTimestamp = Date.now.minusCacheMaxAge().adding(seconds: 1)
         let (sut, repo) = makeSUT()
         
@@ -210,6 +210,15 @@ final class LocalMovieLoaderTests: XCTestCase {
         XCTAssertEqual(repo.messages, [.retrieve])
     }
     
+    func test_validate_requestsCacheDeletionOnCacheExpiration() {
+        let expirationTimestamp = Date.now.minusCacheMaxAge()
+        let (sut, repo) = makeSUT()
+        
+        sut.validateCache() { _ in }
+        repo.completeRetrieval(with: uniqueMovies().locals, timestamp: expirationTimestamp)
+        
+        XCTAssertEqual(repo.messages, [.retrieve, .deleteCachedMovies])
+    }
     // MARK: - Helpers
     
     private func makeSUT(

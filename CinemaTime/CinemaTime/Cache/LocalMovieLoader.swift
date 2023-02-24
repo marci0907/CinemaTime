@@ -61,7 +61,16 @@ public final class LocalMovieLoader: MovieLoader {
     }
     
     public func validateCache(completion: @escaping (ValidationResult) -> Void) {
-        store.retrieve { _ in }
+        store.retrieve { [weak self] result in
+            guard let self = self else { return }
+            
+            switch result {
+            case let .success(.some(cache)) where !MovieCachePolicy.validate(cache.timestamp, against: self.currentDate()):
+                self.store.deleteCachedMovies { _ in }
+                
+            default: break
+            }
+        }
     }
 }
 
