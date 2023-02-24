@@ -201,8 +201,9 @@ final class LocalMovieLoaderTests: XCTestCase {
     }
     
     func test_validate_doesNotRequestCacheDeletionOnNonExpiredCache() {
-        let nonExpiredTimestamp = Date.now.minusCacheMaxAge().adding(seconds: 1)
-        let (sut, store) = makeSUT()
+        let currentDate = Date.now
+        let nonExpiredTimestamp = currentDate.minusCacheMaxAge().adding(seconds: 1)
+        let (sut, store) = makeSUT(currentDate: { currentDate })
         
         sut.validateCache() { _ in }
         store.completeRetrieval(with: uniqueMovies().locals, timestamp: nonExpiredTimestamp)
@@ -211,8 +212,9 @@ final class LocalMovieLoaderTests: XCTestCase {
     }
     
     func test_validate_requestsCacheDeletionOnCacheExpiration() {
-        let expirationTimestamp = Date.now.minusCacheMaxAge()
-        let (sut, store) = makeSUT()
+        let currentDate = Date.now
+        let expirationTimestamp = currentDate.minusCacheMaxAge()
+        let (sut, store) = makeSUT(currentDate: { currentDate })
         
         sut.validateCache() { _ in }
         store.completeRetrieval(with: uniqueMovies().locals, timestamp: expirationTimestamp)
@@ -221,8 +223,9 @@ final class LocalMovieLoaderTests: XCTestCase {
     }
     
     func test_validate_requestsCacheDeletionOnExpiredCache() {
-        let expiredTimestamp = Date.now.minusCacheMaxAge().adding(seconds: -1)
-        let (sut, store) = makeSUT()
+        let currentDate = Date.now
+        let expiredTimestamp = currentDate.minusCacheMaxAge().adding(seconds: -1)
+        let (sut, store) = makeSUT(currentDate: { currentDate })
         
         sut.validateCache() { _ in }
         store.completeRetrieval(with: uniqueMovies().locals, timestamp: expiredTimestamp)
