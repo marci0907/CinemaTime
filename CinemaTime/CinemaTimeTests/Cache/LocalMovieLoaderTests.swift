@@ -88,58 +88,58 @@ final class LocalMovieLoaderTests: XCTestCase {
     // MARK: - Save
     
     func test_save_requestsCacheDeletion() {
-        let (sut, repo) = makeSUT()
+        let (sut, store) = makeSUT()
         
         sut.save([]) { _ in }
         
-        XCTAssertEqual(repo.messages, [.deleteCachedMovies])
+        XCTAssertEqual(store.messages, [.deleteCachedMovies])
     }
     
     func test_save_doesNotRequestInsertionOnStoreDeletionError() {
-        let (sut, repo) = makeSUT()
+        let (sut, store) = makeSUT()
         
         sut.save([]) { _ in }
-        repo.completeDeletion(with: anyNSError())
+        store.completeDeletion(with: anyNSError())
         
-        XCTAssertEqual(repo.messages, [.deleteCachedMovies])
+        XCTAssertEqual(store.messages, [.deleteCachedMovies])
     }
     
     func test_save_requestsInsertionOnSuccessfulCacheDeletion() {
         let movies = uniqueMovies()
         let currentDate = Date.now
-        let (sut, repo) = makeSUT(currentDate: { currentDate })
+        let (sut, store) = makeSUT(currentDate: { currentDate })
         
         sut.save(movies.models) { _ in }
-        repo.completeDeletionSuccessfully()
+        store.completeDeletionSuccessfully()
         
-        XCTAssertEqual(repo.messages, [.deleteCachedMovies, .insert(movies.locals, currentDate)])
+        XCTAssertEqual(store.messages, [.deleteCachedMovies, .insert(movies.locals, currentDate)])
     }
     
     func test_save_deliversErrorOnDeletionError() {
         let expectedError = anyNSError()
-        let (sut, repo) = makeSUT()
+        let (sut, store) = makeSUT()
         
         expect(sut, toFinishSavingWith: .failure(expectedError), when: {
-            repo.completeDeletion(with: expectedError)
+            store.completeDeletion(with: expectedError)
         })
     }
     
     func test_save_deliversErrorOnInsertionError() {
         let expectedError = anyNSError()
-        let (sut, repo) = makeSUT()
+        let (sut, store) = makeSUT()
         
         expect(sut, toFinishSavingWith: .failure(expectedError), when: {
-            repo.completeDeletionSuccessfully()
-            repo.completeInsertion(with: expectedError)
+            store.completeDeletionSuccessfully()
+            store.completeInsertion(with: expectedError)
         })
     }
     
     func test_save_succeedsAfterSuccessfulDeletionAndInsertion() {
-        let (sut, repo) = makeSUT()
+        let (sut, store) = makeSUT()
         
         expect(sut, toFinishSavingWith: .success(()), when: {
-            repo.completeDeletionSuccessfully()
-            repo.completeInsertionSuccessfully()
+            store.completeDeletionSuccessfully()
+            store.completeInsertionSuccessfully()
         })
     }
     
@@ -175,59 +175,59 @@ final class LocalMovieLoaderTests: XCTestCase {
     // MARK: - Validate
     
     func test_validate_requestsCacheRetrieval() {
-        let (sut, repo) = makeSUT()
+        let (sut, store) = makeSUT()
         
         sut.validateCache() { _ in }
         
-        XCTAssertEqual(repo.messages, [.retrieve])
+        XCTAssertEqual(store.messages, [.retrieve])
     }
     
     func test_validate_requestsCacheDeletionOnRetrievalError() {
-        let (sut, repo) = makeSUT()
+        let (sut, store) = makeSUT()
         
         sut.validateCache() { _ in }
-        repo.completeRetrieval(with: anyNSError())
+        store.completeRetrieval(with: anyNSError())
         
-        XCTAssertEqual(repo.messages, [.retrieve, .deleteCachedMovies])
+        XCTAssertEqual(store.messages, [.retrieve, .deleteCachedMovies])
     }
     
     func test_validate_doesNotRequestCacheDeletionOnEmptyCache() {
-        let (sut, repo) = makeSUT()
+        let (sut, store) = makeSUT()
         
         sut.validateCache() { _ in }
-        repo.completeRetrievalWithEmptyCache()
+        store.completeRetrievalWithEmptyCache()
         
-        XCTAssertEqual(repo.messages, [.retrieve])
+        XCTAssertEqual(store.messages, [.retrieve])
     }
     
     func test_validate_doesNotRequestCacheDeletionOnNonExpiredCache() {
         let nonExpiredTimestamp = Date.now.minusCacheMaxAge().adding(seconds: 1)
-        let (sut, repo) = makeSUT()
+        let (sut, store) = makeSUT()
         
         sut.validateCache() { _ in }
-        repo.completeRetrieval(with: uniqueMovies().locals, timestamp: nonExpiredTimestamp)
+        store.completeRetrieval(with: uniqueMovies().locals, timestamp: nonExpiredTimestamp)
         
-        XCTAssertEqual(repo.messages, [.retrieve])
+        XCTAssertEqual(store.messages, [.retrieve])
     }
     
     func test_validate_requestsCacheDeletionOnCacheExpiration() {
         let expirationTimestamp = Date.now.minusCacheMaxAge()
-        let (sut, repo) = makeSUT()
+        let (sut, store) = makeSUT()
         
         sut.validateCache() { _ in }
-        repo.completeRetrieval(with: uniqueMovies().locals, timestamp: expirationTimestamp)
+        store.completeRetrieval(with: uniqueMovies().locals, timestamp: expirationTimestamp)
         
-        XCTAssertEqual(repo.messages, [.retrieve, .deleteCachedMovies])
+        XCTAssertEqual(store.messages, [.retrieve, .deleteCachedMovies])
     }
     
     func test_validate_requestsCacheDeletionOnExpiredCache() {
         let expiredTimestamp = Date.now.minusCacheMaxAge().adding(seconds: -1)
-        let (sut, repo) = makeSUT()
+        let (sut, store) = makeSUT()
         
         sut.validateCache() { _ in }
-        repo.completeRetrieval(with: uniqueMovies().locals, timestamp: expiredTimestamp)
+        store.completeRetrieval(with: uniqueMovies().locals, timestamp: expiredTimestamp)
         
-        XCTAssertEqual(repo.messages, [.retrieve, .deleteCachedMovies])
+        XCTAssertEqual(store.messages, [.retrieve, .deleteCachedMovies])
     }
     
     func test_validate_doesNotDeliverRetrievalResultAfterSUTHasBeenDeallocated() {
@@ -296,6 +296,35 @@ final class LocalMovieLoaderTests: XCTestCase {
         let exp = expectation(description: "Wait for completion")
         
         sut.save(uniqueMovies().models) { receivedResult in
+            switch (receivedResult, expectedResult) {
+            case let (.failure(receivedError), .failure(expectedError)):
+                XCTAssertEqual(receivedError as NSError, expectedError as NSError, file: file, line: line)
+                
+            case (.success, .success): break
+                
+            default:
+                XCTFail("Expected \(expectedResult), got \(receivedResult) instead", file: file, line: line)
+                
+            }
+            
+            exp.fulfill()
+        }
+        
+        action()
+        
+        wait(for: [exp], timeout: 1.0)
+    }
+    
+    private func expect(
+        _ sut: LocalMovieLoader,
+        toFinishValidatingWith expectedResult: LocalMovieLoader.ValidationResult,
+        when action: @escaping () -> Void,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        let exp = expectation(description: "Wait for completion")
+        
+        sut.validateCache { receivedResult in
             switch (receivedResult, expectedResult) {
             case let (.failure(receivedError), .failure(expectedError)):
                 XCTAssertEqual(receivedError as NSError, expectedError as NSError, file: file, line: line)
