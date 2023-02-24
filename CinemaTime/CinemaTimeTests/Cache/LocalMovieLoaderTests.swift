@@ -40,7 +40,9 @@ final class LocalMovieLoader: MovieLoader {
     }
     
     func load(completion: @escaping (MovieLoader.Result) -> Void) {
-        store.retrieve { result in
+        store.retrieve { [weak self] result in
+            guard self != nil else { return }
+            
             switch result {
             case let .failure(error):
                 completion(.failure(error))
@@ -128,6 +130,20 @@ final class LocalMovieLoaderTests: XCTestCase {
         expect(sut, toFinishWith: .success([]), when: {
             store.complete(with: movies.locals, timestamp: expiredTimestamp)
         })
+    }
+    
+    func test_load_doesNotDeliverResultAfterSUTHasBeenDeallocated() {
+        let store = MovieStoreSpy()
+        var sut: LocalMovieLoader? = LocalMovieLoader(store: store)
+        
+        var loadCallCount = 0
+        sut?.load { _ in loadCallCount += 1 }
+        
+        sut = nil
+        
+        store.completeWithEmptyCache()
+        
+        XCTAssertEqual(loadCallCount, 0)
     }
     
     // MARK: - Helpers
