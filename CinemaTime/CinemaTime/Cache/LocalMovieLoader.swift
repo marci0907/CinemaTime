@@ -65,6 +65,9 @@ public final class LocalMovieLoader: MovieLoader {
             guard let self = self else { return }
             
             switch result {
+            case .failure:
+                self.store.deleteCachedMovies { _ in }
+                
             case let .success(.some(cache)) where !MovieCachePolicy.validate(cache.timestamp, against: self.currentDate()):
                 self.store.deleteCachedMovies { _ in }
                 
