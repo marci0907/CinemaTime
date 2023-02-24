@@ -2,18 +2,18 @@
 
 import Foundation
 
-public final class LocalMovieLoader: MovieLoader {
+public final class LocalMovieLoader {
     private let store: MovieStore
     private let currentDate: () -> Date
-    
-    public typealias LoadResult = MovieLoader.Result
-    public typealias SaveResult = Swift.Result<Void, Error>
-    public typealias ValidationResult = Swift.Result<Void, Error>
     
     public init(store: MovieStore, currentDate: @escaping () -> Date) {
         self.store = store
         self.currentDate = currentDate
     }
+}
+
+extension LocalMovieLoader: MovieLoader {
+    public typealias LoadResult = MovieLoader.Result
     
     public func load(completion: @escaping (LoadResult) -> Void) {
         store.retrieve { [weak self] result in
@@ -31,6 +31,10 @@ public final class LocalMovieLoader: MovieLoader {
             }
         }
     }
+}
+
+extension LocalMovieLoader {
+    public typealias SaveResult = Swift.Result<Void, Error>
     
     public func save(_ movies: [Movie], completion: @escaping (SaveResult) -> Void) {
         store.deleteCachedMovies { [weak self] result in
@@ -59,6 +63,10 @@ public final class LocalMovieLoader: MovieLoader {
             }
         })
     }
+}
+
+extension LocalMovieLoader {
+    public typealias ValidationResult = Swift.Result<Void, Error>
     
     public func validateCache(completion: @escaping (ValidationResult) -> Void) {
         store.retrieve { [weak self] result in
