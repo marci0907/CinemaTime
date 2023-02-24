@@ -43,10 +43,22 @@ final class LocalMovieLoader: MovieLoader {
         store.retrieve { result in
             if case let .failure(error) = result {
                 completion(.failure(error))
-            } else {
-                completion(.success([]))
+            } else if case let .success(cache) = result {
+                completion(.success(cache?.movies.toModels() ?? []))
             }
         }
+    }
+}
+
+private extension Array where Element == LocalMovie {
+    func toModels() -> [Movie] {
+        map { Movie(
+            id: $0.id,
+            title: $0.title,
+            imagePath: $0.imagePath,
+            overview: $0.overview,
+            releaseDate: $0.releaseDate,
+            rating: $0.rating) }
     }
 }
 
@@ -80,6 +92,15 @@ final class LocalMovieLoaderTests: XCTestCase {
         
         expect(sut, toFinishWith: .success([]), when: {
             store.completeWithEmptyCache()
+        })
+    }
+    
+    func test_load_deliversMoviesOnNonEmptyNonExpiredCache() {
+        let movies = uniqueMovies()
+        let (sut, store) = makeSUT()
+        
+        expect(sut, toFinishWith: .success(movies.models), when: {
+            store.complete(with: movies.locals, timestamp: .now)
         })
     }
     
@@ -121,6 +142,28 @@ final class LocalMovieLoaderTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
+    private func uniqueMovie() -> Movie {
+        Movie(
+            id: (0...100000).randomElement()!,
+            title: "any title",
+            imagePath: nil,
+            overview: nil,
+            releaseDate: nil,
+            rating: nil)
+    }
+    
+    private func uniqueMovies() -> (models: [Movie], locals: [LocalMovie]) {
+        let models = [uniqueMovie(), uniqueMovie(), uniqueMovie()]
+        let locals = models.map { LocalMovie(
+            id: $0.id,
+            title: $0.title,
+            imagePath: $0.imagePath,
+            overview: $0.overview,
+            releaseDate: $0.releaseDate,
+            rating: $0.rating) }
+        return (models, locals)
+    }
+    
     private class MovieStoreSpy: MovieStore {
         enum Message {
             case retrieve
@@ -136,6 +179,10 @@ final class LocalMovieLoaderTests: XCTestCase {
         
         func completeWithEmptyCache(at index: Int = 0) {
             retrievalCompletions[index](.success(.none))
+        }
+        
+        func complete(with movies: [LocalMovie], timestamp: Date, at index: Int = 0) {
+            retrievalCompletions[index](.success(.some(CachedMovies(movies: movies, timestamp: timestamp))))
         }
         
         func complete(with error: Error, at index: Int = 0) {
