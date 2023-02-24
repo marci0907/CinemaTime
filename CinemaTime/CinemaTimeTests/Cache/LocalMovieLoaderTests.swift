@@ -26,7 +26,7 @@ final class LocalMovieLoaderTests: XCTestCase {
         let (sut, store) = makeSUT()
         
         expect(sut, toFinishLoadingWith: .failure(expectedError), when: {
-            store.complete(with: expectedError)
+            store.completeRetrieval(with: expectedError)
         })
     }
     
@@ -34,7 +34,7 @@ final class LocalMovieLoaderTests: XCTestCase {
         let (sut, store) = makeSUT()
         
         expect(sut, toFinishLoadingWith: .success([]), when: {
-            store.completeWithEmptyCache()
+            store.completeRetrievalWithEmptyCache()
         })
     }
     
@@ -45,7 +45,7 @@ final class LocalMovieLoaderTests: XCTestCase {
         let (sut, store) = makeSUT(currentDate: { currentDate })
         
         expect(sut, toFinishLoadingWith: .success(movies.models), when: {
-            store.complete(with: movies.locals, timestamp: nonExpiredTimestamp)
+            store.completeRetrieval(with: movies.locals, timestamp: nonExpiredTimestamp)
         })
     }
     
@@ -56,7 +56,7 @@ final class LocalMovieLoaderTests: XCTestCase {
         let (sut, store) = makeSUT(currentDate: { currentDate })
         
         expect(sut, toFinishLoadingWith: .success([]), when: {
-            store.complete(with: movies.locals, timestamp: expirationTimestamp)
+            store.completeRetrieval(with: movies.locals, timestamp: expirationTimestamp)
         })
     }
     
@@ -67,7 +67,7 @@ final class LocalMovieLoaderTests: XCTestCase {
         let (sut, store) = makeSUT(currentDate: { currentDate })
         
         expect(sut, toFinishLoadingWith: .success([]), when: {
-            store.complete(with: movies.locals, timestamp: expiredTimestamp)
+            store.completeRetrieval(with: movies.locals, timestamp: expiredTimestamp)
         })
     }
     
@@ -80,7 +80,7 @@ final class LocalMovieLoaderTests: XCTestCase {
         
         sut = nil
         
-        store.completeWithEmptyCache()
+        store.completeRetrievalWithEmptyCache()
         
         XCTAssertEqual(loadCallCount, 0)
     }
@@ -250,15 +250,15 @@ final class LocalMovieLoaderTests: XCTestCase {
             retrievalCompletions.append(completion)
         }
         
-        func completeWithEmptyCache(at index: Int = 0) {
+        func completeRetrievalWithEmptyCache(at index: Int = 0) {
             retrievalCompletions[index](.success(.none))
         }
         
-        func complete(with movies: [LocalMovie], timestamp: Date, at index: Int = 0) {
+        func completeRetrieval(with movies: [LocalMovie], timestamp: Date, at index: Int = 0) {
             retrievalCompletions[index](.success(.some(CachedMovies(movies: movies, timestamp: timestamp))))
         }
         
-        func complete(with error: Error, at index: Int = 0) {
+        func completeRetrieval(with error: Error, at index: Int = 0) {
             retrievalCompletions[index](.failure(error))
         }
         
