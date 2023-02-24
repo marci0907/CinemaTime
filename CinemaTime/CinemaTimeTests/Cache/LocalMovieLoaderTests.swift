@@ -134,6 +134,15 @@ final class LocalMovieLoaderTests: XCTestCase {
         })
     }
     
+    func test_save_succeedsAfterSuccessfulDeletionAndInsertion() {
+        let (sut, repo) = makeSUT()
+        
+        expect(sut, toFinishSavingWith: .success(()), when: {
+            repo.completeDeletionSuccessfully()
+            repo.completeInsertionSuccessfully()
+        })
+    }
+    
     func test_save_doesNotDeliverDeletionResultAfterSUTHasBeenDeallocated() {
         let store = MovieStoreSpy()
         var sut: LocalMovieLoader? = LocalMovieLoader(store: store, currentDate: Date.init)
@@ -292,6 +301,10 @@ final class LocalMovieLoaderTests: XCTestCase {
         func insert(_ movies: [LocalMovie], timestamp: Date, completion: @escaping InsertionCompletion) {
             messages.append(.insert(movies, timestamp))
             insertionCompletions.append(completion)
+        }
+        
+        func completeInsertionSuccessfully(at index: Int = 0) {
+            insertionCompletions[index](.success(()))
         }
         
         func completeInsertion(with error: Error, at index: Int = 0) {

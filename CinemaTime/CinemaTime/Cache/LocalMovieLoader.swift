@@ -37,7 +37,11 @@ public final class LocalMovieLoader: MovieLoader {
             switch result {
             case .success:
                 self.store.insert(movies.toLocals(), timestamp: self.currentDate(), completion: { result in
-                    if case let .failure(error) = result {
+                    switch result {
+                    case .success:
+                        completion(.success(()))
+                        
+                    case let .failure(error):
                         completion(.failure(error))
                     }
                 })
