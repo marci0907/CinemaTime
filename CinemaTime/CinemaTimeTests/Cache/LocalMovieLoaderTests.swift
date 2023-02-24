@@ -41,10 +41,15 @@ final class LocalMovieLoader: MovieLoader {
     
     func load(completion: @escaping (MovieLoader.Result) -> Void) {
         store.retrieve { result in
-            if case let .failure(error) = result {
+            switch result {
+            case let .failure(error):
                 completion(.failure(error))
-            } else if case let .success(cache) = result {
-                completion(.success(cache?.movies.toModels() ?? []))
+                
+            case let .success(.some(cache)) where cache.timestamp > Date.now.addingTimeInterval(-7*24*60*60):
+                completion(.success(cache.movies.toModels()))
+                
+            case .success:
+                completion(.success([]))
             }
         }
     }
@@ -97,10 +102,21 @@ final class LocalMovieLoaderTests: XCTestCase {
     
     func test_load_deliversMoviesOnNonEmptyNonExpiredCache() {
         let movies = uniqueMovies()
+        let nonExpiredTimestamp = Date.now.minusCacheMaxAge().adding(seconds: 1)
         let (sut, store) = makeSUT()
         
         expect(sut, toFinishWith: .success(movies.models), when: {
-            store.complete(with: movies.locals, timestamp: .now)
+            store.complete(with: movies.locals, timestamp: nonExpiredTimestamp)
+        })
+    }
+    
+    func test_load_deliversZeroMoviesOnCacheExpiration() {
+        let movies = uniqueMovies()
+        let expirationTimestamp = Date.now.minusCacheMaxAge()
+        let (sut, store) = makeSUT()
+        
+        expect(sut, toFinishWith: .success([]), when: {
+            store.complete(with: movies.locals, timestamp: expirationTimestamp)
         })
     }
     
@@ -188,5 +204,21 @@ final class LocalMovieLoaderTests: XCTestCase {
         func complete(with error: Error, at index: Int = 0) {
             retrievalCompletions[index](.failure(error))
         }
+    }
+}
+
+private extension Date {
+    var moviesCacheMaxAgeInDays: Int { 7 }
+    
+    func minusCacheMaxAge() -> Date {
+        adding(days: -moviesCacheMaxAgeInDays)
+    }
+    
+    func adding(seconds: Int) -> Date {
+        Calendar(identifier: .gregorian).date(byAdding: .second, value: seconds, to: self)!
+    }
+    
+    func adding(days: Int) -> Date {
+        Calendar(identifier: .gregorian).date(byAdding: .day, value: days, to: self)!
     }
 }
