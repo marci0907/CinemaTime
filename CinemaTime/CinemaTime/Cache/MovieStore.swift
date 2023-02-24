@@ -16,4 +16,8 @@ public protocol MovieStore {
     typealias RetrievalCompletion = (Result<CachedMovies?, Error>) -> Void
     
     func retrieve(completion: @escaping RetrievalCompletion)
+    
+    typealias DeletionResult = Result<Void, Error>
+    typealias DeletionCompletion = (DeletionResult) -> Void
+    func deleteCachedMovies(completion: @escaping DeletionCompletion)
 }

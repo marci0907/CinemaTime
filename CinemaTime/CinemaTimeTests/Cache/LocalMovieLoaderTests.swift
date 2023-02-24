@@ -5,6 +5,8 @@ import CinemaTime
 
 final class LocalMovieLoaderTests: XCTestCase {
     
+    // MARK: - Load
+    
     func test_init_doesNotCallStore() {
         let (_, store) = makeSUT()
         
@@ -83,13 +85,23 @@ final class LocalMovieLoaderTests: XCTestCase {
         XCTAssertEqual(loadCallCount, 0)
     }
     
+    // MARK: - Save
+    
+    func test_save_deliversErrorOnStoreDeletionError() {
+        let (sut, repo) = makeSUT()
+        
+        sut.save() { _ in }
+        
+        XCTAssertEqual(repo.messages, [.deleteCachedMovies])
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(
         currentDate: @escaping () -> Date = { .now },
         file: StaticString = #file,
         line: UInt = #line
-    ) -> (MovieLoader, MovieStoreSpy) {
+    ) -> (LocalMovieLoader, MovieStoreSpy) {
         let spy = MovieStoreSpy()
         let sut = LocalMovieLoader(store: spy, currentDate: currentDate)
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -148,12 +160,16 @@ final class LocalMovieLoaderTests: XCTestCase {
     }
     
     private class MovieStoreSpy: MovieStore {
-        enum Message {
+        enum Message: Equatable {
             case retrieve
+            case deleteCachedMovies
         }
         
         private(set) var messages = [Message]()
         private var retrievalCompletions = [MovieStore.RetrievalCompletion]()
+        private var deletionCompletions = [MovieStore.DeletionCompletion]()
+        
+        // MARK: - Retrieve
         
         func retrieve(completion: @escaping MovieStore.RetrievalCompletion) {
             messages.append(.retrieve)
@@ -170,6 +186,13 @@ final class LocalMovieLoaderTests: XCTestCase {
         
         func complete(with error: Error, at index: Int = 0) {
             retrievalCompletions[index](.failure(error))
+        }
+        
+        // MARK: - Delete
+        
+        func deleteCachedMovies(completion: @escaping DeletionCompletion) {
+            messages.append(.deleteCachedMovies)
+            deletionCompletions.append(completion)
         }
     }
 }

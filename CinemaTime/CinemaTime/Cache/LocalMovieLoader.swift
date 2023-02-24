@@ -6,6 +6,8 @@ public final class LocalMovieLoader: MovieLoader {
     private let store: MovieStore
     private let currentDate: () -> Date
     
+    public typealias SaveResult = Swift.Result<Void, Error>
+    
     public init(store: MovieStore, currentDate: @escaping () -> Date) {
         self.store = store
         self.currentDate = currentDate
@@ -26,6 +28,10 @@ public final class LocalMovieLoader: MovieLoader {
                 completion(.success([]))
             }
         }
+    }
+    
+    public func save(completion: @escaping (SaveResult) -> Void) {
+        store.deleteCachedMovies { _ in }
     }
 }
 
