@@ -200,6 +200,16 @@ final class LocalMovieLoaderTests: XCTestCase {
         XCTAssertEqual(repo.messages, [.retrieve])
     }
     
+    func test_validate_doesNotRequestsCacheDeletionOnNonExpiredCache() {
+        let nonExpiredTimestamp = Date.now.minusCacheMaxAge().adding(seconds: 1)
+        let (sut, repo) = makeSUT()
+        
+        sut.validateCache() { _ in }
+        repo.completeRetrieval(with: uniqueMovies().locals, timestamp: nonExpiredTimestamp)
+        
+        XCTAssertEqual(repo.messages, [.retrieve])
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(
