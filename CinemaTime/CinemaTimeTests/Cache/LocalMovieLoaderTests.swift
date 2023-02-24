@@ -90,7 +90,7 @@ final class LocalMovieLoaderTests: XCTestCase {
     func test_save_requestsCacheDeletion() {
         let (sut, repo) = makeSUT()
         
-        sut.save() { _ in }
+        sut.save([]) { _ in }
         
         XCTAssertEqual(repo.messages, [.deleteCachedMovies])
     }
@@ -98,10 +98,21 @@ final class LocalMovieLoaderTests: XCTestCase {
     func test_save_doesNotRequestInsertionOnStoreDeletionError() {
         let (sut, repo) = makeSUT()
         
-        sut.save() { _ in }
+        sut.save([]) { _ in }
         repo.completeDeletion(with: anyNSError())
         
         XCTAssertEqual(repo.messages, [.deleteCachedMovies])
+    }
+    
+    func test_save_requestsInsertionOnSuccessfulCacheDeletion() {
+        let movies = uniqueMovies()
+        let currentDate = Date.now
+        let (sut, repo) = makeSUT(currentDate: { currentDate })
+        
+        sut.save(movies.models) { _ in }
+        repo.completeDeletionSuccessfully()
+        
+        XCTAssertEqual(repo.messages, [.deleteCachedMovies, .insert(movies.locals, currentDate)])
     }
     
     // MARK: - Helpers
@@ -204,6 +215,10 @@ final class LocalMovieLoaderTests: XCTestCase {
         func deleteCachedMovies(completion: @escaping DeletionCompletion) {
             messages.append(.deleteCachedMovies)
             deletionCompletions.append(completion)
+        }
+        
+        func completeDeletionSuccessfully(at index: Int = 0) {
+            deletionCompletions[index](.success(()))
         }
         
         func completeDeletion(with error: Error, at index: Int = 0) {
