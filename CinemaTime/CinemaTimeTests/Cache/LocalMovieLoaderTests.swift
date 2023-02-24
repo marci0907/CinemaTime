@@ -115,6 +115,20 @@ final class LocalMovieLoaderTests: XCTestCase {
         XCTAssertEqual(repo.messages, [.deleteCachedMovies, .insert(movies.locals, currentDate)])
     }
     
+    func test_save_doesNotDeliverDeletionResultAfterSUTHasBeenDeallocated() {
+        let store = MovieStoreSpy()
+        var sut: LocalMovieLoader? = LocalMovieLoader(store: store, currentDate: Date.init)
+        
+        var loadCallCount = 0
+        sut?.save([]) { _ in loadCallCount += 1 }
+        
+        sut = nil
+        
+        store.completeDeletionSuccessfully()
+        
+        XCTAssertEqual(loadCallCount, 0)
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(
