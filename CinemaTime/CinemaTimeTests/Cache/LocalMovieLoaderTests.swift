@@ -290,7 +290,7 @@ final class LocalMovieLoaderTests: XCTestCase {
         
         sut = nil
         
-        store.completeRetrieval(with: anyNSError())
+        store.completeRetrievalWithEmptyCache()
         
         XCTAssertEqual(loadCallCount, 0)
     }
