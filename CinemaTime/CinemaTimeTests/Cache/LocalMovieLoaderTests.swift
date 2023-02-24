@@ -49,13 +49,28 @@ final class LocalMovieLoader: MovieLoader {
             case let .failure(error):
                 completion(.failure(error))
                 
-            case let .success(.some(cache)) where cache.timestamp > self.currentDate().addingTimeInterval(-7*24*60*60):
+            case let .success(.some(cache)) where MovieCachePolicy.validate(cache.timestamp, against: self.currentDate()):
                 completion(.success(cache.movies.toModels()))
                 
             case .success:
                 completion(.success([]))
             }
         }
+    }
+}
+
+final class MovieCachePolicy {
+    private static let calendar = Calendar(identifier: .gregorian)
+    private static var maxCacheAgeInDays: Int { 7 }
+    
+    private init() {}
+    
+    static func validate(_ timestamp: Date, against currentTime: Date) -> Bool {
+        guard let cacheExpirationDate = calendar.date(byAdding: .day, value: maxCacheAgeInDays, to: timestamp) else {
+            return false
+        }
+        
+        return cacheExpirationDate > currentTime
     }
 }
 
