@@ -120,6 +120,16 @@ final class LocalMovieLoaderTests: XCTestCase {
         })
     }
     
+    func test_load_deliversZeroMoviesOnExpiredCache() {
+        let movies = uniqueMovies()
+        let expiredTimestamp = Date.now.minusCacheMaxAge().adding(seconds: -1)
+        let (sut, store) = makeSUT()
+        
+        expect(sut, toFinishWith: .success([]), when: {
+            store.complete(with: movies.locals, timestamp: expiredTimestamp)
+        })
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (MovieLoader, MovieStoreSpy) {
