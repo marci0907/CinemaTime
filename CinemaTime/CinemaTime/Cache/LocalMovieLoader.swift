@@ -36,22 +36,26 @@ public final class LocalMovieLoader: MovieLoader {
             
             switch result {
             case .success:
-                self.store.insert(movies.toLocals(), timestamp: self.currentDate(), completion: { [weak self] result in
-                    guard self != nil else { return }
-                    
-                    switch result {
-                    case .success:
-                        completion(.success(()))
-                        
-                    case let .failure(error):
-                        completion(.failure(error))
-                    }
-                })
+                self.cache(movies.toLocals(), completion: completion)
                 
             case let .failure(error):
                 completion(.failure(error))
             }
         }
+    }
+    
+    private func cache(_ movies: [LocalMovie], completion: @escaping (SaveResult) -> Void) {
+        store.insert(movies, timestamp: currentDate(), completion: { [weak self] result in
+            guard self != nil else { return }
+            
+            switch result {
+            case .success:
+                completion(.success(()))
+                
+            case let .failure(error):
+                completion(.failure(error))
+            }
+        })
     }
 }
 
