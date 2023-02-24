@@ -34,20 +34,22 @@ protocol MovieStore {
 
 final class LocalMovieLoader: MovieLoader {
     private let store: MovieStore
+    private let currentDate: () -> Date
     
-    init(store: MovieStore) {
+    init(store: MovieStore, currentDate: @escaping () -> Date) {
         self.store = store
+        self.currentDate = currentDate
     }
     
     func load(completion: @escaping (MovieLoader.Result) -> Void) {
         store.retrieve { [weak self] result in
-            guard self != nil else { return }
+            guard let self = self else { return }
             
             switch result {
             case let .failure(error):
                 completion(.failure(error))
                 
-            case let .success(.some(cache)) where cache.timestamp > Date.now.addingTimeInterval(-7*24*60*60):
+            case let .success(.some(cache)) where cache.timestamp > self.currentDate().addingTimeInterval(-7*24*60*60):
                 completion(.success(cache.movies.toModels()))
                 
             case .success:
@@ -104,8 +106,9 @@ final class LocalMovieLoaderTests: XCTestCase {
     
     func test_load_deliversMoviesOnNonEmptyNonExpiredCache() {
         let movies = uniqueMovies()
-        let nonExpiredTimestamp = Date.now.minusCacheMaxAge().adding(seconds: 1)
-        let (sut, store) = makeSUT()
+        let currentDate = Date.now
+        let nonExpiredTimestamp = currentDate.minusCacheMaxAge().adding(seconds: 1)
+        let (sut, store) = makeSUT(currentDate: { currentDate })
         
         expect(sut, toFinishWith: .success(movies.models), when: {
             store.complete(with: movies.locals, timestamp: nonExpiredTimestamp)
@@ -114,8 +117,9 @@ final class LocalMovieLoaderTests: XCTestCase {
     
     func test_load_deliversZeroMoviesOnCacheExpiration() {
         let movies = uniqueMovies()
-        let expirationTimestamp = Date.now.minusCacheMaxAge()
-        let (sut, store) = makeSUT()
+        let currentDate = Date.now
+        let expirationTimestamp = currentDate.minusCacheMaxAge()
+        let (sut, store) = makeSUT(currentDate: { currentDate })
         
         expect(sut, toFinishWith: .success([]), when: {
             store.complete(with: movies.locals, timestamp: expirationTimestamp)
@@ -124,8 +128,9 @@ final class LocalMovieLoaderTests: XCTestCase {
     
     func test_load_deliversZeroMoviesOnExpiredCache() {
         let movies = uniqueMovies()
-        let expiredTimestamp = Date.now.minusCacheMaxAge().adding(seconds: -1)
-        let (sut, store) = makeSUT()
+        let currentDate = Date.now
+        let expiredTimestamp = currentDate.minusCacheMaxAge().adding(seconds: -1)
+        let (sut, store) = makeSUT(currentDate: { currentDate })
         
         expect(sut, toFinishWith: .success([]), when: {
             store.complete(with: movies.locals, timestamp: expiredTimestamp)
@@ -134,7 +139,7 @@ final class LocalMovieLoaderTests: XCTestCase {
     
     func test_load_doesNotDeliverResultAfterSUTHasBeenDeallocated() {
         let store = MovieStoreSpy()
-        var sut: LocalMovieLoader? = LocalMovieLoader(store: store)
+        var sut: LocalMovieLoader? = LocalMovieLoader(store: store, currentDate: Date.init)
         
         var loadCallCount = 0
         sut?.load { _ in loadCallCount += 1 }
@@ -148,9 +153,13 @@ final class LocalMovieLoaderTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (MovieLoader, MovieStoreSpy) {
+    private func makeSUT(
+        currentDate: @escaping () -> Date = { .now },
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> (MovieLoader, MovieStoreSpy) {
         let spy = MovieStoreSpy()
-        let sut = LocalMovieLoader(store: spy)
+        let sut = LocalMovieLoader(store: spy, currentDate: currentDate)
         trackForMemoryLeaks(sut, file: file, line: line)
         return (sut, spy)
     }
