@@ -182,6 +182,15 @@ final class LocalMovieLoaderTests: XCTestCase {
         XCTAssertEqual(repo.messages, [.retrieve])
     }
     
+    func test_validate_doesNotRequestsCacheDeletionOnRetrievalError() {
+        let (sut, repo) = makeSUT()
+        
+        sut.validateCache() { _ in }
+        repo.completeRetrieval(with: anyNSError())
+        
+        XCTAssertEqual(repo.messages, [.retrieve])
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(
