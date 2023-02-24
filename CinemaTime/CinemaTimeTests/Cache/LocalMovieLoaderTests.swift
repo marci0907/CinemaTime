@@ -3,60 +3,6 @@
 import XCTest
 import CinemaTime
 
-final class LocalMovieLoader: MovieLoader {
-    private let store: MovieStore
-    private let currentDate: () -> Date
-    
-    init(store: MovieStore, currentDate: @escaping () -> Date) {
-        self.store = store
-        self.currentDate = currentDate
-    }
-    
-    func load(completion: @escaping (MovieLoader.Result) -> Void) {
-        store.retrieve { [weak self] result in
-            guard let self = self else { return }
-            
-            switch result {
-            case let .failure(error):
-                completion(.failure(error))
-                
-            case let .success(.some(cache)) where MovieCachePolicy.validate(cache.timestamp, against: self.currentDate()):
-                completion(.success(cache.movies.toModels()))
-                
-            case .success:
-                completion(.success([]))
-            }
-        }
-    }
-}
-
-final class MovieCachePolicy {
-    private static let calendar = Calendar(identifier: .gregorian)
-    private static var maxCacheAgeInDays: Int { 7 }
-    
-    private init() {}
-    
-    static func validate(_ timestamp: Date, against currentTime: Date) -> Bool {
-        guard let cacheExpirationDate = calendar.date(byAdding: .day, value: maxCacheAgeInDays, to: timestamp) else {
-            return false
-        }
-        
-        return cacheExpirationDate > currentTime
-    }
-}
-
-private extension Array where Element == LocalMovie {
-    func toModels() -> [Movie] {
-        map { Movie(
-            id: $0.id,
-            title: $0.title,
-            imagePath: $0.imagePath,
-            overview: $0.overview,
-            releaseDate: $0.releaseDate,
-            rating: $0.rating) }
-    }
-}
-
 final class LocalMovieLoaderTests: XCTestCase {
     
     func test_init_doesNotCallStore() {
