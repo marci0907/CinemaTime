@@ -240,6 +240,16 @@ final class LocalMovieLoaderTests: XCTestCase {
         })
     }
     
+    func test_validate_succeedsOnRetrievalErrorButSuccessfulDeletion() {
+        let expectedError = anyNSError()
+        let (sut, store) = makeSUT()
+        
+        expect(sut, toFinishValidatingWith: .success(()), when: {
+            store.completeRetrieval(with: expectedError)
+            store.completeDeletionSuccessfully()
+        })
+    }
+    
     func test_validate_doesNotDeliverRetrievalResultAfterSUTHasBeenDeallocated() {
         let store = MovieStoreSpy()
         var sut: LocalMovieLoader? = LocalMovieLoader(store: store, currentDate: Date.init)
