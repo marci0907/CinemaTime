@@ -230,6 +230,16 @@ final class LocalMovieLoaderTests: XCTestCase {
         XCTAssertEqual(store.messages, [.retrieve, .deleteCachedMovies])
     }
     
+    func test_validate_deliversErrorOnRetrievalAndDeletionError() {
+        let expectedError = anyNSError()
+        let (sut, store) = makeSUT()
+        
+        expect(sut, toFinishValidatingWith: .failure(expectedError), when: {
+            store.completeRetrieval(with: expectedError)
+            store.completeDeletion(with: expectedError)
+        })
+    }
+    
     func test_validate_doesNotDeliverRetrievalResultAfterSUTHasBeenDeallocated() {
         let store = MovieStoreSpy()
         var sut: LocalMovieLoader? = LocalMovieLoader(store: store, currentDate: Date.init)
@@ -304,7 +314,6 @@ final class LocalMovieLoaderTests: XCTestCase {
                 
             default:
                 XCTFail("Expected \(expectedResult), got \(receivedResult) instead", file: file, line: line)
-                
             }
             
             exp.fulfill()
@@ -333,7 +342,6 @@ final class LocalMovieLoaderTests: XCTestCase {
                 
             default:
                 XCTFail("Expected \(expectedResult), got \(receivedResult) instead", file: file, line: line)
-                
             }
             
             exp.fulfill()
