@@ -6,6 +6,7 @@ public final class LocalMovieLoader: MovieLoader {
     private let store: MovieStore
     private let currentDate: () -> Date
     
+    public typealias LoadResult = MovieLoader.Result
     public typealias SaveResult = Swift.Result<Void, Error>
     
     public init(store: MovieStore, currentDate: @escaping () -> Date) {
@@ -13,7 +14,7 @@ public final class LocalMovieLoader: MovieLoader {
         self.currentDate = currentDate
     }
     
-    public func load(completion: @escaping (MovieLoader.Result) -> Void) {
+    public func load(completion: @escaping (LoadResult) -> Void) {
         store.retrieve { [weak self] result in
             guard let self = self else { return }
             

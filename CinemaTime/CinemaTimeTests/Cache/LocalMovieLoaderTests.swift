@@ -187,7 +187,7 @@ final class LocalMovieLoaderTests: XCTestCase {
     
     private func expect(
         _ sut: LocalMovieLoader,
-        toFinishLoadingWith expectedResult: MovieLoader.Result,
+        toFinishLoadingWith expectedResult: LocalMovieLoader.LoadResult,
         when action: @escaping () -> Void,
         file: StaticString = #filePath,
         line: UInt = #line
