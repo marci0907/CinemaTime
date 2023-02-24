@@ -250,6 +250,14 @@ final class LocalMovieLoaderTests: XCTestCase {
         })
     }
     
+    func test_validate_succeedsOnEmptyCache() {
+        let (sut, store) = makeSUT()
+        
+        expect(sut, toFinishValidatingWith: .success(()), when: {
+            store.completeRetrievalWithEmptyCache()
+        })
+    }
+    
     func test_validate_doesNotDeliverRetrievalResultAfterSUTHasBeenDeallocated() {
         let store = MovieStoreSpy()
         var sut: LocalMovieLoader? = LocalMovieLoader(store: store, currentDate: Date.init)
