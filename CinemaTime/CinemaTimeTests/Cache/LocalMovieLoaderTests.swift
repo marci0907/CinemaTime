@@ -172,6 +172,16 @@ final class LocalMovieLoaderTests: XCTestCase {
         XCTAssertEqual(loadCallCount, 0)
     }
     
+    // MARK: - Validate
+    
+    func test_validate_requestsCacheRetrieval() {
+        let (sut, repo) = makeSUT()
+        
+        sut.validateCache() { _ in }
+        
+        XCTAssertEqual(repo.messages, [.retrieve])
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(

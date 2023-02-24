@@ -8,6 +8,7 @@ public final class LocalMovieLoader: MovieLoader {
     
     public typealias LoadResult = MovieLoader.Result
     public typealias SaveResult = Swift.Result<Void, Error>
+    public typealias ValidationResult = Swift.Result<Void, Error>
     
     public init(store: MovieStore, currentDate: @escaping () -> Date) {
         self.store = store
@@ -57,6 +58,10 @@ public final class LocalMovieLoader: MovieLoader {
                 completion(.failure(error))
             }
         })
+    }
+    
+    public func validateCache(completion: @escaping (ValidationResult) -> Void) {
+        store.retrieve { _ in }
     }
 }
 
