@@ -3,8 +3,31 @@
 import XCTest
 import CinemaTime
 
+public struct LocalMovie: Equatable {
+    public let id: Int
+    public let title: String
+    public let imagePath: String?
+    public let overview: String?
+    public let releaseDate: Date?
+    public let rating: Double?
+    
+    public init(id: Int, title: String, imagePath: String?, overview: String?, releaseDate: Date?, rating: Double?) {
+        self.id = id
+        self.title = title
+        self.imagePath = imagePath
+        self.overview = overview
+        self.releaseDate = releaseDate
+        self.rating = rating
+    }
+}
+
+struct CachedMovies {
+    let movies: [LocalMovie]
+    let timestamp: Date
+}
+
 protocol MovieStore {
-    typealias RetrievalCompletion = (Result<Void, Error>) -> Void
+    typealias RetrievalCompletion = (Result<CachedMovies?, Error>) -> Void
     
     func retrieve(completion: @escaping RetrievalCompletion)
 }
@@ -20,6 +43,8 @@ final class LocalMovieLoader: MovieLoader {
         store.retrieve { result in
             if case let .failure(error) = result {
                 completion(.failure(error))
+            } else {
+                completion(.success([]))
             }
         }
     }
@@ -47,6 +72,14 @@ final class LocalMovieLoaderTests: XCTestCase {
         
         expect(sut, toFinishWith: .failure(expectedError), when: {
             store.complete(with: expectedError)
+        })
+    }
+    
+    func test_load_deliversZeroMoviesOnEmptyCache() {
+        let (sut, store) = makeSUT()
+        
+        expect(sut, toFinishWith: .success([]), when: {
+            store.completeWithEmptyCache()
         })
     }
     
@@ -99,6 +132,10 @@ final class LocalMovieLoaderTests: XCTestCase {
         func retrieve(completion: @escaping MovieStore.RetrievalCompletion) {
             messages.append(.retrieve)
             retrievalCompletions.append(completion)
+        }
+        
+        func completeWithEmptyCache(at index: Int = 0) {
+            retrievalCompletions[index](.success(.none))
         }
         
         func complete(with error: Error, at index: Int = 0) {
