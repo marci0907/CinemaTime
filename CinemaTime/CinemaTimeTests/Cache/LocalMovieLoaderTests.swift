@@ -157,6 +157,21 @@ final class LocalMovieLoaderTests: XCTestCase {
         XCTAssertEqual(loadCallCount, 0)
     }
     
+    func test_save_doesNotDeliverInsertionResultAfterSUTHasBeenDeallocated() {
+        let store = MovieStoreSpy()
+        var sut: LocalMovieLoader? = LocalMovieLoader(store: store, currentDate: Date.init)
+        
+        var loadCallCount = 0
+        sut?.save([]) { _ in loadCallCount += 1 }
+        store.completeDeletionSuccessfully()
+        
+        sut = nil
+        
+        store.completeInsertionSuccessfully()
+        
+        XCTAssertEqual(loadCallCount, 0)
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(
