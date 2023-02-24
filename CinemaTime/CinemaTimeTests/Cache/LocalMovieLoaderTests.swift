@@ -87,10 +87,19 @@ final class LocalMovieLoaderTests: XCTestCase {
     
     // MARK: - Save
     
-    func test_save_deliversErrorOnStoreDeletionError() {
+    func test_save_requestsCacheDeletion() {
         let (sut, repo) = makeSUT()
         
         sut.save() { _ in }
+        
+        XCTAssertEqual(repo.messages, [.deleteCachedMovies])
+    }
+    
+    func test_save_doesNotRequestInsertionOnStoreDeletionError() {
+        let (sut, repo) = makeSUT()
+        
+        sut.save() { _ in }
+        repo.completeDeletion(with: anyNSError())
         
         XCTAssertEqual(repo.messages, [.deleteCachedMovies])
     }
@@ -162,12 +171,14 @@ final class LocalMovieLoaderTests: XCTestCase {
     private class MovieStoreSpy: MovieStore {
         enum Message: Equatable {
             case retrieve
+            case insert([LocalMovie], Date)
             case deleteCachedMovies
         }
         
         private(set) var messages = [Message]()
         private var retrievalCompletions = [MovieStore.RetrievalCompletion]()
         private var deletionCompletions = [MovieStore.DeletionCompletion]()
+        private var insertionCompletions = [MovieStore.InsertionCompletion]()
         
         // MARK: - Retrieve
         
@@ -193,6 +204,17 @@ final class LocalMovieLoaderTests: XCTestCase {
         func deleteCachedMovies(completion: @escaping DeletionCompletion) {
             messages.append(.deleteCachedMovies)
             deletionCompletions.append(completion)
+        }
+        
+        func completeDeletion(with error: Error, at index: Int = 0) {
+            deletionCompletions[index](.failure(error))
+        }
+        
+        // MARK: - Insert
+        
+        func insert(_ movies: [LocalMovie], timestamp: Date, completion: @escaping InsertionCompletion) {
+            messages.append(.insert(movies, timestamp))
+            insertionCompletions.append(completion)
         }
     }
 }

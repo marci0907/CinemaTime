@@ -20,4 +20,8 @@ public protocol MovieStore {
     typealias DeletionResult = Result<Void, Error>
     typealias DeletionCompletion = (DeletionResult) -> Void
     func deleteCachedMovies(completion: @escaping DeletionCompletion)
+    
+    typealias InsertionResult = Result<Void, Error>
+    typealias InsertionCompletion = (InsertionResult) -> Void
+    func insert(_ movies: [LocalMovie], timestamp: Date, completion: @escaping InsertionCompletion)
 }
