@@ -261,6 +261,17 @@ final class LocalMovieLoaderTests: XCTestCase {
         })
     }
     
+    func test_validate_succeedsOnNonExpiredCache() {
+        let movies = uniqueMovies().locals
+        let currentDate = Date.now
+        let nonExpiredTimestamp = currentDate.minusCacheMaxAge().adding(seconds: 1)
+        let (sut, store) = makeSUT(currentDate: { nonExpiredTimestamp })
+        
+        expect(sut, toFinishValidatingWith: .success(()), when: {
+            store.completeRetrieval(with: movies, timestamp: nonExpiredTimestamp)
+        })
+    }
+    
     func test_validate_deliversErrorOnDeletionErrorForNonEmptyExpiredCache() {
         let expectedError = anyNSError()
         let movies = uniqueMovies().locals
