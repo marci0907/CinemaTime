@@ -25,7 +25,7 @@ final class LocalMovieLoaderTests: XCTestCase {
         let expectedError = anyNSError()
         let (sut, store) = makeSUT()
         
-        expect(sut, toFinishWith: .failure(expectedError), when: {
+        expect(sut, toFinishLoadingWith: .failure(expectedError), when: {
             store.complete(with: expectedError)
         })
     }
@@ -33,7 +33,7 @@ final class LocalMovieLoaderTests: XCTestCase {
     func test_load_deliversZeroMoviesOnEmptyCache() {
         let (sut, store) = makeSUT()
         
-        expect(sut, toFinishWith: .success([]), when: {
+        expect(sut, toFinishLoadingWith: .success([]), when: {
             store.completeWithEmptyCache()
         })
     }
@@ -44,7 +44,7 @@ final class LocalMovieLoaderTests: XCTestCase {
         let nonExpiredTimestamp = currentDate.minusCacheMaxAge().adding(seconds: 1)
         let (sut, store) = makeSUT(currentDate: { currentDate })
         
-        expect(sut, toFinishWith: .success(movies.models), when: {
+        expect(sut, toFinishLoadingWith: .success(movies.models), when: {
             store.complete(with: movies.locals, timestamp: nonExpiredTimestamp)
         })
     }
@@ -55,7 +55,7 @@ final class LocalMovieLoaderTests: XCTestCase {
         let expirationTimestamp = currentDate.minusCacheMaxAge()
         let (sut, store) = makeSUT(currentDate: { currentDate })
         
-        expect(sut, toFinishWith: .success([]), when: {
+        expect(sut, toFinishLoadingWith: .success([]), when: {
             store.complete(with: movies.locals, timestamp: expirationTimestamp)
         })
     }
@@ -66,7 +66,7 @@ final class LocalMovieLoaderTests: XCTestCase {
         let expiredTimestamp = currentDate.minusCacheMaxAge().adding(seconds: -1)
         let (sut, store) = makeSUT(currentDate: { currentDate })
         
-        expect(sut, toFinishWith: .success([]), when: {
+        expect(sut, toFinishLoadingWith: .success([]), when: {
             store.complete(with: movies.locals, timestamp: expiredTimestamp)
         })
     }
@@ -115,6 +115,15 @@ final class LocalMovieLoaderTests: XCTestCase {
         XCTAssertEqual(repo.messages, [.deleteCachedMovies, .insert(movies.locals, currentDate)])
     }
     
+    func test_save_deliversErrorOnDeletionError() {
+        let expectedError = anyNSError()
+        let (sut, repo) = makeSUT()
+        
+        expect(sut, toFinishSavingWith: .failure(expectedError), when: {
+            repo.completeDeletion(with: expectedError)
+        })
+    }
+    
     func test_save_doesNotDeliverDeletionResultAfterSUTHasBeenDeallocated() {
         let store = MovieStoreSpy()
         var sut: LocalMovieLoader? = LocalMovieLoader(store: store, currentDate: Date.init)
@@ -143,8 +152,8 @@ final class LocalMovieLoaderTests: XCTestCase {
     }
     
     private func expect(
-        _ sut: MovieLoader,
-        toFinishWith expectedResult: MovieLoader.Result,
+        _ sut: LocalMovieLoader,
+        toFinishLoadingWith expectedResult: MovieLoader.Result,
         when action: @escaping () -> Void,
         file: StaticString = #filePath,
         line: UInt = #line
@@ -161,6 +170,35 @@ final class LocalMovieLoaderTests: XCTestCase {
                 
             default:
                 XCTFail("Expected \(expectedResult), got \(receivedResult) instead", file: file, line: line)
+            }
+            
+            exp.fulfill()
+        }
+        
+        action()
+        
+        wait(for: [exp], timeout: 1.0)
+    }
+    
+    private func expect(
+        _ sut: LocalMovieLoader,
+        toFinishSavingWith expectedResult: LocalMovieLoader.SaveResult,
+        when action: @escaping () -> Void,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        let exp = expectation(description: "Wait for completion")
+        
+        sut.save(uniqueMovies().models) { receivedResult in
+            switch (receivedResult, expectedResult) {
+            case let (.failure(receivedError), .failure(expectedError)):
+                XCTAssertEqual(receivedError as NSError, expectedError as NSError, file: file, line: line)
+                
+            case (.success, .success): break
+                
+            default:
+                XCTFail("Expected \(expectedResult), got \(receivedResult) instead", file: file, line: line)
+                
             }
             
             exp.fulfill()

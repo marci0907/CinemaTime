@@ -34,8 +34,12 @@ public final class LocalMovieLoader: MovieLoader {
         store.deleteCachedMovies { [weak self] result in
             guard let self = self else { return }
             
-            if case .success = result {
+            switch result {
+            case .success:
                 self.store.insert(movies.toLocals(), timestamp: self.currentDate(), completion: { _ in })
+                
+            case let .failure(error):
+                completion(.failure(error))
             }
         }
     }
