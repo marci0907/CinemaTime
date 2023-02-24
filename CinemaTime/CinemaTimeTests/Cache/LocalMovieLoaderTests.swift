@@ -230,6 +230,20 @@ final class LocalMovieLoaderTests: XCTestCase {
         XCTAssertEqual(repo.messages, [.retrieve, .deleteCachedMovies])
     }
     
+    func test_validate_doesNotDeliverRetrievalResultAfterSUTHasBeenDeallocated() {
+        let store = MovieStoreSpy()
+        var sut: LocalMovieLoader? = LocalMovieLoader(store: store, currentDate: Date.init)
+        
+        var loadCallCount = 0
+        sut?.validateCache { _ in loadCallCount += 1 }
+        
+        sut = nil
+        
+        store.completeRetrieval(with: anyNSError())
+        
+        XCTAssertEqual(loadCallCount, 0)
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(
